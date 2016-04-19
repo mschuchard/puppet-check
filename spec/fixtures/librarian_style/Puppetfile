@@ -1,0 +1,5 @@
+mod 'i',
+  am: 'a',
+  librarian: 'puppet'
+
+mod 'file', :with => 'bad style'

@@ -1,0 +1,17 @@
+# TODO: RC reek and rubocop checks should be 2.1.x only
+# TODO: RC setup travisci plugin
+
+sudo: false
+cache: bundler
+language: ruby
+
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.5
+  - 2.2.2
+  - 2.3.0
+
+before_install: gem update bundler
+install: bundle install --retry=3
+script: bundle exec rake spec

@@ -1,0 +1,3 @@
+i am a
+<% puppet template %>
+< $with = 'bad syntax %>

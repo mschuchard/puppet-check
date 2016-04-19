@@ -1,0 +1,7 @@
+mod 'i',
+    am: 'a'
+    librarian: 'puppet'
+
+mod 'file', with:
+
+mod 'bad', :'syntax'

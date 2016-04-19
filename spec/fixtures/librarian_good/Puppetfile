@@ -1,0 +1,5 @@
+mod 'i',
+    am: 'a',
+    good: 'librarian'
+
+mod 'puppet', 'file'
