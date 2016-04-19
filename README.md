@@ -4,10 +4,10 @@
 Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verification and validation of your Puppet catalogs.
 
 ### Former Method for Catalog Checks
-![Old](https://raw.githubusercontent.com/mschuchard/puppet-check/master/puppetcheck_old.png)
+![Old](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_old.png)
 
 ### Puppet Check Method for Catalog Checks
-![New](https://raw.githubusercontent.com/mschuchard/puppet-check/master/puppetcheck_new.png)
+![New](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_new.png)
 
 ### Why not Puppetlabs Spec Helper?
 - Puppetlabs Spec Helper is a larger and varied gem with a different emphasis for its features.  Puppet Check is a lean and efficient gem solely for comprehensive Puppet catalog validation.
