@@ -21,6 +21,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'json'
   # spec.add_runtime_dependency 'rspec-puppet'
   # spec.add_runtime_dependency 'beaker'
-  # spec.add_runtime_dependency 'metadata-json-lint'
+  spec.add_runtime_dependency 'metadata-json-lint'
   spec.add_development_dependency 'rspec', '>= 3.0'
 end

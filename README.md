@@ -29,4 +29,4 @@ This will exist in the future release candidate.
 `reek` checks will automatically be enabled for style checks if your Ruby version is `>= 2.1`. `rspec`, `rspec-puppet`, and `beaker` are other forthcoming optional checks.
 
 ## Contributing
-Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit. While the version is currently tagged as `< 1.0.0`, please consult the CHANGELOG for the current development roadmap and contributing guidelines.
+Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit. While the version is currently tagged as `< 1.0.0`, please consult the `CHANGELOG` for the current development roadmap and contributing guidelines.

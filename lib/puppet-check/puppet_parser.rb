@@ -8,21 +8,19 @@ class PuppetCheck::PuppetParser
     require 'puppet/face'
     # we need this for 'reasons'
     Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
-    Puppet[:parser] = 'future' if @future_parser && (Puppet::PUPPETVERSION.to_i < 4)
+    Puppet[:parser] = 'future' if PuppetCheck.future_parser && (Puppet::PUPPETVERSION.to_i < 4)
     # check puppet syntax
     begin
       Puppet::Face[:parser, :current].validate(file)
     # prevent Puppet::Face from executing an exit that affects PuppetCheck
     rescue SystemExit
       PuppetCheck.error_files.push("-- #{file}: has a syntax error")
-      return
     # TODO: B get this capturing the error output; I think I need to redirect logging; update spec test when finished
     # Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(output))
     # Puppet::Util::Log.level = :warning
     # Puppet::Util::Log.close_all
     rescue Puppet::ParseError, Puppet::ParseErrorWithIssue => err
       PuppetCheck.error_files.push("-- #{err}")
-      return
     end
     # check puppet style
     if PuppetCheck.style_check
@@ -43,8 +41,7 @@ class PuppetCheck::PuppetParser
       if puppet_lint.warnings?
         warning = "-- #{file}:"
         puppet_lint.problems.each { |values| warning += " #{values[:message]} at line #{values[:line]}, column #{values[:column]}\n" }
-        PuppetCheck.warning_files.push(warning)
-        return
+        return PuppetCheck.warning_files.push(warning)
       end
     end
     PuppetCheck.clean_files.push("-- #{file}")
@@ -54,10 +51,7 @@ class PuppetCheck::PuppetParser
   def self.template(file)
     require 'puppet/pops'
     # puppet before version 4 cannot check template syntax
-    if Puppet::PUPPETVERSION.to_i < 4
-      PuppetCheck.ignored_files.push("-- #{file}: ignored due to Puppet Agent < 4.0.0")
-      return
-    end
+    return PuppetCheck.ignored_files.push("-- #{file}: ignored due to Puppet Agent < 4.0.0") if Puppet::PUPPETVERSION.to_i < 4
 
     # check puppet template syntax
     begin
@@ -65,9 +59,8 @@ class PuppetCheck::PuppetParser
       Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
     rescue StandardError => err
       PuppetCheck.error_files.push("-- #{file}: #{err}")
-      return
+    else
+      PuppetCheck.clean_files.push("-- #{file}")
     end
-
-    PuppetCheck.clean_files.push("-- #{file}")
   end
 end

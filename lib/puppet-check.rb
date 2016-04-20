@@ -41,13 +41,13 @@ class PuppetCheck
     sort_input_files(@all_files)
     # pass the categorized files out to the parsers to determine their status
     # TODO: RC pass the arrays of files to each method instead of each file individually
-    @puppet_manifests.each { |manifest| PuppetParser.manifest(manifest, @puppetlint_args) }
-    @puppet_templates.each { |template| PuppetParser.template(template) }
-    @ruby_rubies.each { |ruby| RubyParser.ruby(ruby, @rubocop_args, @reek_args) }
-    @ruby_templates.each { |template| RubyParser.template(template) }
-    @data_yamls.each { |yaml| DataParser.yaml(yaml) }
-    @data_jsons.each { |json| DataParser.json(json) }
-    @ruby_librarians.each { |librarian| RubyParser.librarian(librarian, @rubocop_args, @reek_args) }
+    @puppet_manifests.each { |manifest| PuppetCheck::PuppetParser.manifest(manifest, @puppetlint_args) }
+    @puppet_templates.each { |template| PuppetCheck::PuppetParser.template(template) }
+    @ruby_rubies.each { |ruby| PuppetCheck::RubyParser.ruby(ruby, @rubocop_args, @reek_args) }
+    @ruby_templates.each { |template| PuppetCheck::RubyParser.template(template) }
+    @data_yamls.each { |yaml| PuppetCheck::DataParser.yaml(yaml) }
+    @data_jsons.each { |json| PuppetCheck::DataParser.json(json) }
+    @ruby_librarians.each { |librarian| PuppetCheck::RubyParser.librarian(librarian, @rubocop_args, @reek_args) }
     # output the diagnostic results
     output_results
   end
@@ -69,7 +69,7 @@ class PuppetCheck
       when /.*\.ya?ml/ then @data_yamls.push(input_file)
       when /.*\.json/ then @data_jsons.push(input_file)
       when 'Puppetfile', 'Modulefile' then @ruby_librarians.push(input_file)
-      else self.class.ignored_files.push(input_file)
+      else self.class.ignored_files.push("-- #{input_file}")
       end
     end
   end
@@ -77,24 +77,12 @@ class PuppetCheck
   # output the results for the files that were requested to be checked
   def output_results
     # output files with errors
-    unless self.class.error_files.empty?
-      puts 'The following files have errors:'
-      puts self.class.error_files
-    end
+    puts 'The following files have errors:', self.class.error_files unless self.class.error_files.empty?
     # output files with warnings
-    unless self.class.warning_files.empty?
-      puts 'The following files have warnings:'
-      puts self.class.warning_files
-    end
+    puts 'The following files have warnings:', self.class.warning_files unless self.class.warning_files.empty?
     # output files with no issues
-    unless self.class.clean_files.empty?
-      puts 'The following files processed with no errors or warnings:'
-      puts self.class.clean_files
-    end
+    puts 'The following files processed with no errors or warnings:', self.class.clean_files unless self.class.clean_files.empty?
     # output files that were ignored
-    unless self.class.ignored_files.empty?
-      puts 'The following files were unrecognized formats and therefore not processed:'
-      puts self.class.ignored_files
-    end
+    puts 'The following files were unrecognized formats and therefore not processed:', self.class.ignored_files unless self.class.ignored_files.empty?
   end
 end

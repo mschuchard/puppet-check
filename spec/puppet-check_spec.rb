@@ -71,7 +71,7 @@ describe PuppetCheck do
       expect(puppetcheck.instance_variable_get(:@data_yamls)).to eql(['yaml.yaml', 'yaml.yml'])
       expect(puppetcheck.instance_variable_get(:@data_jsons)).to eql(['json.json'])
       expect(puppetcheck.instance_variable_get(:@ruby_librarians)).to eql(%w(Puppetfile Modulefile))
-      expect(PuppetCheck.ignored_files).to eql(['foobarbaz'])
+      expect(PuppetCheck.ignored_files).to eql(['-- foobarbaz'])
     end
   end
 

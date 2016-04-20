@@ -10,34 +10,26 @@ class PuppetCheck::RubyParser
       instance_eval(File.read(file), file)
     rescue ScriptError, StandardError => err
       PuppetCheck.error_files.push("-- #{err}")
-      return
       # TODO: RC rescue warnings and dump in style array
+    else
+      # check ruby style
+      if PuppetCheck.style_check
+        require 'rubocop'
+        # check RuboCop and ignore stdout
+        rubocop_args.concat(['-o', '/dev/null', file])
+        # TODO: B capture style issues
+        # check Reek
+        begin
+          require 'reek'
+        rescue LoadError
+        else
+          # TODO: B add reek (spec test already exists)
+        end
+        # catalog the warnings; RuboCop exits with 1 iff style issues
+        return PuppetCheck.warning_files.push("-- #{file}: has warnings") if RuboCop::CLI.new.run(rubocop_args) == 1
+      end
+      PuppetCheck.clean_files.push("-- #{file}")
     end
-    # check ruby style
-    if PuppetCheck.style_check
-      require 'rubocop'
-      begin
-        reek = true
-        require 'reek'
-      rescue LoadError
-        reek = false
-      end
-      # check RuboCop and ignore stdout
-      rubocop_args.concat(['-o', '/dev/null', file])
-      rubocop_result = RuboCop::CLI.new.run(rubocop_args)
-      # TODO: B capture style issues
-      # check Reek
-      # TODO: B add reek (spec test already exists)
-      if reek
-        #
-      end
-      # catalog the warnings; RuboCop exits with 1 iff style issues
-      if rubocop_result == 1
-        PuppetCheck.warning_files.push("-- #{file}: has warnings")
-        return
-      end
-    end
-    PuppetCheck.clean_files.push("-- #{file}")
   end
 
   # checks ruby template syntax (.erb)
@@ -49,8 +41,7 @@ class PuppetCheck::RubyParser
     # credits to gds-operations/puppet-syntax for errors to ignore
     rescue NameError, TypeError
     rescue ScriptError, StandardError => err
-      PuppetCheck.error_files.push("-- #{file}: #{err}")
-      return
+      return PuppetCheck.error_files.push("-- #{file}: #{err}")
       # TODO: RC rescue warnings and dump in style array
     end
     PuppetCheck.clean_files.push("-- #{file}")
@@ -65,8 +56,7 @@ class PuppetCheck::RubyParser
     # TODO: B revisit this once instance_eval is fixed; at the moment there is no 'mod' method so instance_eval throws NoMethodError
     rescue NoMethodError
     rescue SyntaxError, LoadError, ArgumentError => err
-      PuppetCheck.error_files.push("-- #{file}: #{err}")
-      return
+      return PuppetCheck.error_files.push("-- #{file}: #{err}")
     end
     # check librarian puppet style
     if PuppetCheck.style_check
@@ -74,13 +64,9 @@ class PuppetCheck::RubyParser
       # check Rubocop and ignore stdout; RuboCop is confused about the first 'mod' argument in librarian puppet so disable the Style/FileName check
       rubocop_args.include?('--except') ? rubocop_args[rubocop_args.index('--except') + 1] = "#{rubocop_args[rubocop_args.index('--except') + 1]},Style/FileName" : rubocop_args.concat(['--except', 'Style/FileName'])
       rubocop_args.concat(['-o', '/dev/null', file])
-      rubocop_result = RuboCop::CLI.new.run(rubocop_args)
       # TODO: B capture style issues
       # catalog style warnings; RuboCop exits with 1 iff style issues
-      if rubocop_result == 1
-        PuppetCheck.warning_files.push("-- #{file}: has warnings")
-        return
-      end
+      return PuppetCheck.warning_files.push("-- #{file}: has warnings") if RuboCop::CLI.new.run(rubocop_args) == 1
     end
     PuppetCheck.clean_files.push("-- #{file}")
   end

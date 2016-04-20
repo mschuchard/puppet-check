@@ -10,24 +10,24 @@ class PuppetCheck::DataParser
       YAML.load_file(file)
     rescue StandardError => err
       PuppetCheck.error_files.push("-- #{err}")
-      return
+    else
+      PuppetCheck.clean_files.push("-- #{file}")
     end
-    PuppetCheck.clean_files.push("-- #{file}")
   end
 
   # checks json syntax (.json)
   # TODO: RC more checks if metadata.json
   def self.json(file)
     require 'json'
-    # require 'metadata-json-lint/rake_task'
+    require 'metadata-json-lint/rake_task'
     # check json syntax
     begin
       JSON.parse(File.read(file))
     rescue JSON::ParserError => err
       PuppetCheck.error_files.push("-- #{file}: #{err.to_s.lines.first}")
-      return
+    else
+      # Rake::Task[:metadata_lint].invoke
+      PuppetCheck.clean_files.push("-- #{file}")
     end
-    # Rake::Task[:metadata_lint].invoke
-    PuppetCheck.clean_files.push("-- #{file}")
   end
 end
