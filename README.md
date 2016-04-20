@@ -17,7 +17,7 @@ Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verifi
 - Puppetlabs Spec Helper has no CLI.
 
 ## Usage
-Puppet Check requires `ruby` >= 1.9.3, `puppet` >= 3.2, and `puppet-lint` >= 1.1.0. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks.
+Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 1.1.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks.
 
 ### CLI
 This will exist in the future beta.
@@ -26,11 +26,7 @@ This will exist in the future beta.
 This will exist in the future release candidate.
 
 ### Optional Checks
-`reek` checks will automatically be enabled for style checks if your Ruby version is >= 2.1. `rspec`, `rspec-puppet`, and `beaker` are other forthcoming optional checks.
+`reek` checks will automatically be enabled for style checks if your Ruby version is `>= 2.1`. `rspec`, `rspec-puppet`, and `beaker` are other forthcoming optional checks.
 
-### Contributing
-
-Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
-
-## Notes
-While the version is currently tagged as < 1.0.0, please consult the CHANGELOG for the current development roadmap and contributing guidelines.
+## Contributing
+Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit. While the version is currently tagged as `< 1.0.0`, please consult the CHANGELOG for the current development roadmap and contributing guidelines.
