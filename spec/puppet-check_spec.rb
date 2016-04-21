@@ -2,18 +2,9 @@ require_relative 'spec_helper'
 require_relative '../lib/puppet-check'
 
 describe PuppetCheck do
-  let(:puppetcheck) { PuppetCheck.new([], [], []) }
+  let(:puppetcheck) { PuppetCheck.new }
 
   context 'initializes and' do
-    it 'args, future parser, style check, puppet-lint args, rubocop args, and reek args have the correct defaults' do
-      # this becomes true due to other tests executing before this one so reset the default assignment
-      PuppetCheck.style_check = false
-      expect(PuppetCheck.future_parser).to eql(false)
-      expect(PuppetCheck.style_check).to eql(false)
-      expect(puppetcheck.instance_variable_get(:@puppetlint_args)).to eql([])
-      expect(puppetcheck.instance_variable_get(:@rubocop_args)).to eql([])
-      expect(puppetcheck.instance_variable_get(:@reek_args)).to eql([])
-    end
     it 'future parser can be altered' do
       PuppetCheck.future_parser = true
       expect(PuppetCheck.future_parser).to eql(true)
@@ -23,16 +14,16 @@ describe PuppetCheck do
       expect(PuppetCheck.style_check).to eql(true)
     end
     it 'puppet lint arguments can be altered' do
-      puppetcheck.instance_variable_set(:@puppetlint_args, ['--puppetlint-arg-one, --puppetlint-arg-two'])
-      expect(puppetcheck.instance_variable_get(:@puppetlint_args)).to eql(['--puppetlint-arg-one, --puppetlint-arg-two'])
+      PuppetCheck.puppetlint_args = ['--puppetlint-arg-one, --puppetlint-arg-two']
+      expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one, --puppetlint-arg-two'])
     end
     it 'rubocop arguments can be altered' do
-      puppetcheck.instance_variable_set(:@rubocop_args, ['--rubocop-arg-one, --rubocop-arg-two'])
-      expect(puppetcheck.instance_variable_get(:@rubocop_args)).to eql(['--rubocop-arg-one, --rubocop-arg-two'])
+      PuppetCheck.rubocop_args = ['--rubocop-arg-one, --rubocop-arg-two']
+      expect(PuppetCheck.rubocop_args).to eql(['--rubocop-arg-one, --rubocop-arg-two'])
     end
     it 'reek arguments can be altered' do
-      puppetcheck.instance_variable_set(:@reek_args, ['--reek-arg-one, --reek-arg-two'])
-      expect(puppetcheck.instance_variable_get(:@reek_args)).to eql(['--reek-arg-one, --reek-arg-two'])
+      PuppetCheck.reek_args = ['--reek-arg-one, --reek-arg-two']
+      expect(PuppetCheck.reek_args).to eql(['--reek-arg-one, --reek-arg-two'])
     end
   end
 

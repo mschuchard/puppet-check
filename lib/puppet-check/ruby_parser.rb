@@ -3,7 +3,7 @@ require_relative '../puppet-check'
 # executes diagnostics on ruby files
 class PuppetCheck::RubyParser
   # checks ruby syntax and style (.rb)
-  def self.ruby(file, rubocop_args, reek_args)
+  def self.ruby(file)
     # TODO: B instance_eval seems to actually execute the files despite it not being instance_exec
     # check ruby syntax
     begin
@@ -16,7 +16,7 @@ class PuppetCheck::RubyParser
       if PuppetCheck.style_check
         require 'rubocop'
         # check RuboCop and ignore stdout
-        rubocop_args.concat(['-o', '/dev/null', file])
+        rubocop_args = PuppetCheck.rubocop_args.concat(['-o', '/dev/null', file])
         # TODO: B capture style issues
         # check Reek
         begin
@@ -48,7 +48,7 @@ class PuppetCheck::RubyParser
   end
 
   # checks Puppetfile/Modulefile syntax (Puppetfile/Modulefile)
-  def self.librarian(file, rubocop_args, reek_args)
+  def self.librarian(file)
     # check librarian puppet syntax
     begin
       # TODO: B instance_eval seems to actually execute the files despite it not being instance_exec
@@ -62,6 +62,7 @@ class PuppetCheck::RubyParser
     if PuppetCheck.style_check
       require 'rubocop'
       # check Rubocop and ignore stdout; RuboCop is confused about the first 'mod' argument in librarian puppet so disable the Style/FileName check
+      rubocop_args = PuppetCheck.rubocop_args
       rubocop_args.include?('--except') ? rubocop_args[rubocop_args.index('--except') + 1] = "#{rubocop_args[rubocop_args.index('--except') + 1]},Style/FileName" : rubocop_args.concat(['--except', 'Style/FileName'])
       rubocop_args.concat(['-o', '/dev/null', file])
       # TODO: B capture style issues

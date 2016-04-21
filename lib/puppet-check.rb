@@ -12,17 +12,18 @@ class PuppetCheck
   @clean_files = []
   @ignored_files = []
 
+  # initialize style arg arrays
+  @puppetlint_args = []
+  @rubocop_args = []
+  @reek_args = []
+
   # let the parser methods read user options and append to the file arrays; let CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files
+    attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args, :reek_args
   end
 
-  def initialize(puppetlint_args, rubocop_args, reek_args)
-    # initialize style arg arrays
-    @puppetlint_args = puppetlint_args
-    @rubocop_args = rubocop_args
-    @reek_args = reek_args
-
+  # TODO: RC find a way to completely remove need for initialize and these vars
+  def initialize
     # initialize file type arrays
     @all_files = []
     @puppet_manifests = []
@@ -41,13 +42,13 @@ class PuppetCheck
     sort_input_files(@all_files)
     # pass the categorized files out to the parsers to determine their status
     # TODO: RC pass the arrays of files to each method instead of each file individually
-    @puppet_manifests.each { |manifest| PuppetCheck::PuppetParser.manifest(manifest, @puppetlint_args) }
+    @puppet_manifests.each { |manifest| PuppetCheck::PuppetParser.manifest(manifest) }
     @puppet_templates.each { |template| PuppetCheck::PuppetParser.template(template) }
-    @ruby_rubies.each { |ruby| PuppetCheck::RubyParser.ruby(ruby, @rubocop_args, @reek_args) }
+    @ruby_rubies.each { |ruby| PuppetCheck::RubyParser.ruby(ruby) }
     @ruby_templates.each { |template| PuppetCheck::RubyParser.template(template) }
     @data_yamls.each { |yaml| PuppetCheck::DataParser.yaml(yaml) }
     @data_jsons.each { |json| PuppetCheck::DataParser.json(json) }
-    @ruby_librarians.each { |librarian| PuppetCheck::RubyParser.librarian(librarian, @rubocop_args, @reek_args) }
+    @ruby_librarians.each { |librarian| PuppetCheck::RubyParser.librarian(librarian) }
     # output the diagnostic results
     output_results
   end

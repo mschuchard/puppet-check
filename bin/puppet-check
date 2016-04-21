@@ -4,4 +4,4 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w(.. lib))
 
 require 'puppet-check/cli'
 
-exit PuppetCheck::CLI.new(ARGV).run
+exit PuppetCheck::CLI.run(ARGV)

@@ -6,33 +6,37 @@ describe PuppetCheck::PuppetParser do
     PuppetCheck.error_files = []
     PuppetCheck.warning_files = []
     PuppetCheck.clean_files = []
+    PuppetCheck.future_parser = false
+    PuppetCheck.style_check = false
+    PuppetCheck.puppetlint_args = []
   end
 
   context '.manifest' do
     it 'puts a bad syntax Puppet manifest in the error files array' do
-      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/syntax.pp', [])
+      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/syntax.pp')
       # expect(subject.instance_variable_get(:@error_files)[0]).to match(%r{^\-\- #{fixtures_dir}manifests/syntax.pp:.*syntax error})
       expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}manifests/syntax.pp:})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style Puppet manifest in the warning files array' do
-      PuppetCheck.instance_variable_set(:@style_check, true)
-      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/style.pp', [])
+      PuppetCheck.style_check = true
+      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/style.pp')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}manifests/style.pp: double quoted string containing.*\n\sindentation of})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style Puppet manifest in the clean files array when puppetlint_args ignores its warnings' do
-      PuppetCheck.instance_variable_set(:@style_check, true)
-      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/style.pp', ['--no-double_quoted_strings-check', '--no-arrow_alignment-check'])
+      PuppetCheck.style_check = true
+      PuppetCheck.puppetlint_args = ['--no-double_quoted_strings-check', '--no-arrow_alignment-check']
+      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/style.pp')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}manifests/style.pp"])
     end
     it 'puts a good Puppet manifest in the clean files array' do
-      PuppetCheck.instance_variable_set(:@style_check, true)
-      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/good.pp', [])
+      PuppetCheck.style_check = true
+      PuppetCheck::PuppetParser.manifest(fixtures_dir + 'manifests/good.pp')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}manifests/good.pp"])
