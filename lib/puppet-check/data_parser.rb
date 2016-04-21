@@ -1,7 +1,7 @@
 require_relative '../puppet-check'
 
 # executes diagnostics on data files
-class PuppetCheck::DataParser
+class DataParser
   # checks yaml syntax (.yaml or .yml)
   def self.yaml(file)
     require 'yaml'
@@ -23,6 +23,7 @@ class PuppetCheck::DataParser
     # check json syntax
     begin
       JSON.parse(File.read(file))
+    # TODO: RC error info kind of sucks
     rescue JSON::ParserError => err
       PuppetCheck.error_files.push("-- #{file}: #{err.to_s.lines.first}")
     else

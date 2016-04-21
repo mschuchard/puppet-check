@@ -10,7 +10,7 @@ class PuppetCheck::CLI
     parse(args)
 
     raise 'puppet-check: no paths specified' if args.empty?
-    # PuppetCheck.new(puppetlint_args, rubocop_args, reek_args).run(args)
+    PuppetCheck.new.run(args)
     0
   end
 

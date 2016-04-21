@@ -2,7 +2,7 @@ require 'puppet'
 require_relative '../puppet-check'
 
 # executes diagnostics on puppet files
-class PuppetCheck::PuppetParser
+class PuppetParser
   # checks puppet syntax and style (.pp)
   def self.manifest(file)
     require 'puppet/face'

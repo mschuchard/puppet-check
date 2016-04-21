@@ -1,6 +1,11 @@
 # interfaces from CLI/tasks and to individual parsers
 # TODO: RC rearrange the init and run methods with each other
 # TODO: RC refactor the methods to reduce instance vars
+
+require_relative 'puppet-check/puppet_parser'
+require_relative 'puppet-check/ruby_parser'
+require_relative 'puppet-check/data_parser'
+
 class PuppetCheck
   # initialize future parser and style check bools
   @future_parser = false
@@ -42,13 +47,13 @@ class PuppetCheck
     sort_input_files(@all_files)
     # pass the categorized files out to the parsers to determine their status
     # TODO: RC pass the arrays of files to each method instead of each file individually
-    @puppet_manifests.each { |manifest| PuppetCheck::PuppetParser.manifest(manifest) }
-    @puppet_templates.each { |template| PuppetCheck::PuppetParser.template(template) }
-    @ruby_rubies.each { |ruby| PuppetCheck::RubyParser.ruby(ruby) }
-    @ruby_templates.each { |template| PuppetCheck::RubyParser.template(template) }
-    @data_yamls.each { |yaml| PuppetCheck::DataParser.yaml(yaml) }
-    @data_jsons.each { |json| PuppetCheck::DataParser.json(json) }
-    @ruby_librarians.each { |librarian| PuppetCheck::RubyParser.librarian(librarian) }
+    @puppet_manifests.each { |manifest| PuppetParser.manifest(manifest) }
+    @puppet_templates.each { |template| PuppetParser.template(template) }
+    @ruby_rubies.each { |ruby| RubyParser.ruby(ruby) }
+    @ruby_templates.each { |template| RubyParser.template(template) }
+    @data_yamls.each { |yaml| DataParser.yaml(yaml) }
+    @data_jsons.each { |json| DataParser.json(json) }
+    @ruby_librarians.each { |librarian| RubyParser.librarian(librarian) }
     # output the diagnostic results
     output_results
   end
@@ -63,13 +68,13 @@ class PuppetCheck
   def sort_input_files(input_files)
     input_files.each do |input_file|
       case input_file
-      when /.*\.pp/ then @puppet_manifests.push(input_file)
-      when /.*\.epp/ then @puppet_templates.push(input_file)
-      when /.*\.rb/ then @ruby_rubies.push(input_file)
-      when /.*\.erb/ then @ruby_templates.push(input_file)
-      when /.*\.ya?ml/ then @data_yamls.push(input_file)
-      when /.*\.json/ then @data_jsons.push(input_file)
-      when 'Puppetfile', 'Modulefile' then @ruby_librarians.push(input_file)
+      when /.*\.pp$/ then @puppet_manifests.push(input_file)
+      when /.*\.epp$/ then @puppet_templates.push(input_file)
+      when /.*\.rb$/ then @ruby_rubies.push(input_file)
+      when /.*\.erb$/ then @ruby_templates.push(input_file)
+      when /.*\.ya?ml$/ then @data_yamls.push(input_file)
+      when /.*\.json$/ then @data_jsons.push(input_file)
+      when /.*Puppetfile$/, /.*Modulefile$/ then @ruby_librarians.push(input_file)
       else self.class.ignored_files.push("-- #{input_file}")
       end
     end
@@ -78,12 +83,12 @@ class PuppetCheck
   # output the results for the files that were requested to be checked
   def output_results
     # output files with errors
-    puts 'The following files have errors:', self.class.error_files unless self.class.error_files.empty?
+    puts "\033[31mThe following files have errors:\033[0m", self.class.error_files unless self.class.error_files.empty?
     # output files with warnings
-    puts 'The following files have warnings:', self.class.warning_files unless self.class.warning_files.empty?
+    puts "\033[33mThe following files have warnings:\033[0m", self.class.warning_files unless self.class.warning_files.empty?
     # output files with no issues
-    puts 'The following files processed with no errors or warnings:', self.class.clean_files unless self.class.clean_files.empty?
+    puts "\033[32mThe following files have no errors or warnings:\033[0m", self.class.clean_files unless self.class.clean_files.empty?
     # output files that were ignored
-    puts 'The following files were unrecognized formats and therefore not processed:', self.class.ignored_files unless self.class.ignored_files.empty?
+    puts "\033[34mThe following files were unrecognized formats and therefore not processed:\033[0m", self.class.ignored_files unless self.class.ignored_files.empty?
   end
 end

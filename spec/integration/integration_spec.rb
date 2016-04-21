@@ -1,10 +1,13 @@
-#TODO: RC
+require_relative '../spec_helper.rb'
+require_relative '../../lib/puppet-check/cli'
+
+# TODO: RC
 describe 'PuppetCheck' do
   let(:puppet_check) { PuppetCheck.new }
 
   context 'executed as a system from the CLI with various files to be processed' do
     it 'outputs diagnostic results correctly after processing all of the files' do
-      #
+      PuppetCheck::CLI.run(%W(-s #{fixtures_dir}))
     end
   end
 

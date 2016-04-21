@@ -1,7 +1,7 @@
 require_relative '../spec_helper'
 require_relative '../../lib/puppet-check/ruby_parser'
 
-describe PuppetCheck::RubyParser do
+describe RubyParser do
   before(:each) do
     PuppetCheck.error_files = []
     PuppetCheck.warning_files = []
@@ -13,7 +13,7 @@ describe PuppetCheck::RubyParser do
 
   context '.ruby' do
     it 'puts a bad syntax ruby file in the error files array' do
-      PuppetCheck::RubyParser.ruby(fixtures_dir + 'lib/syntax.rb')
+      RubyParser.ruby(fixtures_dir + 'lib/syntax.rb')
       expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/syntax.rb:.*syntax error})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
@@ -21,7 +21,7 @@ describe PuppetCheck::RubyParser do
     if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
       it 'puts a bad style ruby file in the warning files array' do
         PuppetCheck.style_check = true
-        PuppetCheck::RubyParser.ruby(fixtures_dir + 'lib/style.rb')
+        RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
         expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:})
         expect(PuppetCheck.clean_files).to eql([])
@@ -29,7 +29,7 @@ describe PuppetCheck::RubyParser do
     else
       it 'puts a bad style ruby file in the warning files array' do
         PuppetCheck.style_check = true
-        PuppetCheck::RubyParser.ruby(fixtures_dir + 'lib/style.rb')
+        RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
         expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:})
         expect(PuppetCheck.clean_files).to eql([])
@@ -38,14 +38,14 @@ describe PuppetCheck::RubyParser do
     it 'puts a bad style ruby file in the clean files array when rubocop_args ignores its warnings' do
       PuppetCheck.style_check = true
       PuppetCheck.rubocop_args = ['--except', 'Lint/UselessAssignment,Style/HashSyntax,Style/GlobalVars,Style/StringLiterals']
-      PuppetCheck::RubyParser.ruby(fixtures_dir + 'lib/style.rb')
+      RubyParser.ruby(fixtures_dir + 'lib/style.rb')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}lib/style.rb"])
     end
     it 'puts a good ruby file in the clean files array' do
       PuppetCheck.style_check = true
-      PuppetCheck::RubyParser.ruby(fixtures_dir + 'lib/good.rb')
+      RubyParser.ruby(fixtures_dir + 'lib/good.rb')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}lib/good.rb"])
@@ -54,19 +54,19 @@ describe PuppetCheck::RubyParser do
 
   context '.template' do
     it 'puts a bad syntax ruby template file in the error files array' do
-      PuppetCheck::RubyParser.template(fixtures_dir + 'templates/syntax.erb')
+      RubyParser.template(fixtures_dir + 'templates/syntax.erb')
       expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/syntax.erb:.*syntax error, unexpected tIDENTIFIER})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style ruby template file in the warning files array' do
-      PuppetCheck::RubyParser.template(fixtures_dir + 'templates/style.erb')
+      RubyParser.template(fixtures_dir + 'templates/style.erb')
       expect(PuppetCheck.error_files).to eql([])
       # expect(PuppetCheck.warning_files)[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:})
       # expect(PuppetCheck.clean_files)).to eql([])
     end
     it 'puts a good ruby template file in the clean files array' do
-      PuppetCheck::RubyParser.template(fixtures_dir + 'templates/good.erb')
+      RubyParser.template(fixtures_dir + 'templates/good.erb')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}templates/good.erb"])
@@ -75,14 +75,14 @@ describe PuppetCheck::RubyParser do
 
   context '.librarian' do
     it 'puts a bad syntax librarian Puppet file in the error files array' do
-      PuppetCheck::RubyParser.librarian(fixtures_dir + 'librarian_syntax/Puppetfile')
+      RubyParser.librarian(fixtures_dir + 'librarian_syntax/Puppetfile')
       expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_syntax/Puppetfile:.*syntax error})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style librarian Puppet file in the warning files array' do
       PuppetCheck.style_check = true
-      PuppetCheck::RubyParser.librarian(fixtures_dir + 'librarian_style/Puppetfile')
+      RubyParser.librarian(fixtures_dir + 'librarian_style/Puppetfile')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_style/Puppetfile:})
       expect(PuppetCheck.clean_files).to eql([])
@@ -90,14 +90,14 @@ describe PuppetCheck::RubyParser do
     it 'puts a bad style librarian Puppet file in the clean files array when rubocop_args ignores its warnings' do
       PuppetCheck.style_check = true
       PuppetCheck.rubocop_args = ['--except', 'Style/AlignParameters,Style/HashSyntax']
-      PuppetCheck::RubyParser.librarian(fixtures_dir + 'librarian_style/Puppetfile')
+      RubyParser.librarian(fixtures_dir + 'librarian_style/Puppetfile')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}librarian_style/Puppetfile"])
     end
     it 'puts a good librarian Puppet file in the clean files array' do
       PuppetCheck.style_check = true
-      PuppetCheck::RubyParser.librarian(fixtures_dir + 'librarian_good/Puppetfile')
+      RubyParser.librarian(fixtures_dir + 'librarian_good/Puppetfile')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}librarian_good/Puppetfile"])
