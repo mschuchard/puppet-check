@@ -14,16 +14,16 @@ describe PuppetCheck do
       expect(PuppetCheck.style_check).to eql(true)
     end
     it 'puppet lint arguments can be altered' do
-      PuppetCheck.puppetlint_args = ['--puppetlint-arg-one, --puppetlint-arg-two']
-      expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one, --puppetlint-arg-two'])
+      PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two']
+      expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
     end
     it 'rubocop arguments can be altered' do
-      PuppetCheck.rubocop_args = ['--rubocop-arg-one, --rubocop-arg-two']
-      expect(PuppetCheck.rubocop_args).to eql(['--rubocop-arg-one, --rubocop-arg-two'])
+      PuppetCheck.rubocop_args = ['--rubocop-arg-one', '--rubocop-arg-two']
+      expect(PuppetCheck.rubocop_args).to eql(['--rubocop-arg-one', '--rubocop-arg-two'])
     end
     it 'reek arguments can be altered' do
-      PuppetCheck.reek_args = ['--reek-arg-one, --reek-arg-two']
-      expect(PuppetCheck.reek_args).to eql(['--reek-arg-one, --reek-arg-two'])
+      PuppetCheck.reek_args = ['--reek-arg-one', '--reek-arg-two']
+      expect(PuppetCheck.reek_args).to eql(['--reek-arg-one', '--reek-arg-two'])
     end
   end
 

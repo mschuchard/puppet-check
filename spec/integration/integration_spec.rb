@@ -7,7 +7,7 @@ describe 'PuppetCheck' do
 
   context 'executed as a system from the CLI with various files to be processed' do
     it 'outputs diagnostic results correctly after processing all of the files' do
-      PuppetCheck::CLI.run(%W(-s #{fixtures_dir}))
+      PuppetCheck::CLI.run(%W(-s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding #{fixtures_dir}))
     end
   end
 

@@ -1,5 +1,4 @@
 # TODO: RC verbose logging eventually
-# TODO: B add ARG parser method that assigns user options
 
 require 'optparse'
 require_relative '../puppet-check'
@@ -20,9 +19,10 @@ class PuppetCheck::CLI
 
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.future_parser = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.style_check = true }
-      opts.on('--puppet-lint', 'Arguments/Options to pass to PuppetLint') {}
-      opts.on('--rubocop', 'Arguments/Options to pass to Rubocop') {}
-      opts.on('--reek', 'Arguments/Options to pass to Reek') {}
+      opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
+        PuppetCheck.puppetlint_args = puppetlint_args.map { |arg| "--#{arg}" }
+      end
+      opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| PuppetCheck.rubocop_args = ['--except', arg] }
     end
 
     opt_parser.parse!(args)

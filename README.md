@@ -20,7 +20,19 @@ Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verifi
 Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 1.1.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks.
 
 ### CLI
-This will exist in the future beta.
+```
+usage: puppet-check [options] paths
+    -f, --future                     Enable future parser
+    -s, --style                      Enable style checks
+        --puppet-lint arg_one,arg_two
+                                     Arguments for PuppetLint ignored checks
+        --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
+```
+The command line interface enables the ability to select the Puppet future parser, additional style checks besides the syntax checks, and to specify PuppetLint and Rubocop checks to ignore. It should be noted that your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek` files should still be automatically respected by the individual style checkers if you prefer those to a simplified CLI.
+```
+Example:
+puppet-check -s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/puppet_catalog
+```
 
 ### Rake
 This will exist in the future release candidate.

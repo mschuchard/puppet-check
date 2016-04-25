@@ -4,10 +4,12 @@
 # TODO: RC verbose logging eventually
 # TODO: RC add ARG parser method that assigns user options
 
+require 'rake'
+require 'rake/tasklib'
 require_relative '../puppet-check'
 
 # the rake interface for PuppetCheck
-class PuppetCheck::Rake < ::Rake::TaskLib
+class PuppetCheck::Tasks < ::Rake::TaskLib
   def initialize
     desc 'Execute Puppet-Check'
     task 'PuppetCheck' do
@@ -16,4 +18,4 @@ class PuppetCheck::Rake < ::Rake::TaskLib
   end
 end
 
-PuppetCheck::Rake.new
+PuppetCheck::Tasks.new
