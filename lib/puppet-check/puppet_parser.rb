@@ -10,18 +10,16 @@ class PuppetParser
     Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
     Puppet[:parser] = 'future' if PuppetCheck.future_parser && (Puppet::PUPPETVERSION.to_i < 4)
     # check puppet syntax
+    errors = []
+    Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(errors))
     begin
       Puppet::Face[:parser, :current].validate(file)
-    # prevent Puppet::Face from executing an exit that affects PuppetCheck
+    # this is the error that we need to rescue Puppet::Face from
     rescue SystemExit
-      return PuppetCheck.error_files.push("-- #{file}: has a syntax error")
-    # TODO: B get this capturing the error output; I think I need to redirect logging; update spec test when finished
-    # Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(output))
-    # Puppet::Util::Log.level = :warning
-    # Puppet::Util::Log.close_all
-    rescue Puppet::ParseError, Puppet::ParseErrorWithIssue => err
-      return PuppetCheck.error_files.push("-- #{err}")
+      return PuppetCheck.error_files.push("-- #{file}: #{errors.map(&:to_s).join("\n").gsub("#{file}:", '')}")
+      # TODO: RC rescue warnings and dump in style array
     end
+    Puppet::Util::Log.close_all
     # check puppet style
     if PuppetCheck.style_check
       require 'puppet-lint'
@@ -57,7 +55,8 @@ class PuppetParser
       # credits to gds-operations/puppet-syntax for the parser function call
       Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
     rescue StandardError => err
-      PuppetCheck.error_files.push("-- #{file}: #{err}")
+      PuppetCheck.error_files.push("-- #{file}: #{err.to_s.gsub("#{file}:", '')}")
+      # TODO: RC rescue warnings and dump in style array
     else
       PuppetCheck.clean_files.push("-- #{file}")
     end

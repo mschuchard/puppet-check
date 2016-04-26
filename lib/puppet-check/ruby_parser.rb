@@ -14,16 +14,19 @@ class RubyParser
     if PuppetCheck.style_check
       require 'rubocop'
       # check RuboCop and catalog warnings
-      warnings = capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
+      rubocop_warnings = capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
+      warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{file}:").join('')
       # check Reek
       begin
         require 'reek'
+        require 'reek/cli/application'
       rescue LoadError
       else
-        # TODO: B add reek (spec test already exists)
+        reek_warnings = capture_stdout { Reek::CLI::Application.new([file]).execute }
+        warnings += reek_warnings.split("\n")[1..-1].join("\n").strip unless reek_warnings == ''
       end
       # return warnings
-      return PuppetCheck.warning_files.push("-- #{file}: #{warnings.split("#{file}:").join('')}") unless warnings.empty?
+      return PuppetCheck.warning_files.push("-- #{file}: #{warnings}") unless warnings == ''
     end
     PuppetCheck.clean_files.push("-- #{file}")
   end

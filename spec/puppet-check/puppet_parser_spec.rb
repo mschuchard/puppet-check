@@ -15,7 +15,7 @@ describe PuppetParser do
     it 'puts a bad syntax Puppet manifest in the error files array' do
       PuppetParser.manifest(fixtures_dir + 'manifests/syntax.pp')
       # expect(subject.instance_variable_get(:@error_files)[0]).to match(%r{^\-\- #{fixtures_dir}manifests/syntax.pp:.*syntax error})
-      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}manifests/syntax.pp:})
+      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}manifests/syntax.pp: This Variable has no effect.*\nIllegal variable name})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end

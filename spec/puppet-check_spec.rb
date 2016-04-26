@@ -32,19 +32,19 @@ describe PuppetCheck do
     it 'correctly parses one directory and returns all of its files' do
       puppetcheck.parse_paths([fixtures_dir])
       puppetcheck.instance_variable_get(:@all_files).each { |file| expect(File.file?(file)).to be true }
-      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(19)
+      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(20)
     end
 
     it 'correctly parses multiple directories and returns all of their files' do
       puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'manifests'])
       puppetcheck.instance_variable_get(:@all_files).each { |file| expect(File.file?(file)).to be true }
-      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(10)
+      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(11)
     end
 
     it 'correctly parses three directories (one repeated) and three files (one repeated from directories and another repeated from files) and returns the unique files' do
       puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'hieradata/good.json', fixtures_dir + 'manifests/good.pp', fixtures_dir + 'manifests/good.pp'])
       puppetcheck.instance_variable_get(:@all_files).each { |file| expect(File.file?(file)).to be true }
-      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(8)
+      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(9)
     end
   end
 

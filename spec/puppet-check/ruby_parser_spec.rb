@@ -22,7 +22,7 @@ describe RubyParser do
         PuppetCheck.style_check = true
         RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
-        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single})
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*is a writable attribute})
         expect(PuppetCheck.clean_files).to eql([])
       end
     else
@@ -30,17 +30,17 @@ describe RubyParser do
         PuppetCheck.style_check = true
         RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
-        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:})
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single})
         expect(PuppetCheck.clean_files).to eql([])
       end
     end
     it 'puts a bad style ruby file in the clean files array when rubocop_args ignores its warnings' do
       PuppetCheck.style_check = true
       PuppetCheck.rubocop_args = ['--except', 'Lint/UselessAssignment,Style/HashSyntax,Style/GlobalVars,Style/StringLiterals']
-      RubyParser.ruby(fixtures_dir + 'lib/style.rb')
+      RubyParser.ruby(fixtures_dir + 'lib/rubocop_style.rb')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
-      expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}lib/style.rb"])
+      expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}lib/rubocop_style.rb"])
     end
     it 'puts a good ruby file in the clean files array' do
       PuppetCheck.style_check = true
