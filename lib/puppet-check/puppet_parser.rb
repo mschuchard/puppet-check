@@ -38,8 +38,8 @@ class PuppetParser
       puppet_lint.run
       # catalog the warnings
       if puppet_lint.warnings?
-        warning = "-- #{file}:"
-        puppet_lint.problems.each { |values| warning += " #{values[:message]} at line #{values[:line]}, column #{values[:column]}\n" }
+        warning = "-- #{file}: "
+        puppet_lint.problems.each { |values| warning += "#{values[:message]} at line #{values[:line]}, column #{values[:column]}\n" }
         return PuppetCheck.warning_files.push(warning)
       end
     end

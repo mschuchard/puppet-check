@@ -21,10 +21,6 @@ describe PuppetCheck do
       PuppetCheck.rubocop_args = ['--rubocop-arg-one', '--rubocop-arg-two']
       expect(PuppetCheck.rubocop_args).to eql(['--rubocop-arg-one', '--rubocop-arg-two'])
     end
-    it 'reek arguments can be altered' do
-      PuppetCheck.reek_args = ['--reek-arg-one', '--reek-arg-two']
-      expect(PuppetCheck.reek_args).to eql(['--reek-arg-one', '--reek-arg-two'])
-    end
   end
 
   context '.parse_paths' do

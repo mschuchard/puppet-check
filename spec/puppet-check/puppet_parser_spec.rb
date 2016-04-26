@@ -23,7 +23,7 @@ describe PuppetParser do
       PuppetCheck.style_check = true
       PuppetParser.manifest(fixtures_dir + 'manifests/style.pp')
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}manifests/style.pp: double quoted string containing.*\n\sindentation of})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}manifests/style.pp: double quoted string containing.*\nindentation of})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style Puppet manifest in the clean files array when puppetlint_args ignores its warnings' do

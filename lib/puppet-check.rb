@@ -20,11 +20,10 @@ class PuppetCheck
   # initialize style arg arrays
   @puppetlint_args = []
   @rubocop_args = []
-  @reek_args = []
 
   # let the parser methods read user options and append to the file arrays; let CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args, :reek_args
+    attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
 
   # TODO: RC find a way to completely remove need for initialize and these vars
@@ -60,7 +59,14 @@ class PuppetCheck
 
   # parse the paths and return the array of files
   def parse_paths(paths)
-    paths.uniq.each { |path| File.directory?(path) ? @all_files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file? subpath }) : @all_files.push(path) }
+    paths.uniq.each do |path|
+      if File.directory?(path)
+        files = Dir.glob("#{path}/**/*").select { |subpath| File.file? subpath }
+        @all_files.concat(files.map { |file| file.gsub('//', '/') })
+      else
+        @all_files.push(path)
+      end
+    end
     @all_files.uniq!
   end
 

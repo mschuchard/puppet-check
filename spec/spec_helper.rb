@@ -1,4 +1,3 @@
-#TODO: RC integration tests
 require 'rspec'
 
 # for path to fixtures

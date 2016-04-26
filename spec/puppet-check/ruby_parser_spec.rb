@@ -8,7 +8,6 @@ describe RubyParser do
     PuppetCheck.clean_files = []
     PuppetCheck.style_check = false
     PuppetCheck.rubocop_args = []
-    PuppetCheck.reek_args = []
   end
 
   context '.ruby' do
@@ -23,7 +22,7 @@ describe RubyParser do
         PuppetCheck.style_check = true
         RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
-        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:})
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single})
         expect(PuppetCheck.clean_files).to eql([])
       end
     else
@@ -84,7 +83,7 @@ describe RubyParser do
       PuppetCheck.style_check = true
       RubyParser.librarian(fixtures_dir + 'librarian_style/Puppetfile')
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_style/Puppetfile:})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_style/Puppetfile:.*Align the parameters.*\n.*Use the new})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style librarian Puppet file in the clean files array when rubocop_args ignores its warnings' do
