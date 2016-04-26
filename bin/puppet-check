@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w(.. lib))
-
-require 'puppet-check/cli'
+require_relative '../lib/puppet-check/cli'
 
 exit PuppetCheck::CLI.run(ARGV)

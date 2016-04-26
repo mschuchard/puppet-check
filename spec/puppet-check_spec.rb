@@ -73,19 +73,19 @@ describe PuppetCheck do
 
     it 'outputs files with errors' do
       PuppetCheck.error_files = ['-- foo: i had an error']
-      expect { puppetcheck.output_results }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error\n").to_stdout
+      expect { PuppetCheck.output_results }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error\n").to_stdout
     end
     it 'outputs files with warnings' do
       PuppetCheck.warning_files = ['-- foo: i had a warning']
-      expect { puppetcheck.output_results }.to output("\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning\n").to_stdout
+      expect { PuppetCheck.output_results }.to output("\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning\n").to_stdout
     end
     it 'outputs files with no errors or warnings' do
       PuppetCheck.clean_files = ['-- foo: i was totally good to go']
-      expect { puppetcheck.output_results }.to output("\033[32mThe following files have no errors or warnings:\033[0m\n-- foo: i was totally good to go\n").to_stdout
+      expect { PuppetCheck.output_results }.to output("\033[32mThe following files have no errors or warnings:\033[0m\n-- foo: i was totally good to go\n").to_stdout
     end
     it 'outputs files that were not processed' do
       PuppetCheck.ignored_files = ['-- foo: who knows what i am']
-      expect { puppetcheck.output_results }.to output("\033[34mThe following files were unrecognized formats and therefore not processed:\033[0m\n-- foo: who knows what i am\n").to_stdout
+      expect { PuppetCheck.output_results }.to output("\033[34mThe following files were unrecognized formats and therefore not processed:\033[0m\n-- foo: who knows what i am\n").to_stdout
     end
   end
 end

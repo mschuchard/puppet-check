@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'puppet-check'
-  spec.version       = 'Alpha'
+  spec.version       = 'Beta'
   spec.authors       = ['Matt Schuchard']
   spec.description   = 'A streamlined comprehensive set of checks for your entire Puppet catalog'
   spec.summary       = 'A streamlined comprehensive set of checks for your entire Puppet catalog'

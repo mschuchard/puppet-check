@@ -5,6 +5,7 @@ class DataParser
   # checks yaml syntax (.yaml or .yml)
   def self.yaml(file)
     require 'yaml'
+
     # check yaml syntax
     begin
       YAML.load_file(file)
@@ -20,6 +21,7 @@ class DataParser
   def self.json(file)
     require 'json'
     require 'metadata-json-lint/rake_task'
+
     # check json syntax
     begin
       JSON.parse(File.read(file))

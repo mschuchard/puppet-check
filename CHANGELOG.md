@@ -5,7 +5,7 @@
 - (Future) will be released for wide testing from rubygems and github.  Issues or PR related to bugs will be accepted.
 
 ### Beta
-- (Future) will be released for limited testing from github.  Issues or PR related to bugs will be accepted.
+- Ready for testing from Github by people building the gem themselves.  Issues related to bugs will be accepted.
 
 ### Alpha
 - Initial push to github.  No Issues or PR accepted.

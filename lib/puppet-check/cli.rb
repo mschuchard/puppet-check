@@ -6,8 +6,8 @@ class PuppetCheck::CLI
   # run method for the cli
   def self.run(args)
     parse(args)
-
     raise 'puppet-check: no paths specified' if args.empty?
+
     # run PuppetCheck
     PuppetCheck.new.run(args)
     0
