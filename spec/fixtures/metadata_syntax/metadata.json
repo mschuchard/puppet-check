@@ -1,0 +1,15 @@
+{
+  "name": "puppetlabs-stdlib",
+  "author": "puppetlabs",
+  "summary": "This is the song that never ends. Yes it goes on and on my friends. Some people, started singing it not knowing what it was. And they will keep singing it forever just because.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/puppetlabs/puppetlabs-stdlib",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-stdlib",
+  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
+  "description": "Standard Library for Puppet Modules",
+  "dependencies": [
+    {"name": "puppetlabs/nothing", "version_requirement": ">=1.1.1 < 2.2.2"},
+    {"name": "puppetlabs/nothing", "version_requirement": ">=1.1.1 < 2.2.2"}
+  ],
+  "checksum": "foo"
+}

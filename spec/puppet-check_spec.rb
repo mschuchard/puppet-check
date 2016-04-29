@@ -32,7 +32,7 @@ describe PuppetCheck do
     it 'correctly parses one directory and returns all of its files' do
       puppetcheck.parse_paths([fixtures_dir])
       puppetcheck.instance_variable_get(:@all_files).each { |file| expect(File.file?(file)).to be true }
-      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(20)
+      expect(puppetcheck.instance_variable_get(:@all_files).length).to eql(23)
     end
 
     it 'correctly parses multiple directories and returns all of their files' do

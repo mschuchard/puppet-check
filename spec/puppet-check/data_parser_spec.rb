@@ -30,11 +30,29 @@ describe DataParser do
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
+    it 'puts a bad metadata json file in the error files array' do
+      DataParser.json(fixtures_dir + 'metadata_syntax/metadata.json')
+      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}metadata_syntax/metadata.json: Required field.*\nDuplicate dependencies.*\nDeprecated field.*\nSummary exceeds})
+      expect(PuppetCheck.warning_files).to eql([])
+      expect(PuppetCheck.clean_files).to eql([])
+    end
+    it 'puts a bad style metadata json file in the warning files array' do
+      DataParser.json(fixtures_dir + 'metadata_style/metadata.json')
+      expect(PuppetCheck.error_files).to eql([])
+      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}metadata_style/metadata.json: License identifier})
+      expect(PuppetCheck.clean_files).to eql([])
+    end
     it 'puts a good json file in the clean files array' do
       DataParser.json(fixtures_dir + 'hieradata/good.json')
       expect(PuppetCheck.error_files).to eql([])
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}hieradata/good.json"])
+    end
+    it 'puts a good metadata json file in the clean files array' do
+      DataParser.json(fixtures_dir + 'metadata_good/metadata.json')
+      expect(PuppetCheck.error_files).to eql([])
+      expect(PuppetCheck.warning_files).to eql([])
+      expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}metadata_good/metadata.json"])
     end
   end
 end

@@ -74,8 +74,6 @@ class RubyParser
   end
 end
 
-private
-
 def capture_stdout
   old_stdout = $stdout
   $stdout = StringIO.new('', 'w')

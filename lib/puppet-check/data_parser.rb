@@ -7,6 +7,7 @@ class DataParser
     require 'yaml'
 
     # check yaml syntax
+    # TODO: RC also do some kind of hiera/puppet lookup check
     begin
       YAML.load_file(file)
     rescue StandardError => err
@@ -17,19 +18,61 @@ class DataParser
   end
 
   # checks json syntax (.json)
-  # TODO: RC more checks if metadata.json
+  # TODO: RC also do some kind of hiera/puppet lookup check
   def self.json(file)
     require 'json'
-    require 'metadata-json-lint/rake_task'
 
     # check json syntax
     begin
-      JSON.parse(File.read(file))
+      parsed = JSON.parse(File.read(file))
     # TODO: RC error info kind of sucks
     rescue JSON::ParserError => err
       PuppetCheck.error_files.push("-- #{file}: #{err.to_s.lines.first}")
     else
-      # Rake::Task[:metadata_lint].invoke
+      # check metadata.json
+      if file =~ /.*metadata\.json$/
+        require 'spdx-licenses'
+
+        # metadata-json-lint has issues and is essentially no longer maintained so here is an improved and leaner version of it
+        # check for errors
+        errors = []
+
+        # check for required keys
+        %w(name version author license summary source dependencies).each do |key|
+          errors.push("Required field '#{key}' not found in metadata.json.") unless parsed.key?(key)
+        end
+
+        # check for duplicate dependencies and requirements
+        %w(requirements dependencies).each do |key|
+          next unless parsed.key?(key)
+          names = []
+          parsed[key].each do |req_dep|
+            name = req_dep['name']
+            errors.push("Duplicate #{key} on #{name}.") if names.include?(name)
+            names << name
+          end
+        end
+
+        # check for deprecated fields
+        %w(types checksum).each do |key|
+          errors.push("Deprecated field '#{key}' found.") if parsed.key?(key)
+        end
+
+        # check for summary under 144 character
+        errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
+
+        return PuppetCheck.error_files.push("-- #{file}: #{errors.join("\n")}") unless errors.empty?
+
+        # check for warnings
+        warnings = []
+
+        # check for spdx license
+        if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] != 'proprietary'
+          warnings.push("License identifier #{parsed['license']} is not in the SPDX list: http://spdx.org/licenses/")
+        end
+
+        return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
+      end
       PuppetCheck.clean_files.push("-- #{file}")
     end
   end
