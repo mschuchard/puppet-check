@@ -1,3 +1,6 @@
+### 1.1.0
+- rspec, rspec puppet, and beaker as optional tasks
+
 ### 1.0.0
 - (Future) will be released on rubygems and github as full product.  All issues and PR will be accepted.
 

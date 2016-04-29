@@ -1,4 +1,3 @@
-# TODO: 1.1 add in rspec, rspec puppet, and beaker as optional tasks (begin, require gem, rescue)
 # TODO: RC task has style/future options
 # TODO: RC args for style options
 # TODO: RC verbose logging eventually
