@@ -15,6 +15,12 @@ describe DataParser do
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
+    it 'puts a good yaml file with potential hiera issues in the warning files array' do
+      DataParser.yaml(fixtures_dir + 'hieradata/style.yaml')
+      expect(PuppetCheck.error_files).to eql([])
+      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}hieradata/style.yaml: Values missing in key})
+      expect(PuppetCheck.clean_files).to eql([])
+    end
     it 'puts a good yaml file in the clean files array' do
       DataParser.yaml(fixtures_dir + 'hieradata/good.yaml')
       expect(PuppetCheck.error_files).to eql([])

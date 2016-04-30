@@ -1,0 +1,15 @@
+---
+i: 'am'
+
+:a:
+  good:
+    - yaml
+    - file
+
+but: 'i am missing a'
+
+value:
+
+and:
+  also: 'a'
+  subvalue:

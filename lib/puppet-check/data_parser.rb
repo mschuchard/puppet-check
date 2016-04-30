@@ -7,25 +7,24 @@ class DataParser
     require 'yaml'
 
     # check yaml syntax
-    # TODO: RC also do some kind of hiera/puppet lookup check
     begin
-      YAML.load_file(file)
+      parsed = YAML.load_file(file)
     rescue StandardError => err
       PuppetCheck.error_files.push("-- #{err}")
     else
+      warnings = hiera(parsed)
+      return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
       PuppetCheck.clean_files.push("-- #{file}")
     end
   end
 
   # checks json syntax (.json)
-  # TODO: RC also do some kind of hiera/puppet lookup check
   def self.json(file)
     require 'json'
 
     # check json syntax
     begin
       parsed = JSON.parse(File.read(file))
-    # TODO: RC error info kind of sucks
     rescue JSON::ParserError => err
       PuppetCheck.error_files.push("-- #{file}: #{err.to_s.lines.first}")
     else
@@ -72,8 +71,19 @@ class DataParser
         end
 
         return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
+      else
+        warnings = hiera(parsed)
+        return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
       end
       PuppetCheck.clean_files.push("-- #{file}")
     end
+  end
+
+  def self.hiera(data)
+    warnings = []
+    data.each do |key, value|
+      warnings.push("Values missing in key '#{key}'.") if value.nil?
+    end
+    warnings
   end
 end

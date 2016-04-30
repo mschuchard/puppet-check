@@ -1,5 +1,4 @@
 # TODO: RC rearrange the init and run methods with each other
-# TODO: RC refactor the methods to reduce instance vars
 
 require_relative 'puppet-check/puppet_parser'
 require_relative 'puppet-check/ruby_parser'
@@ -29,7 +28,6 @@ class PuppetCheck
   # TODO: RC find a way to completely remove need for initialize and these vars
   def initialize
     # initialize file type arrays
-    @all_files = []
     @puppet_manifests = []
     @puppet_templates = []
     @ruby_rubies = []
@@ -42,8 +40,8 @@ class PuppetCheck
   # main runner for PuppetCheck
   def run(paths)
     # grab all of the files to be processed and categorize them
-    parse_paths(paths)
-    sort_input_files(@all_files)
+    all_files = parse_paths(paths)
+    sort_input_files(all_files)
 
     # pass the categorized files out to the parsers to determine their status
     # TODO: RC pass the arrays of files to each method instead of each file individually
@@ -61,17 +59,20 @@ class PuppetCheck
 
   # parse the paths and return the array of files
   def parse_paths(paths)
+    all_files = []
+
     # traverse the unique paths, return all files, and replace // with /
     paths.uniq.each do |path|
       if File.directory?(path)
-        files = Dir.glob("#{path}/**/*").select { |subpath| File.file? subpath }
-        @all_files.concat(files.map { |file| file.gsub('//', '/') })
+        all_files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file? subpath })
       else
-        @all_files.push(path)
+        all_files.push(path)
       end
     end
+    all_files.map { |file| file.gsub('//', '/') }
+
     # return unique files
-    @all_files.uniq!
+    all_files.uniq
   end
 
   # sorts the files to be processed and returns them in categorized arrays
