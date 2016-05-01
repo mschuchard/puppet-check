@@ -19,11 +19,9 @@ class RubyParser
       warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{file}:").join('')
 
       # check Reek
-      begin
+      if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
         require 'reek'
         require 'reek/cli/application'
-      rescue LoadError
-      else
         reek_warnings = capture_stdout { Reek::CLI::Application.new([file]).execute }
         warnings += reek_warnings.split("\n")[1..-1].join("\n").strip unless reek_warnings == ''
       end

@@ -24,28 +24,33 @@ describe PuppetCheck do
   end
 
   context '.parse_paths' do
-    let(:all_files_file) { puppetcheck.parse_paths([fixtures_dir + 'lib/good.rb']) }
-    let(:all_files_dir) { puppetcheck.parse_paths([fixtures_dir]) }
-    let(:all_files_multi_dir) { puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'manifests']) }
-    let(:all_files_repeats) { puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'hieradata/good.json', fixtures_dir + 'manifests/good.pp', fixtures_dir + 'manifests/good.pp']) }
+    let(:no_files) { puppetcheck.parse_paths(%w(foo bar baz)) }
+    let(:file) { puppetcheck.parse_paths([fixtures_dir + 'lib/good.rb']) }
+    let(:dir) { puppetcheck.parse_paths([fixtures_dir]) }
+    let(:multi_dir) { puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'manifests']) }
+    let(:repeats) { puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'hieradata/good.json', fixtures_dir + 'manifests/good.pp', fixtures_dir + 'manifests/good.pp']) }
+
+    it 'raises an error if no files were found' do
+      expect { no_files }.to raise_error(RuntimeError, 'No files found in supplied paths foo, bar, baz.')
+    end
 
     it 'correctly parses one file and returns it' do
-      expect(all_files_file[0]).to match(%r{spec/fixtures/lib/good.rb})
+      expect(file[0]).to match(%r{spec/fixtures/lib/good.rb})
     end
 
     it 'correctly parses one directory and returns all of its files' do
-      all_files_dir.each { |file| expect(File.file?(file)).to be true }
-      expect(all_files_dir.length).to eql(24)
+      dir.each { |file| expect(File.file?(file)).to be true }
+      expect(dir.length).to eql(24)
     end
 
     it 'correctly parses multiple directories and returns all of their files' do
-      all_files_multi_dir.each { |file| expect(File.file?(file)).to be true }
-      expect(all_files_multi_dir.length).to eql(12)
+      multi_dir.each { |file| expect(File.file?(file)).to be true }
+      expect(multi_dir.length).to eql(12)
     end
 
     it 'correctly parses three directories (one repeated) and three files (one repeated from directories and another repeated from files) and returns the unique files' do
-      all_files_repeats.each { |file| expect(File.file?(file)).to be true }
-      expect(all_files_repeats.length).to eql(10)
+      repeats.each { |file| expect(File.file?(file)).to be true }
+      expect(repeats.length).to eql(10)
     end
   end
 
