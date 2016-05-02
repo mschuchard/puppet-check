@@ -14,9 +14,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
 
     desc 'Execute Puppet-Check syntax and style checks'
     task 'puppetcheck:all' do
-      require 'puppet-lint/tasks/puppet-lint'
-      require 'rubocop/rake_task'
-      require 'reek/rake/task' if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
+      PuppetCheck.style_check = true
       PuppetCheck.new.run(Dir.glob('*'))
     end
   end

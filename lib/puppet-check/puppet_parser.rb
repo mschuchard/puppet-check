@@ -18,7 +18,7 @@ class PuppetParser
       Puppet::Face[:parser, :current].validate(file)
     # this is the actual error that we need to rescue Puppet::Face from
     rescue SystemExit
-      return PuppetCheck.error_files.push("-- #{file}: #{errors.map(&:to_s).join("\n").gsub("#{file}:", '')}")
+      return PuppetCheck.error_files.push("-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
       # TODO: RC rescue warnings and dump in style array
     end
     Puppet::Util::Log.close_all
@@ -42,8 +42,8 @@ class PuppetParser
 
       # catalog the warnings
       if puppet_lint.warnings?
-        warning = "-- #{file}: "
-        puppet_lint.problems.each { |values| warning += "#{values[:message]} at line #{values[:line]}, column #{values[:column]}\n" }
+        warning = "-- #{file}:"
+        puppet_lint.problems.each { |values| warning += "\n#{values[:message]} at line #{values[:line]}, column #{values[:column]}" }
         return PuppetCheck.warning_files.push(warning)
       end
     end
@@ -62,7 +62,7 @@ class PuppetParser
       # credits to gds-operations/puppet-syntax for the parser function call
       Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
     rescue StandardError => err
-      PuppetCheck.error_files.push("-- #{file}: #{err.to_s.gsub("#{file}:", '')}")
+      PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("#{file}:", '')}")
       # TODO: RC rescue warnings and dump in style array
     else
       PuppetCheck.clean_files.push("-- #{file}")

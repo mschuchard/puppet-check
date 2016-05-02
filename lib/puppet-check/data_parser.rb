@@ -10,10 +10,10 @@ class DataParser
     begin
       parsed = YAML.load_file(file)
     rescue StandardError => err
-      PuppetCheck.error_files.push("-- #{err}")
+      PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
     else
       warnings = hiera(parsed)
-      return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
+      return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
       PuppetCheck.clean_files.push("-- #{file}")
     end
   end
@@ -26,7 +26,7 @@ class DataParser
     begin
       parsed = JSON.parse(File.read(file))
     rescue JSON::ParserError => err
-      PuppetCheck.error_files.push("-- #{file}: #{err.to_s.lines.first}")
+      PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.lines.first.strip}")
     else
       # check metadata.json
       if file =~ /.*metadata\.json$/
@@ -60,20 +60,20 @@ class DataParser
         # check for summary under 144 character
         errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
 
-        return PuppetCheck.error_files.push("-- #{file}: #{errors.join("\n")}") unless errors.empty?
+        return PuppetCheck.error_files.push("-- #{file}:\n#{errors.join("\n")}") unless errors.empty?
 
         # check for warnings
         warnings = []
 
         # check for spdx license
         if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] != 'proprietary'
-          warnings.push("License identifier #{parsed['license']} is not in the SPDX list: http://spdx.org/licenses/")
+          warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
         end
 
-        return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
+        return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
       else
         warnings = hiera(parsed)
-        return PuppetCheck.warning_files.push("-- #{file}: #{warnings.join("\n")}") unless warnings.empty?
+        return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
       end
       PuppetCheck.clean_files.push("-- #{file}")
     end

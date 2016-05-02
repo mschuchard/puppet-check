@@ -13,7 +13,7 @@ describe RubyParser do
   context '.ruby' do
     it 'puts a bad syntax ruby file in the error files array' do
       RubyParser.ruby(fixtures_dir + 'lib/syntax.rb')
-      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/syntax.rb:.*syntax error})
+      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/syntax.rb:\n.*syntax error})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
@@ -22,7 +22,7 @@ describe RubyParser do
         PuppetCheck.style_check = true
         RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
-        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*is a writable attribute})
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:\n.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*is a writable attribute})
         expect(PuppetCheck.clean_files).to eql([])
       end
     else
@@ -30,7 +30,7 @@ describe RubyParser do
         PuppetCheck.style_check = true
         RubyParser.ruby(fixtures_dir + 'lib/style.rb')
         expect(PuppetCheck.error_files).to eql([])
-        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single})
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:\n.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single})
         expect(PuppetCheck.clean_files).to eql([])
       end
     end
@@ -54,7 +54,7 @@ describe RubyParser do
   context '.template' do
     it 'puts a bad syntax ruby template file in the error files array' do
       RubyParser.template(fixtures_dir + 'templates/syntax.erb')
-      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/syntax.erb:.*syntax error, unexpected tIDENTIFIER})
+      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/syntax.erb:\n.*syntax error, unexpected tIDENTIFIER})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
@@ -75,7 +75,7 @@ describe RubyParser do
   context '.librarian' do
     it 'puts a bad syntax librarian Puppet file in the error files array' do
       RubyParser.librarian(fixtures_dir + 'librarian_syntax/Puppetfile')
-      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_syntax/Puppetfile:.*syntax error})
+      expect(PuppetCheck.error_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_syntax/Puppetfile:\n.*syntax error})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
@@ -83,7 +83,7 @@ describe RubyParser do
       PuppetCheck.style_check = true
       RubyParser.librarian(fixtures_dir + 'librarian_style/Puppetfile')
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_style/Puppetfile:.*Align the parameters.*\n.*Use the new})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}librarian_style/Puppetfile:\n.*Align the parameters.*\n.*Use the new})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style librarian Puppet file in the clean files array when rubocop_args ignores its warnings' do
