@@ -1,5 +1,3 @@
-# TODO: RC rearrange the init and run methods with each other
-
 require_relative 'puppet-check/puppet_parser'
 require_relative 'puppet-check/ruby_parser'
 require_relative 'puppet-check/data_parser'
@@ -43,15 +41,8 @@ class PuppetCheck
     files = parse_paths(paths)
     sort_input_files(files)
 
-    # pass the categorized files out to the parsers to determine their status
-    # TODO: RC pass the arrays of files to each method instead of each file individually
-    @puppet_manifests.each { |manifest| PuppetParser.manifest(manifest) }
-    @puppet_templates.each { |template| PuppetParser.template(template) }
-    @ruby_rubies.each { |ruby| RubyParser.ruby(ruby) }
-    @ruby_templates.each { |template| RubyParser.template(template) }
-    @data_yamls.each { |yaml| DataParser.yaml(yaml) }
-    @data_jsons.each { |json| DataParser.json(json) }
-    @ruby_librarians.each { |librarian| RubyParser.librarian(librarian) }
+    # parse the files
+    execute_parsers
 
     # output the diagnostic results
     self.class.output_results
@@ -90,6 +81,17 @@ class PuppetCheck
       else self.class.ignored_files.push("-- #{input_file}")
       end
     end
+  end
+
+  # pass the categorized files out to the parsers to determine their status
+  def execute_parsers
+    PuppetParser.manifest(@puppet_manifests)
+    PuppetParser.template(@puppet_templates)
+    RubyParser.ruby(@ruby_rubies)
+    RubyParser.template(@ruby_templates)
+    DataParser.yaml(@data_yamls)
+    DataParser.json(@data_jsons)
+    RubyParser.librarian(@ruby_librarians)
   end
 
   # output the results for the files that were requested to be checked

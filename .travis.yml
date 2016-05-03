@@ -1,5 +1,4 @@
 # TODO: RC reek and rubocop checks should be 2.1.x only
-# TODO: RC setup travisci plugin
 
 sudo: false
 cache: bundler

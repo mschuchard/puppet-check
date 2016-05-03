@@ -16,10 +16,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rubocop', '~> 0'
   spec.add_dependency 'rake', '>= 9', '< 13' # becomes standard in later versions of ruby
   # spec.add_dependency 'rspec', '~> 3.0'
-  spec.add_runtime_dependency 'puppet', '>= 3.2', '< 5'
-  spec.add_runtime_dependency 'puppet-lint', '~> 1.1'
-  # spec.add_runtime_dependency 'rspec-puppet', '~> 2.0'
-  # spec.add_runtime_dependency 'beaker.' '~> 2.0'
-  spec.add_runtime_dependency 'spdx-licenses', '~> 0'
+  spec.add_dependency 'puppet', '>= 3.2', '< 5'
+  spec.add_dependency 'puppet-lint', '~> 1.1'
+  # spec.add_dependency 'rspec-puppet', '~> 2.0'
+  # spec.add_dependency 'beaker.' '~> 2.0'
+  spec.add_dependency 'spdx-licenses', '~> 0'
   spec.add_development_dependency 'rspec', '~> 3.0'
 end
