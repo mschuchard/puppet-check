@@ -1,5 +1,13 @@
+### 1.3.0 (Roadmap)
+- minimum puppet version bump to 3.5 and future parser enabled by force for version < 4
+- minimum ruby version bump to 2.0.0 (remove rake from specified deps and switch vagrant and docker to centos7)
+
+### 1.2.0 (Roadmap)
+- json and yaml output formats support
+- beaker as optional task
+
 ### 1.1.0 (Roadmap)
-- rspec, rspec puppet, and beaker as optional tasks
+- rspec and rspec puppet as optional tasks
 - add additional hiera checks, including nested hash parsing
 
 ### 1.0.0 (Roadmap)

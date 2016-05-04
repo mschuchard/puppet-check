@@ -19,7 +19,7 @@ class PuppetParser
         Puppet::Face[:parser, :current].validate(file)
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
-        return PuppetCheck.error_files.push("-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
+        next PuppetCheck.error_files.push("-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
         # TODO: RC rescue warnings and dump in style array
       end
       Puppet::Util::Log.close_all
@@ -45,7 +45,7 @@ class PuppetParser
         if puppet_lint.warnings?
           warning = "-- #{file}:"
           puppet_lint.problems.each { |values| warning += "\n#{values[:message]} at line #{values[:line]}, column #{values[:column]}" }
-          return PuppetCheck.warning_files.push(warning)
+          next PuppetCheck.warning_files.push(warning)
         end
       end
       PuppetCheck.clean_files.push("-- #{file}")
@@ -58,7 +58,7 @@ class PuppetParser
 
     files.each do |file|
       # puppet before version 4 cannot check template syntax
-      return PuppetCheck.ignored_files.push("-- #{file}: ignored due to Puppet Agent < 4.0.0") if Puppet::PUPPETVERSION.to_i < 4
+      next PuppetCheck.ignored_files.push("-- #{file}: ignored due to Puppet Agent < 4.0.0") if Puppet::PUPPETVERSION.to_i < 4
 
       # check puppet template syntax
       begin

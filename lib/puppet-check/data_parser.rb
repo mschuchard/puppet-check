@@ -14,7 +14,7 @@ class DataParser
         PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
         warnings = hiera(parsed)
-        return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+        next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.clean_files.push("-- #{file}")
       end
     end
@@ -63,7 +63,7 @@ class DataParser
           # check for summary under 144 character
           errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
 
-          return PuppetCheck.error_files.push("-- #{file}:\n#{errors.join("\n")}") unless errors.empty?
+          next PuppetCheck.error_files.push("-- #{file}:\n#{errors.join("\n")}") unless errors.empty?
 
           # check for warnings
           warnings = []
@@ -73,11 +73,11 @@ class DataParser
             warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
           end
 
-          return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+          next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         else
           # check for questionable hieradata
           warnings = hiera(parsed)
-          return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+          next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         end
         PuppetCheck.clean_files.push("-- #{file}")
       end

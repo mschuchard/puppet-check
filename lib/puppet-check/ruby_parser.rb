@@ -24,11 +24,11 @@ class RubyParser
             require 'reek'
             require 'reek/cli/application'
             reek_warnings = capture_stdout { Reek::CLI::Application.new([file]).execute }
-            warnings += reek_warnings.split("\n")[1..-1].join("\n").strip unless reek_warnings == ''
+            warnings += reek_warnings.split("\n")[1..-1].join('').strip unless reek_warnings == ''
           end
 
           # return warnings
-          return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.strip}") unless warnings == ''
+          next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.strip}") unless warnings == ''
         end
         PuppetCheck.clean_files.push("-- #{file}")
       end
@@ -42,13 +42,15 @@ class RubyParser
     files.each do |file|
       # check ruby template syntax
       begin
-        ERB.new(File.read(file), nil, '-').result
+        # TODO: RC erb is loading each template onto the old here it seems
+        warnings = capture_stderr { ERB.new(File.read(file), nil, '-').result }
       # credits to gds-operations/puppet-syntax for errors to ignore
       rescue NameError, TypeError
-      rescue ScriptError, StandardError => err
-        return PuppetCheck.error_files.push("-- #{file}:\n#{err}")
-        # TODO: RC rescue warnings and dump in style array
+      rescue ScriptError => err
+        next PuppetCheck.error_files.push("-- #{file}:\n#{err}")
       end
+      # return warnings from the check if there were any
+      next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join('').strip}") unless warnings == ''
       PuppetCheck.clean_files.push("-- #{file}")
     end
   end
@@ -60,7 +62,7 @@ class RubyParser
         # check librarian puppet syntax
         catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}") }
       rescue SyntaxError, LoadError, ArgumentError => err
-        return PuppetCheck.error_files.push("-- #{file}:\n#{err}")
+        PuppetCheck.error_files.push("-- #{file}:\n#{err}")
       else
         # check librarian puppet style
         if PuppetCheck.style_check
@@ -73,7 +75,7 @@ class RubyParser
           warnings = capture_stdout { RuboCop::CLI.new.run(rubocop_args + ['--format', 'emacs', file]) }
 
           # catalog style warnings
-          return PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
+          next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
         end
         PuppetCheck.clean_files.push("-- #{file}")
       end
@@ -81,11 +83,22 @@ class RubyParser
   end
 end
 
+# utility function to capture stdout
 def capture_stdout
   old_stdout = $stdout
-  $stdout = StringIO.new('', 'w')
+  $stdout = StringIO.new
   yield
   $stdout.string
 ensure
   $stdout = old_stdout
+end
+
+# utility function to capture stderr
+def capture_stderr
+  old_stderr = $stderr
+  $stderr = StringIO.new
+  yield
+  $stderr.string
+ensure
+  $stderr = old_stderr
 end

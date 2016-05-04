@@ -61,8 +61,8 @@ describe RubyParser do
     it 'puts a bad style ruby template file in the warning files array' do
       RubyParser.template([fixtures_dir + 'templates/style.erb'])
       expect(PuppetCheck.error_files).to eql([])
-      # expect(PuppetCheck.warning_files)[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:})
-      # expect(PuppetCheck.clean_files)).to eql([])
+      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:\n.*already initialized constant.*\n.*previous definition of})
+      expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a good ruby template file in the clean files array' do
       RubyParser.template([fixtures_dir + 'templates/good.erb'])

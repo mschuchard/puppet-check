@@ -60,6 +60,10 @@ indentation of => is not properly aligned at line 2, column 5
 3:6: C: Prefer single-quoted strings when you don't need string interpolation or special symbols.
 [7]:Attribute: Issue#foobarbaz is a writable attribute [https://github.com/troessner/reek/blob/master/docs/Attribute.md]
 
+-- templates/style.erb:
+2: already initialized constant TEMPLATE
+3: previous definition of TEMPLATE was here
+
 -- hieradata/style.yaml:
 Values missing in key 'value'.
 
@@ -74,7 +78,6 @@ The following files have no errors or warnings:
 -- manifests/good.pp
 -- templates/good.epp
 -- lib/good.rb
--- templates/style.erb
 -- templates/good.erb
 -- hieradata/good.yaml
 -- hieradata/good.json
@@ -119,7 +122,7 @@ rake puppetcheck:syntax    # Execute Puppet-Check syntax checks
 The style checks from within `rake` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. The capability to pass arguments and options to them from within the `Rakefile` task block will be considered for future versions.
 
 ### Optional Checks
-`reek` checks will automatically be enabled for style checks if your Ruby version is `>= 2.1`. `rspec`, `rspec-puppet`, and `beaker` are other forthcoming optional checks.
+`reek` will automatically be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1`. `rspec`, `rspec-puppet`, and `beaker` are forthcoming purely optional dependency checks.
 
 ## Contributing
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit. While the version is currently tagged as `< 1.0.0`, please consult the `CHANGELOG` for the current development roadmap and contributing guidelines.

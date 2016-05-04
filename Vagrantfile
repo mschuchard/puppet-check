@@ -67,9 +67,10 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision 'shell', inline: <<-SHELL
-    sudo cd /vagrant
+    cd /vagrant
+    sudo apt-get install git -y
     sudo gem build puppet-check.gemspec
-    sudo gem install puppet-check*.gem
-    sudo /usr/local/bin/puppet-check spec/fixtures
+    sudo gem install --no-rdoc --no-ri puppet-check*.gem
+    sudo /usr/local/bin/puppet-check -s spec/fixtures
   SHELL
 end
