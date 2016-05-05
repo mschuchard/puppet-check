@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = Gem::Requirement.new('>= 1.9.3')
   spec.add_dependency 'rubocop', '~> 0'
-  spec.add_dependency 'rake', '>= 9', '< 13' # becomes standard in later versions of ruby
+  spec.add_dependency 'rake', '>= 9', '< 13'
   # spec.add_dependency 'rspec', '~> 3.0'
   spec.add_dependency 'puppet', '>= 3.2', '< 5'
   spec.add_dependency 'puppet-lint', '~> 1.1'

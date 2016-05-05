@@ -23,26 +23,13 @@ class PuppetCheck
     attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
 
-  # TODO: RC find a way to completely remove need for initialize and these vars
-  def initialize
-    # initialize file type arrays
-    @puppet_manifests = []
-    @puppet_templates = []
-    @ruby_rubies = []
-    @ruby_templates = []
-    @data_yamls = []
-    @data_jsons = []
-    @ruby_librarians = []
-  end
-
   # main runner for PuppetCheck
   def run(paths)
-    # grab all of the files to be processed and categorize them
+    # grab all of the files to be processed
     files = parse_paths(paths)
-    sort_input_files(files)
 
     # parse the files
-    execute_parsers
+    execute_parsers(files)
 
     # output the diagnostic results
     self.class.output_results
@@ -67,31 +54,23 @@ class PuppetCheck
     files.uniq
   end
 
-  # sorts the files to be processed and returns them in categorized arrays
-  def sort_input_files(input_files)
-    input_files.each do |input_file|
-      case input_file
-      when /.*\.pp$/ then @puppet_manifests.push(input_file)
-      when /.*\.epp$/ then @puppet_templates.push(input_file)
-      when /.*\.rb$/ then @ruby_rubies.push(input_file)
-      when /.*\.erb$/ then @ruby_templates.push(input_file)
-      when /.*\.ya?ml$/ then @data_yamls.push(input_file)
-      when /.*\.json$/ then @data_jsons.push(input_file)
-      when /.*Puppetfile$/, /.*Modulefile$/ then @ruby_librarians.push(input_file)
-      else self.class.ignored_files.push("-- #{input_file}")
-      end
-    end
-  end
-
-  # pass the categorized files out to the parsers to determine their status
-  def execute_parsers
-    PuppetParser.manifest(@puppet_manifests)
-    PuppetParser.template(@puppet_templates)
-    RubyParser.ruby(@ruby_rubies)
-    RubyParser.template(@ruby_templates)
-    DataParser.yaml(@data_yamls)
-    DataParser.json(@data_jsons)
-    RubyParser.librarian(@ruby_librarians)
+  # categorize and pass the files out to the parsers to determine their status
+  def execute_parsers(files)
+    PuppetParser.manifest(files.select { |file| file =~ /.*\.pp$/ })
+    files.reject! { |file| file =~ /.*\.pp$/ }
+    PuppetParser.template(files.select { |file| file =~ /.*\.epp$/ })
+    files.reject! { |file| file =~ /.*\.epp$/ }
+    RubyParser.ruby(files.select { |file| file =~ /.*\.rb$/ })
+    files.reject! { |file| file =~ /.*\.rb$/ }
+    RubyParser.template(files.select { |file| file =~ /.*\.erb$/ })
+    files.reject! { |file| file =~ /.*\.erb$/ }
+    DataParser.yaml(files.select { |file| file =~ /.*\.ya?ml$/ })
+    files.reject! { |file| file =~ /.*\.ya?ml$/ }
+    DataParser.json(files.select { |file| file =~ /.*\.json$/ })
+    files.reject! { |file| file =~ /.*\.json$/ }
+    RubyParser.librarian(files.select { |file| file =~ /.*(Puppetfile|Modulefile)$/ })
+    files.reject! { |file| file =~ /.*(Puppetfile|Modulefile)$/ }
+    files.each { |file| self.class.ignored_files.push("-- #{file}") }
   end
 
   # output the results for the files that were requested to be checked

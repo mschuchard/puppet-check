@@ -1,15 +1,21 @@
-# TODO: RC reek and rubocop checks should be 2.1.x only
-
 sudo: false
-cache: bundler
-language: ruby
+notifications:
+  email: false
 
-rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.9
-  - 2.2.5
+language: ruby
+cache: bundler
+
+matrix:
+  include:
+    - rvm: 1.9.3
+      env: TEST=spec
+    - rvm: 2.0.0
+      env: TEST=spec
+    - rvm: 2.1.9
+      env: TEST=default
+    - rvm: 2.2.5
+      env: TEST=spec
 
 before_install: gem update bundler
 install: bundle install --retry=3
-script: bundle exec rake spec
+script: bundle exec rake $TEST

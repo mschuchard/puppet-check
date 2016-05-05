@@ -61,8 +61,8 @@ indentation of => is not properly aligned at line 2, column 5
 [7]:Attribute: Issue#foobarbaz is a writable attribute [https://github.com/troessner/reek/blob/master/docs/Attribute.md]
 
 -- templates/style.erb:
-2: already initialized constant TEMPLATE
-3: previous definition of TEMPLATE was here
+3: already initialized constant TEMPLATE
+2: previous definition of TEMPLATE was here
 
 -- hieradata/style.yaml:
 Values missing in key 'value'.
@@ -89,7 +89,7 @@ The following files were unrecognized formats and therefore not processed:
 ```
 
 ### Why not Puppetlabs Spec Helper?
-- Puppetlabs Spec Helper is a larger and varied gem with a different emphasis for its features.  Puppet Check is a lean and efficient gem solely for comprehensive Puppet catalog validation.
+- Puppetlabs Spec Helper is a larger and varied gem with a different overall emphasis for its features.  Puppet Check is a lean and efficient gem solely for comprehensive Puppet catalog validation.
 - Puppetlabs Spec Helper performs fewer types of checks.
 - Puppetlabs Spec Helper has extra layers of gems in between it and the gems executing the checks.
 - Puppetlabs Spec Helper does not allow interfacing through it to the gems executing the checks.
@@ -125,4 +125,8 @@ The style checks from within `rake` are directly interfaced to `puppet-lint`, `r
 `reek` will automatically be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1`. `rspec`, `rspec-puppet`, and `beaker` are forthcoming purely optional dependency checks.
 
 ## Contributing
-Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit. While the version is currently tagged as `< 1.0.0`, please consult the `CHANGELOG` for the current development roadmap and contributing guidelines.
+Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
+
+A `Dockerfile` is provided for easy `rake` testing. A `Vagrantfile` is provided for easy gem building, installation, and post-installation testing.
+
+Please consult the `CHANGELOG` for the current development roadmap.

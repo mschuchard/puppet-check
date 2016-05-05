@@ -54,21 +54,6 @@ describe PuppetCheck do
     end
   end
 
-  context '.sort_input_files' do
-    it 'correctly sorts an array of files to be checked' do
-      PuppetCheck.ignored_files = []
-      puppetcheck.sort_input_files(%w(puppet.pp puppet_template.epp ruby.rb ruby_template.erb yaml.yaml yaml.yml json.json Puppetfile Modulefile foobarbaz))
-      expect(puppetcheck.instance_variable_get(:@puppet_manifests)).to eql(['puppet.pp'])
-      expect(puppetcheck.instance_variable_get(:@puppet_templates)).to eql(['puppet_template.epp'])
-      expect(puppetcheck.instance_variable_get(:@ruby_rubies)).to eql(['ruby.rb'])
-      expect(puppetcheck.instance_variable_get(:@ruby_templates)).to eql(['ruby_template.erb'])
-      expect(puppetcheck.instance_variable_get(:@data_yamls)).to eql(['yaml.yaml', 'yaml.yml'])
-      expect(puppetcheck.instance_variable_get(:@data_jsons)).to eql(['json.json'])
-      expect(puppetcheck.instance_variable_get(:@ruby_librarians)).to eql(%w(Puppetfile Modulefile))
-      expect(PuppetCheck.ignored_files).to eql(['-- foobarbaz'])
-    end
-  end
-
   context '.output_results' do
     before(:each) do
       PuppetCheck.error_files = []
