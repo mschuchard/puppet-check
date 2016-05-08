@@ -1,4 +1,4 @@
 notify { 'i am':
   a => "manifest",
-  with => 'bad style',
+  with => 'bad lint style',
 }

@@ -1,6 +1,6 @@
 ### 1.3.0 (Roadmap)
 - minimum puppet version bump to 3.5 and future parser enabled by force for version < 4 (search code on 'future')
-- minimum ruby version bump to 2.0.0 (remove rake from specified deps in gemspec and docker, switch vagrant and docker to centos7, remove 1.9.3 from travis.yml, add 2.3.x to travis.yml, update readme, remove psych::syntaxerror from dataparser.yaml, and remove | already initialized constant from rubyparser.template style spec)
+- minimum ruby version bump to 2.0.0 (switch vagrant to centos7, remove 1.9.3 from travis.yml, add 2.3.x to travis.yml, update readme, remove psych::syntaxerror from dataparser.yaml, and remove | already initialized constant from rubyparser.template style spec)
 
 ### 1.2.0 (Roadmap)
 - json and yaml output formats support

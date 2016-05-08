@@ -1,4 +1,5 @@
 # Puppet Check
+[![Build Status](https://travis-ci.org/mschuchard/puppet-check.svg?branch=master)](https://travis-ci.org/mschuchard/puppet-check)
 
 ## Description
 Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verification and validation of your Puppet catalogs.
@@ -49,9 +50,14 @@ Summary exceeds 144 characters.
               ^
 
 The following files have warnings:
--- manifests/style.pp:
+-- manifests/style_lint.pp:
 double quoted string containing no variables at line 2, column 8
 indentation of => is not properly aligned at line 2, column 5
+
+-- manifests/style_parser.pp:
+Unrecognized escape sequence '\[' at 2:77
+Unrecognized escape sequence '\]' at 2:77
+double quoted string containing no variables at line 2, column 45
 
 -- lib/style.rb:
 1:1: W: Useless assignment to variable - `hash`.

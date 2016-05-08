@@ -13,10 +13,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = Dir['lib']
 
   spec.required_ruby_version = Gem::Requirement.new('>= 1.9.3')
-  spec.add_dependency 'rubocop', '~> 0'
-  spec.add_dependency 'rake', '>= 9', '< 13'
-  # spec.add_dependency 'rspec', '~> 3.0'
   spec.add_dependency 'puppet', '>= 3.2', '< 5'
+  # spec.add_dependency 'rspec', '~> 3.0'
+  spec.add_dependency 'rake', '>= 9', '< 13'
+  spec.add_dependency 'rubocop', '~> 0'
   spec.add_dependency 'puppet-lint', '~> 1.1'
   # spec.add_dependency 'rspec-puppet', '~> 2.0'
   # spec.add_dependency 'beaker.' '~> 2.0'

@@ -68,8 +68,8 @@ class DataParser
           # check for warnings
           warnings = []
 
-          # check for spdx license
-          if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] != 'proprietary'
+          # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
+          if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
             warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
           end
 
