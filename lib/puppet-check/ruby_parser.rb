@@ -24,7 +24,7 @@ class RubyParser
             require 'reek'
             require 'reek/cli/application'
             reek_warnings = capture_stdout { Reek::CLI::Application.new([file]).execute }
-            warnings += reek_warnings.split("\n")[1..-1].join('').strip unless reek_warnings == ''
+            warnings += reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
           end
 
           # return warnings
@@ -42,7 +42,8 @@ class RubyParser
     files.each do |file|
       # check ruby template syntax
       begin
-        # TODO: RC erb is loading each template onto the old here it seems
+        # need to eventually have this associated with a different binding during each iteration
+        # warnings = capture_stderr { ERB.new(File.read(file), nil, '-').result(RubyParser.new.get_binding) }
         warnings = capture_stderr { ERB.new(File.read(file), nil, '-').result }
       # credits to gds-operations/puppet-syntax for errors to ignore
       rescue NameError, TypeError
@@ -81,6 +82,11 @@ class RubyParser
       end
     end
   end
+
+  # potentially for unique erb bindings
+  # def get_binding
+    # binding
+  # end
 end
 
 # utility function to capture stdout

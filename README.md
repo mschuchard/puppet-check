@@ -11,7 +11,6 @@ Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verifi
 ![New](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_new.png)
 
 ### Example Output
-
 ```
 The following files have errors:
 -- manifests/syntax.pp:
@@ -65,6 +64,7 @@ double quoted string containing no variables at line 2, column 45
 2:1: C: Do not introduce global variables.
 3:6: C: Prefer single-quoted strings when you don't need string interpolation or special symbols.
 [7]:Attribute: Issue#foobarbaz is a writable attribute [https://github.com/troessner/reek/blob/master/docs/Attribute.md]
+[6]:IrresponsibleModule: Issue has no descriptive comment [https://github.com/troessner/reek/blob/master/docs/Irresponsible-Module.md]
 
 -- templates/style.erb:
 3: already initialized constant TEMPLATE
@@ -90,7 +90,7 @@ The following files have no errors or warnings:
 -- metadata_good/metadata.json
 -- librarian_good/Puppetfile
 
-The following files were unrecognized formats and therefore not processed:
+The following files have unrecognized formats and therefore were not processed:
 -- foobarbaz
 ```
 
@@ -113,18 +113,28 @@ usage: puppet-check [options] paths
                                      Arguments for PuppetLint ignored checks
         --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
 ```
+
 The command line interface enables the ability to select the Puppet future parser, additional style checks besides the syntax checks, and to specify PuppetLint and Rubocop checks to ignore. It should be noted that your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek` files should still be automatically respected by the individual style checkers if you prefer those to a simplified CLI.
+
 ```
 Example:
 puppet-check -s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/puppet_catalog
 ```
 
 ### Rake
-Interfacing with Puppet-Check via `rake` requires a `require puppet-check/tasks` in your Rakefile. This generates two `rake` commands:
+Interfacing with Puppet-Check via `rake` requires a `require puppet-check/tasks` in your Rakefile. This generates the following `rake` command:
+
 ```
-rake puppetcheck:all       # Execute Puppet-Check syntax and style checks
-rake puppetcheck:syntax    # Execute Puppet-Check syntax checks
+rake puppetcheck:file      # Execute Puppet-Check file checks
 ```
+
+You can add style checks to and select the future parser for the `rake` by adding the following after the require:
+
+```ruby
+PuppetCheck.style_check = true
+PuppetCheck.future_parser = true
+```
+
 The style checks from within `rake` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. The capability to pass arguments and options to them from within the `Rakefile` task block will be considered for future versions.
 
 ### Optional Checks

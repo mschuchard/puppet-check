@@ -78,6 +78,6 @@ class PuppetCheck
     puts "\033[31mThe following files have errors:\033[0m", error_files.join("\n\n") unless error_files.empty?
     puts "\n\033[33mThe following files have warnings:\033[0m", warning_files.join("\n\n") unless warning_files.empty?
     puts "\n\033[32mThe following files have no errors or warnings:\033[0m", clean_files unless clean_files.empty?
-    puts "\n\033[34mThe following files were unrecognized formats and therefore not processed:\033[0m", ignored_files unless ignored_files.empty?
+    puts "\n\033[34mThe following files have unrecognized formats and therefore were not processed:\033[0m", ignored_files unless ignored_files.empty?
   end
 end

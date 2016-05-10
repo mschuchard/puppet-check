@@ -22,7 +22,7 @@ describe RubyParser do
         PuppetCheck.style_check = true
         RubyParser.ruby([fixtures_dir + 'lib/style.rb'])
         expect(PuppetCheck.error_files).to eql([])
-        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:\n.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*is a writable attribute})
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}lib/style.rb:\n.*Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*is a writable attribute.*\n.*Issue has no descriptive comment})
         expect(PuppetCheck.clean_files).to eql([])
       end
     else

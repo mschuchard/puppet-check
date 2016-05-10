@@ -24,11 +24,11 @@ describe 'PuppetCheck' do
       PuppetCheck.warning_files = []
       PuppetCheck.clean_files = []
       PuppetCheck.ignored_files = []
-      PuppetCheck.style_check = false
+      PuppetCheck.style_check = true
     end
 
     it 'outputs diagnostic results correctly after processing all of the files' do
-      expect { Rake::Task['puppetcheck:all'].invoke }.not_to raise_exception
+      expect { Rake::Task['puppetcheck:file'].invoke }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
       expect(PuppetCheck.clean_files.length).to eql(8)

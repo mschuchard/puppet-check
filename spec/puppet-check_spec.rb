@@ -76,7 +76,7 @@ describe PuppetCheck do
     end
     it 'outputs files that were not processed' do
       PuppetCheck.ignored_files = ['-- foo: who knows what i am']
-      expect { PuppetCheck.output_results }.to output("\n\033[34mThe following files were unrecognized formats and therefore not processed:\033[0m\n-- foo: who knows what i am\n").to_stdout
+      expect { PuppetCheck.output_results }.to output("\n\033[34mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo: who knows what i am\n").to_stdout
     end
   end
 end
