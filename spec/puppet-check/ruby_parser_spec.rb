@@ -64,6 +64,12 @@ describe RubyParser do
       expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:\n.*already initialized constant.*\n.*(previous definition of|already initialized constant)})
       expect(PuppetCheck.clean_files).to eql([])
     end
+    it 'puts a ruby template file with ignored errors in the clean files array' do
+      RubyParser.template([fixtures_dir + 'templates/no_method_error.erb'])
+      expect(PuppetCheck.error_files).to eql([])
+      expect(PuppetCheck.warning_files).to eql([])
+      expect(PuppetCheck.clean_files).to eql(["-- #{fixtures_dir}templates/no_method_error.erb"])
+    end
     it 'puts a good ruby template file in the clean files array' do
       RubyParser.template([fixtures_dir + 'templates/good.erb'])
       expect(PuppetCheck.error_files).to eql([])

@@ -1,8 +1,9 @@
 require_relative '../puppet-check'
+require_relative 'utils'
 
 # executes diagnostics on ruby files
 class RubyParser
-  # checks ruby syntax and style (.rb)
+  # checks ruby (.rb)
   def self.ruby(files)
     files.each do |file|
       # check ruby syntax
@@ -16,14 +17,14 @@ class RubyParser
           require 'rubocop'
 
           # check RuboCop and catalog warnings
-          rubocop_warnings = capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
+          rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
           warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
           # check Reek
           if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
             require 'reek'
             require 'reek/cli/application'
-            reek_warnings = capture_stdout { Reek::CLI::Application.new([file]).execute }
+            reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
             warnings += reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
           end
 
@@ -35,7 +36,7 @@ class RubyParser
     end
   end
 
-  # checks ruby template syntax (.erb)
+  # checks ruby template (.erb)
   def self.template(files)
     require 'erb'
 
@@ -43,10 +44,12 @@ class RubyParser
       # check ruby template syntax
       begin
         # need to eventually have this associated with a different binding during each iteration
-        # warnings = capture_stderr { ERB.new(File.read(file), nil, '-').result(RubyParser.new.get_binding) }
-        warnings = capture_stderr { ERB.new(File.read(file), nil, '-').result }
+        # warnings = Util.capture_stderr { ERB.new(File.read(file), nil, '-').result(RubyParser.new.binding) }
+        warnings = Utils.capture_stderr { ERB.new(File.read(file), nil, '-').result }
       # credits to gds-operations/puppet-syntax for errors to ignore
       rescue NameError, TypeError
+        # empty out warnings since it would contain an error if this pass triggers
+        warnings = ''
       rescue ScriptError => err
         next PuppetCheck.error_files.push("-- #{file}:\n#{err}")
       end
@@ -56,7 +59,7 @@ class RubyParser
     end
   end
 
-  # checks librarian puppet syntax (Puppetfile/Modulefile)
+  # checks librarian puppet (Puppetfile/Modulefile) and misc ruby (Rakefile/Gemfile)
   def self.librarian(files)
     files.each do |file|
       begin
@@ -73,7 +76,7 @@ class RubyParser
           rubocop_args = PuppetCheck.rubocop_args.clone
           # RuboCop is confused about the first 'mod' argument in librarian puppet so disable the Style/FileName check
           rubocop_args.include?('--except') ? rubocop_args[rubocop_args.index('--except') + 1] = "#{rubocop_args[rubocop_args.index('--except') + 1]},Style/FileName" : rubocop_args.concat(['--except', 'Style/FileName'])
-          warnings = capture_stdout { RuboCop::CLI.new.run(rubocop_args + ['--format', 'emacs', file]) }
+          warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rubocop_args + ['--format', 'emacs', file]) }
 
           # catalog style warnings
           next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
@@ -84,27 +87,7 @@ class RubyParser
   end
 
   # potentially for unique erb bindings
-  # def get_binding
-    # binding
-  # end
-end
-
-# utility function to capture stdout
-def capture_stdout
-  old_stdout = $stdout
-  $stdout = StringIO.new
-  yield
-  $stdout.string
-ensure
-  $stdout = old_stdout
-end
-
-# utility function to capture stderr
-def capture_stderr
-  old_stderr = $stderr
-  $stderr = StringIO.new
-  yield
-  $stderr.string
-ensure
-  $stderr = old_stderr
+  def binding
+    binding
+  end
 end

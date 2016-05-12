@@ -13,8 +13,5 @@
 ### 1.0.0 (Roadmap)
 - Initial release where changes relative to the Release Candidate will be only bug fixes, cleanup, and optimizations.
 
-### Release Candidate (Roadmap)
+### Release Candidate
 - Ready for wide testing from Github.  Issues or PR related to bugs will be accepted.
-
-### Beta
-- Ready for testing from Github by people building the gem themselves.  Issues related to bugs will be accepted.

@@ -3,14 +3,16 @@ require_relative '../puppet-check'
 
 # executes diagnostics on puppet files
 class PuppetParser
-  # checks puppet syntax and style (.pp)
+  # checks puppet (.pp)
   def self.manifest(files)
     require 'puppet/face'
 
+    # prepare the Puppet settings for the error checking
+    Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
+    Puppet[:parser] = 'future' if PuppetCheck.future_parser && (Puppet::PUPPETVERSION.to_i < 4)
+
     files.each do |file|
-      # prepare the Puppet settings for the error checking
-      Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
-      Puppet[:parser] = 'future' if PuppetCheck.future_parser && (Puppet::PUPPETVERSION.to_i < 4)
+      # setup error logging and collection
       errors = []
       Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(errors))
 
@@ -53,7 +55,7 @@ class PuppetParser
     end
   end
 
-  # checks puppet teplate syntax (.epp)
+  # checks puppet teplate (.epp)
   def self.template(files)
     require 'puppet/pops'
 

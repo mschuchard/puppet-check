@@ -56,20 +56,20 @@ class PuppetCheck
 
   # categorize and pass the files out to the parsers to determine their status
   def execute_parsers(files)
-    PuppetParser.manifest(files.select { |file| file =~ /.*\.pp$/ })
-    files.reject! { |file| file =~ /.*\.pp$/ }
-    PuppetParser.template(files.select { |file| file =~ /.*\.epp$/ })
-    files.reject! { |file| file =~ /.*\.epp$/ }
-    RubyParser.ruby(files.select { |file| file =~ /.*\.rb$/ })
-    files.reject! { |file| file =~ /.*\.rb$/ }
-    RubyParser.template(files.select { |file| file =~ /.*\.erb$/ })
-    files.reject! { |file| file =~ /.*\.erb$/ }
+    PuppetParser.manifest(files.select { |file| File.extname(file) == '.pp' })
+    files.reject! { |file| File.extname(file) == '.pp' }
+    PuppetParser.template(files.select { |file| File.extname(file) == '.epp' })
+    files.reject! { |file| File.extname(file) == '.epp' }
+    RubyParser.ruby(files.select { |file| File.extname(file) == '.rb' })
+    files.reject! { |file| File.extname(file) == '.rb' }
+    RubyParser.template(files.select { |file| File.extname(file) == '.erb' })
+    files.reject! { |file| File.extname(file) == '.erb' }
     DataParser.yaml(files.select { |file| file =~ /.*\.ya?ml$/ })
     files.reject! { |file| file =~ /.*\.ya?ml$/ }
-    DataParser.json(files.select { |file| file =~ /.*\.json$/ })
-    files.reject! { |file| file =~ /.*\.json$/ }
-    RubyParser.librarian(files.select { |file| file =~ /.*(Puppetfile|Modulefile)$/ })
-    files.reject! { |file| file =~ /.*(Puppetfile|Modulefile)$/ }
+    DataParser.json(files.select { |file| File.extname(file) == '.json' })
+    files.reject! { |file| File.extname(file) == '.json' }
+    RubyParser.librarian(files.select { |file| file =~ /.*(Puppet|Module|Rake|Gem)file$/ })
+    files.reject! { |file| file =~ /.*(?:Puppet|Module|Rake|Gem)file$/ }
     files.each { |file| self.class.ignored_files.push("-- #{file}") }
   end
 

@@ -2,7 +2,7 @@ require_relative '../puppet-check'
 
 # executes diagnostics on data files
 class DataParser
-  # checks yaml syntax (.yaml or .yml)
+  # checks yaml (.yaml/.yml)
   def self.yaml(files)
     require 'yaml'
 
@@ -20,7 +20,7 @@ class DataParser
     end
   end
 
-  # checks json syntax (.json)
+  # checks json (.json)
   def self.json(files)
     require 'json'
 

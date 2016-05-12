@@ -11,7 +11,7 @@ describe 'PuppetCheck' do
       expect(cli).to eql(0)
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
-      expect(PuppetCheck.clean_files.length).to eql(8)
+      expect(PuppetCheck.clean_files.length).to eql(9)
       expect(PuppetCheck.ignored_files.length).to eql(1)
     end
   end
@@ -31,7 +31,7 @@ describe 'PuppetCheck' do
       expect { Rake::Task['puppetcheck:file'].invoke }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
-      expect(PuppetCheck.clean_files.length).to eql(8)
+      expect(PuppetCheck.clean_files.length).to eql(9)
       expect(PuppetCheck.ignored_files.length).to eql(1)
     end
   end
