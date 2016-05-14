@@ -8,7 +8,8 @@ describe 'PuppetCheck' do
     let(:cli) { PuppetCheck::CLI.run(%W(-s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding #{fixtures_dir})) }
 
     it 'outputs diagnostic results correctly after processing all of the files' do
-      expect(cli).to eql(0)
+      expect(cli).to eql(1)
+      expect { cli }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
       expect(PuppetCheck.clean_files.length).to eql(9)
@@ -17,7 +18,8 @@ describe 'PuppetCheck' do
   end
 
   context 'executed as a system from the Rakefile with arguments and various files to be processed' do
-    # let(:tasks) { PuppetCheck::Tasks.new }
+    let(:tasks) { Rake::Task['puppetcheck:file'].invoke }
+
     before(:each) do
       FileUtils.cd fixtures_dir
       PuppetCheck.error_files = []
@@ -28,7 +30,8 @@ describe 'PuppetCheck' do
     end
 
     it 'outputs diagnostic results correctly after processing all of the files' do
-      expect { Rake::Task['puppetcheck:file'].invoke }.not_to raise_exception
+      expect(tasks).to eql(1)
+      expect { tasks }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
       expect(PuppetCheck.clean_files.length).to eql(9)

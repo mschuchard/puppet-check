@@ -45,7 +45,7 @@ class PuppetParser
         puppet_lint.file = file
         puppet_lint.run
 
-        # catalog the warnings
+        # collect the warnings
         if puppet_lint.warnings?
           puppet_lint.problems.each { |values| warnings += "\n#{values[:message]} at line #{values[:line]}, column #{values[:column]}" }
         end
@@ -55,7 +55,7 @@ class PuppetParser
     end
   end
 
-  # checks puppet teplate (.epp)
+  # checks puppet template (.epp)
   def self.template(files)
     require 'puppet/pops'
 

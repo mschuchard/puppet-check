@@ -1,9 +1,9 @@
 Gem::Specification.new do |spec|
   spec.name          = 'puppet-check'
-  spec.version       = '0.9.0'
+  spec.version       = '1.0.0'
   spec.authors       = ['Matt Schuchard']
-  spec.description   = 'Puppet Check is a gem that provides a comprehensive, streamlined, and efficient analysis of the syntax, style, and validity of your entire Puppet catalog.'
-  spec.summary       = 'A streamlined comprehensive set of checks for your entire Puppet catalog'
+  spec.description   = 'Puppet Check is a gem that provides a comprehensive, streamlined, and efficient analysis of the syntax, style, and validity of your entire Puppet code and data.'
+  spec.summary       = 'A streamlined comprehensive set of checks for your entire Puppet code and data'
   spec.homepage      = 'https://www.github.com/mschuchard/puppet-check'
   spec.license       = 'MIT'
 

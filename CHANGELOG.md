@@ -10,8 +10,5 @@
 - rspec and rspec puppet as optional tasks
 - add additional hiera checks, including nested hash parsing
 
-### 1.0.0 (Roadmap)
-- Initial release where changes relative to the Release Candidate will be only bug fixes, cleanup, and optimizations.
-
-### Release Candidate
-- Ready for wide testing from Github.  Issues or PR related to bugs will be accepted.
+### 1.0.0
+- Initial release.

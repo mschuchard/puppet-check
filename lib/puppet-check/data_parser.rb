@@ -33,9 +33,9 @@ class DataParser
       else
         # check metadata.json
         if file =~ /.*metadata\.json$/
+          # metadata-json-lint has issues and is essentially no longer maintained so here is an improved and leaner version of it
           require 'spdx-licenses'
 
-          # metadata-json-lint has issues and is essentially no longer maintained so here is an improved and leaner version of it
           # check for errors
           errors = []
 
@@ -88,7 +88,7 @@ class DataParser
   def self.hiera(data)
     warnings = []
     data.each do |key, value|
-      warnings.push("Values missing in key '#{key}'.") if value.nil?
+      warnings.push("Values missing in key '#{key}'.") if value.class.to_s == 'NilClass'
     end
     warnings
   end

@@ -2,12 +2,12 @@
 [![Build Status](https://travis-ci.org/mschuchard/puppet-check.svg?branch=master)](https://travis-ci.org/mschuchard/puppet-check)
 
 ## Description
-Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verification and validation of your Puppet catalogs.
+Puppet Check is a gem for comprehensive, efficient, streamlined, and easy verification and validation of your Puppet code and data.
 
-### Former Method for Catalog Checks
+### Former Method for Code and Data Checks
 ![Old](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_old.png)
 
-### Puppet Check Method for Catalog Checks
+### Puppet Check Method for Code and Data Checks
 ![New](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_new.png)
 
 ### Example Output
@@ -95,7 +95,7 @@ The following files have unrecognized formats and therefore were not processed:
 ```
 
 ### Why not Puppetlabs Spec Helper?
-- Puppetlabs Spec Helper is a larger and varied gem with a different overall emphasis for its features.  Puppet Check is a lean and efficient gem solely for comprehensive Puppet catalog validation.
+- Puppetlabs Spec Helper is a larger and varied gem with a different overall emphasis for its features.  Puppet Check is a lean and efficient gem solely for comprehensive Puppet code and data validation.
 - Puppetlabs Spec Helper performs fewer types of checks.
 - Puppetlabs Spec Helper has extra layers of gems in between it and the gems executing the checks.
 - Puppetlabs Spec Helper does not allow interfacing through it to the gems executing the checks.
@@ -118,7 +118,7 @@ The command line interface enables the ability to select the Puppet future parse
 
 ```
 Example:
-puppet-check -s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/puppet_catalog
+puppet-check -s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/code_and_data
 ```
 
 ### Rake

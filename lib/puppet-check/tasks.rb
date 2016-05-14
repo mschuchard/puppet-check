@@ -7,7 +7,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
   def initialize
     desc 'Execute Puppet-Check file checks'
     task 'puppetcheck:file' do
-      PuppetCheck.new.run(Dir.glob('*'))
+      exit PuppetCheck.new.run(Dir.glob('*'))
     end
   end
 end

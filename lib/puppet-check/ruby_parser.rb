@@ -16,7 +16,7 @@ class RubyParser
         if PuppetCheck.style_check
           require 'rubocop'
 
-          # check RuboCop and catalog warnings
+          # check RuboCop and collect warnings
           rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
           warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
@@ -74,11 +74,11 @@ class RubyParser
 
           # check Rubocop
           rubocop_args = PuppetCheck.rubocop_args.clone
-          # RuboCop is confused about the first 'mod' argument in librarian puppet so disable the Style/FileName check
+          # RuboCop is confused about the first 'mod' argument in librarian puppet (and Rakefiles and Gemfiles) so disable the Style/FileName check
           rubocop_args.include?('--except') ? rubocop_args[rubocop_args.index('--except') + 1] = "#{rubocop_args[rubocop_args.index('--except') + 1]},Style/FileName" : rubocop_args.concat(['--except', 'Style/FileName'])
           warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rubocop_args + ['--format', 'emacs', file]) }
 
-          # catalog style warnings
+          # collect style warnings
           next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
         end
         PuppetCheck.clean_files.push("-- #{file}")

@@ -10,7 +10,6 @@ class PuppetCheck::CLI
 
     # run PuppetCheck
     PuppetCheck.new.run(args)
-    0
   end
 
   # parse the user arguments
