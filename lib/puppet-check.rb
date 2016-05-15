@@ -35,7 +35,7 @@ class PuppetCheck
     self.class.output_results
 
     # exit code
-    self.class.error_files.empty? ? 0 : 1
+    self.class.error_files.empty? ? 0 : 2
   end
 
   # parse the paths and return the array of files

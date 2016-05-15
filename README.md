@@ -137,8 +137,17 @@ PuppetCheck.future_parser = true
 
 The style checks from within `rake` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. The capability to pass arguments and options to them from within the `Rakefile` task block will be considered for future versions.
 
-### Optional Checks
-`reek` will automatically be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1`. `rspec`, `rspec-puppet`, and `beaker` are forthcoming purely optional dependency checks.
+### Exit Codes
+- 0: PuppetCheck exited with no internal exceptions or errors in your Puppet code and data.
+- 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes).
+- 2: PuppetCheck exited with errors in your Puppet code and data.
+
+### Optional dependencies
+- **reek**: will automatically be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1.0`.
+- **rake**: install this if you want to use PuppetCheck with `rake` tasks in addition to the CLI.
+- **rspec**: forthcoming optional dependency check.
+- **rspec-puppet**: forthcoming optional dependency check.
+- **beaker**: forthcoming optional dependency check.
 
 ## Contributing
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.

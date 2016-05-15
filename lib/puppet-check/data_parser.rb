@@ -13,7 +13,8 @@ class DataParser
       rescue Psych::SyntaxError, StandardError => err
         PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
-        warnings = hiera(parsed)
+        # perform some rudimentary hiera checks if data exists
+        warnings = parsed.class.to_s == 'NilClass' ? [] : hiera(parsed)
         next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.clean_files.push("-- #{file}")
       end
@@ -31,6 +32,8 @@ class DataParser
       rescue JSON::ParserError => err
         PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.lines.first.strip}")
       else
+        warnings = []
+
         # check metadata.json
         if file =~ /.*metadata\.json$/
           # metadata-json-lint has issues and is essentially no longer maintained so here is an improved and leaner version of it
@@ -66,19 +69,15 @@ class DataParser
           next PuppetCheck.error_files.push("-- #{file}:\n#{errors.join("\n")}") unless errors.empty?
 
           # check for warnings
-          warnings = []
-
           # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
           if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
             warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
           end
-
-          next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         else
-          # check for questionable hieradata
-          warnings = hiera(parsed)
-          next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+          # perform some rudimentary hiera checks if data exists
+          warnings = hiera(parsed) unless parsed.class.to_s == 'NilClass'
         end
+        next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.clean_files.push("-- #{file}")
       end
     end

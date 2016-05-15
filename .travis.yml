@@ -8,13 +8,13 @@ cache: bundler
 matrix:
   include:
     - rvm: 1.9.3
-      env: TEST=spec
+      env: TEST='unit integration'
     - rvm: 2.0.0
-      env: TEST=spec
+      env: TEST='unit integration'
     - rvm: 2.1.9
       env: TEST=default
     - rvm: 2.2.5
-      env: TEST=spec
+      env: TEST='unit integration'
 
 before_install: gem update bundler
 install: bundle install --retry=3
