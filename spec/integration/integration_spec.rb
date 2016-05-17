@@ -12,16 +12,17 @@ describe 'PuppetCheck' do
       expect { cli }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
-      expect(PuppetCheck.clean_files.length).to eql(9)
+      expect(PuppetCheck.clean_files.length).to eql(10)
       expect(PuppetCheck.ignored_files.length).to eql(1)
     end
   end
 
   context 'executed as a system from the Rakefile with arguments and various files to be processed' do
-    let(:tasks) { Rake::Task['puppetcheck:file'].invoke }
+    let(:tasks) { Rake::Task['puppetcheck:file'.to_sym].invoke }
 
     it 'outputs diagnostic results correctly after processing all of the files' do
-      FileUtils.cd fixtures_dir
+      # ensure rake only checks the files inside fixtures
+      Dir.chdir(fixtures_dir)
       PuppetCheck.error_files = []
       PuppetCheck.warning_files = []
       PuppetCheck.clean_files = []
@@ -32,7 +33,7 @@ describe 'PuppetCheck' do
       expect { tasks }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
       expect(PuppetCheck.warning_files.length).to eql(8)
-      expect(PuppetCheck.clean_files.length).to eql(9)
+      expect(PuppetCheck.clean_files.length).to eql(10)
       expect(PuppetCheck.ignored_files.length).to eql(1)
     end
   end
