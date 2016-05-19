@@ -50,6 +50,8 @@ class PuppetCheck
         files.push(path)
       end
     end
+    # do not process fixtures
+    files.reject! { |file| file =~ /fixtures/ }
 
     # check that at least one file was found, remove double slashes, and return unique files
     raise "No files found in supplied paths #{paths.join(', ')}." if files.empty?

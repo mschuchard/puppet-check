@@ -24,18 +24,20 @@ describe PuppetCheck do
   end
 
   context '.parse_paths' do
+    before(:each) { Dir.chdir(fixtures_dir) }
+
     let(:no_files) { puppetcheck.parse_paths(%w(foo bar baz)) }
-    let(:file) { puppetcheck.parse_paths([fixtures_dir + 'lib/good.rb']) }
-    let(:dir) { puppetcheck.parse_paths([fixtures_dir]) }
-    let(:multi_dir) { puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'manifests']) }
-    let(:repeats) { puppetcheck.parse_paths([fixtures_dir + 'hieradata', fixtures_dir + 'hieradata', fixtures_dir + 'lib', fixtures_dir + 'hieradata/good.json', fixtures_dir + 'manifests/good.pp', fixtures_dir + 'manifests/good.pp']) }
+    let(:file) { puppetcheck.parse_paths(['lib/good.rb']) }
+    let(:dir) { puppetcheck.parse_paths(['.']) }
+    let(:multi_dir) { puppetcheck.parse_paths(%w(hieradata lib manifests)) }
+    let(:repeats) { puppetcheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
 
     it 'raises an error if no files were found' do
       expect { no_files }.to raise_error(RuntimeError, 'No files found in supplied paths foo, bar, baz.')
     end
 
     it 'correctly parses one file and returns it' do
-      expect(file[0]).to match(%r{spec/fixtures/lib/good.rb})
+      expect(file[0]).to eql('lib/good.rb')
     end
 
     it 'correctly parses one directory and returns all of its files' do

@@ -1,4 +1,4 @@
-# utility methods totally not edited from StackOverflow
+# utility methods
 class Utils
   # captures stdout from a block: out = capture_stdout { code }
   def self.capture_stdout

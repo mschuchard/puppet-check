@@ -5,9 +5,11 @@ require_relative '../../lib/puppet-check/tasks'
 
 describe 'PuppetCheck' do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
-    let(:cli) { PuppetCheck::CLI.run(%W(-s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding #{fixtures_dir})) }
+    let(:cli) { PuppetCheck::CLI.run(%w(-s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding .)) }
 
     it 'outputs diagnostic results correctly after processing all of the files' do
+      Dir.chdir(fixtures_dir)
+
       expect(cli).to eql(2)
       expect { cli }.not_to raise_exception
       expect(PuppetCheck.error_files.length).to eql(8)
