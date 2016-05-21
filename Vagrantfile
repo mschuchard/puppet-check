@@ -68,10 +68,10 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision 'shell', inline: <<-SHELL
     cd /vagrant
-    sudo apt-get install git -y
     sudo gem build puppet-check.gemspec
     sudo gem install --no-rdoc --no-ri puppet-check*.gem
-    sudo /usr/local/bin/puppet-check -s spec/fixtures
+    cd spec/fixtures
+    sudo /usr/local/bin/puppet-check -s .
     sudo rm -f puppet-check*.gem
   SHELL
 end

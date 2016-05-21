@@ -4,13 +4,13 @@
 
 ### 1.2.0 (Roadmap)
 - json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
-- beaker as optional task
 - rspec-puppet external dependencies support
+- add additional hiera checks, including nested hash parsing
+- explore puppet-catalog-test integration
 
 ### 1.1.0 (Roadmap)
-- Support for RSpec and RSpec-Puppet.
+- Support for RSpec, RSpec-Puppet, and Beaker.
 - Empty hieradata file bug fix.
-- add additional hiera checks, including nested hash parsing
 
 ### 1.0.0
 - Initial release.

@@ -8,14 +8,15 @@ cache: bundler
 matrix:
   include:
     - rvm: 1.9.3
-      env: TEST='unit integration'
+      env: TEST=unit
     - rvm: 2.0.0
-      env: TEST='unit integration'
+      env: TEST=unit
     - rvm: 2.1.9
-      env: TEST=default
+      env: TEST='rubocop reek unit'
     - rvm: 2.2.5
-      env: TEST='unit integration'
+      env: TEST=unit
 
 before_install: gem update bundler
 install: bundle install --retry=3
 script: bundle exec rake $TEST
+after_script: bundle exec rake integration
