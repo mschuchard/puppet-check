@@ -19,7 +19,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
         exit exit_code if exit_code != 0
       end
 
-      desc 'Execute Puppet-Check spec checks'
+      desc 'Execute RSpec and RSpec-Puppet tests'
       RSpec::Core::RakeTask.new(:spec) do |task|
         rspec_puppet_setup
         # generate tasks for all recognized directories inside of spec directories

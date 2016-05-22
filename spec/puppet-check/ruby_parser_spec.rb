@@ -58,11 +58,20 @@ describe RubyParser do
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
-    it 'puts a bad style ruby template file in the warning files array' do
-      RubyParser.template([fixtures_dir + 'templates/style.erb'])
-      expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:\n.*already initialized constant.*\n.*(previous definition of|already initialized constant)})
-      expect(PuppetCheck.clean_files).to eql([])
+    if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.0.0')
+      it 'puts a bad style ruby template file in the warning files array' do
+        RubyParser.template([fixtures_dir + 'templates/style.erb'])
+        expect(PuppetCheck.error_files).to eql([])
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:\n.*already initialized constant.*\n.*previous definition of})
+        expect(PuppetCheck.clean_files).to eql([])
+      end
+    else
+      it 'puts a bad style ruby template file in the warning files array' do
+        RubyParser.template([fixtures_dir + 'templates/style.erb'])
+        expect(PuppetCheck.error_files).to eql([])
+        expect(PuppetCheck.warning_files[0]).to match(%r{^\-\- #{fixtures_dir}templates/style.erb:})
+        expect(PuppetCheck.clean_files).to eql([])
+      end
     end
     it 'puts a ruby template file with ignored errors in the clean files array' do
       RubyParser.template([fixtures_dir + 'templates/no_method_error.erb'])
