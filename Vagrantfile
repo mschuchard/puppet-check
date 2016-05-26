@@ -70,8 +70,8 @@ Vagrant.configure(2) do |config|
     cd /vagrant
     sudo gem build puppet-check.gemspec
     sudo gem install --no-rdoc --no-ri puppet-check*.gem
+    sudo rm -f puppet-check*.gem
     cd spec/fixtures
     sudo /usr/local/bin/puppet-check -s .
-    sudo rm -f puppet-check*.gem
   SHELL
 end

@@ -44,7 +44,7 @@ class DataParser
 
           # check for required keys
           %w(name version author license summary source dependencies).each do |key|
-            errors.push("Required field '#{key}' not found in metadata.json.") unless parsed.key?(key)
+            errors.push("Required field '#{key}' not found.") unless parsed.key?(key)
           end
 
           # check for duplicate dependencies and requirements

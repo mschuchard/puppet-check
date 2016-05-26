@@ -105,7 +105,7 @@ The following files have unrecognized formats and therefore were not processed:
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation. Also, Puppet Check currently has no intrinsic support for external dependencies during spec testing, so you will need Puppetlabs Spec Helper or Librarian Puppet for that.
 
 ## Usage
-Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 1.1.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` during file checks.
+Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 1.1.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks.
 
 ### CLI
 ```
@@ -142,7 +142,7 @@ PuppetCheck.style_check = true
 PuppetCheck.future_parser = true
 ```
 
-The style checks from within `rake puppetcheck:file` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. However, `puppet-lint` can still be interfaced with from within the `Rakefile` with the normal method of `PuppetLint.configuration.send('foo')` after the require. The capability to pass ruby style arguments and options from within the `Rakefile` task block will be considered for future versions.
+The style checks from within `rake puppetcheck:file` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. The capability to pass style arguments and options from within the `Rakefile` task block will be considered for future versions.
 
 #### puppetcheck:spec
 The spec tests will be executed against everything that matches the pattern `**/{classes, defines, facter, functions, hosts, puppet, unit, types}/**/*_spec.rb`. This means everything in the current path that appears to be a Puppet module spec test will be regarded as such and executed during this rake task.

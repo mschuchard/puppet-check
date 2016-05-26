@@ -8,6 +8,10 @@
 - add additional hiera checks, including nested hash parsing
 - explore puppet-catalog-test integration
 
+### 1.1.1 (Roadmap)
+- refactor and cleanup
+- redo rspec_puppet_setup as cleaner/lighter rspec::puppet::setup
+
 ### 1.1.0
 - Support for RSpec, RSpec-Puppet, and Beaker.
 - Empty hieradata file bug fix.

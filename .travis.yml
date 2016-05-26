@@ -19,4 +19,6 @@ matrix:
 before_install: gem update bundler
 install: bundle install --retry=3
 script: bundle exec rake $TEST
-after_script: bundle exec rake integration
+after_success:
+  - bundle exec rake integration
+  - echo $?

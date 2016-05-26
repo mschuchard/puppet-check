@@ -22,7 +22,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
       desc 'Execute RSpec and RSpec-Puppet tests'
       RSpec::Core::RakeTask.new(:spec) do |task|
         rspec_puppet_setup
-        # generate tasks for all recognized directories inside of spec directories
+        # generate tasks for all recognized directories
         task.pattern = '**/{classes, defines, facter, functions, hosts, puppet, unit, types}/**/*_spec.rb'
       end
 
@@ -43,7 +43,9 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
     end
 
     # executes rspec::puppet::setup in every module directory to ensure module spec directories are configured correctly
-    Dir.glob('**/spec').each do |specdir|
+    # ensure this method does not do anything inside module dependencies
+    specdirs = Dir.glob('**/spec').reject! { |dir| dir =~ /fixtures/ }
+    specdirs.each do |specdir|
       Dir.chdir(specdir + '/..')
       RSpec::Puppet::Setup.run
     end
