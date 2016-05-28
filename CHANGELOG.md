@@ -10,7 +10,7 @@
 
 ### 1.1.1 (Roadmap)
 - refactor and cleanup
-- redo rspec_puppet_setup as cleaner/lighter rspec::puppet::setup
+- Rewrote and optimized RSpec Puppet module support.
 
 ### 1.1.0
 - Support for RSpec, RSpec-Puppet, and Beaker.

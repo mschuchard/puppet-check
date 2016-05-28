@@ -19,5 +19,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'spdx-licenses', '~> 1.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rake', '>= 9', '< 12'
-  spec.add_development_dependency 'rspec-puppet', '~> 2.0'
 end

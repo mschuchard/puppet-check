@@ -13,11 +13,9 @@ describe PuppetCheck::Tasks do
       expect { spec_tasks }.to output(/ruby.*rspec/).to_stdout
       # if this is first then the stdout is not captured for testing
       expect { spec_tasks }.not_to raise_exception
-      # rspec-puppet setup executed
-      expect(File.directory?('spec/fixtures/modules/fixtures')).to be true
 
-      # cleanup rspec-puppet setup
-      %w(Rakefile spec/spec_helper.rb).each { |file| File.delete(file) }
+      # cleanup rspec_puppet_setup
+      %w(spec/spec_helper.rb).each { |file| File.delete(file) }
       %w(manifests modules).each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
     end
   end
@@ -26,6 +24,28 @@ describe PuppetCheck::Tasks do
     it 'verifies the Beaker task exists' do
       Dir.chdir(fixtures_dir)
       expect { Rake::Task['puppetcheck:spec'.to_sym].invoke }.not_to raise_exception
+    end
+  end
+
+  context '.rspec_puppet_setup' do
+    let(:rspec_puppet_setup) { PuppetCheck::Tasks.rspec_puppet_setup }
+    before(:each) { Dir.chdir(fixtures_dir) }
+
+    it 'creates missing directories, missing site.pp, missing symlinks, and a missing spec_helper' do
+      rspec_puppet_setup
+      expect(File.directory?('spec/fixtures/manifests')).to be true
+      expect(File.directory?('spec/fixtures/modules/fixtures')).to be true
+      expect(File.file?('spec/fixtures/manifests/site.pp')).to be true
+      expect(File.symlink?('spec/fixtures/modules/fixtures/hieradata')).to be true
+      expect(File.symlink?('spec/fixtures/modules/fixtures/manifests')).to be true
+      expect(File.symlink?('spec/fixtures/modules/fixtures/lib')).to be true
+      expect(File.symlink?('spec/fixtures/modules/fixtures/templates')).to be true
+      expect(File.file?('spec/spec_helper.rb')).to be true
+    end
+
+    it 'cleans up rspec_puppet_setup (not an actual test)' do
+      %w(spec/spec_helper.rb).each { |file| File.delete(file) }
+      %w(manifests modules).each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
     end
   end
 end
