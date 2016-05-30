@@ -4,7 +4,7 @@ require_relative '../lib/puppet-check'
 describe PuppetCheck do
   let(:puppetcheck) { PuppetCheck.new }
 
-  context 'initializes and' do
+  context 'self' do
     it 'future parser can be altered' do
       PuppetCheck.future_parser = true
       expect(PuppetCheck.future_parser).to eql(true)
@@ -33,7 +33,7 @@ describe PuppetCheck do
     let(:repeats) { puppetcheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
 
     it 'raises an error if no files were found' do
-      expect { no_files }.to raise_error(RuntimeError, 'No files found in supplied paths foo, bar, baz.')
+      expect { no_files }.to raise_error(RuntimeError, 'puppet-check: no files found in supplied paths foo, bar, baz.')
     end
 
     it 'correctly parses one file and returns it' do

@@ -23,7 +23,7 @@ describe PuppetCheck::Tasks do
   context 'puppetcheck:beaker' do
     it 'verifies the Beaker task exists' do
       Dir.chdir(fixtures_dir)
-      expect { Rake::Task['puppetcheck:spec'.to_sym].invoke }.not_to raise_exception
+      expect { Rake::Task['puppetcheck:beaker'.to_sym].invoke }.not_to raise_exception
     end
   end
 
@@ -41,9 +41,8 @@ describe PuppetCheck::Tasks do
       expect(File.symlink?('spec/fixtures/modules/fixtures/lib')).to be true
       expect(File.symlink?('spec/fixtures/modules/fixtures/templates')).to be true
       expect(File.file?('spec/spec_helper.rb')).to be true
-    end
 
-    it 'cleans up rspec_puppet_setup (not an actual test)' do
+      # cleanup rspec_puppet_setup
       %w(spec/spec_helper.rb).each { |file| File.delete(file) }
       %w(manifests modules).each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
     end

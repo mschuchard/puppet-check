@@ -18,7 +18,7 @@ class PuppetCheck
   @puppetlint_args = []
   @rubocop_args = []
 
-  # let the parser methods read user options and append to the file arrays; let CLI and tasks write to user options
+  # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
     attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
@@ -54,7 +54,7 @@ class PuppetCheck
     files.reject! { |file| file =~ /fixtures/ }
 
     # check that at least one file was found, remove double slashes, and return unique files
-    raise "No files found in supplied paths #{paths.join(', ')}." if files.empty?
+    raise "puppet-check: no files found in supplied paths #{paths.join(', ')}." if files.empty?
     files.map! { |file| file.gsub('//', '/') }
     files.uniq
   end
@@ -69,12 +69,12 @@ class PuppetCheck
     files.reject! { |file| File.extname(file) == '.rb' }
     RubyParser.template(files.select { |file| File.extname(file) == '.erb' })
     files.reject! { |file| File.extname(file) == '.erb' }
-    DataParser.yaml(files.select { |file| file =~ /.*\.ya?ml$/ })
-    files.reject! { |file| file =~ /.*\.ya?ml$/ }
+    DataParser.yaml(files.select { |file| File.extname(file) =~ /\.ya?ml$/ })
+    files.reject! { |file| File.extname(file) =~ /\.ya?ml$/ }
     DataParser.json(files.select { |file| File.extname(file) == '.json' })
     files.reject! { |file| File.extname(file) == '.json' }
-    RubyParser.librarian(files.select { |file| file =~ /.*(Puppet|Module|Rake|Gem)file$/ })
-    files.reject! { |file| file =~ /.*(?:Puppet|Module|Rake|Gem)file$/ }
+    RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ })
+    files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     files.each { |file| self.class.ignored_files.push("-- #{file}") }
   end
 

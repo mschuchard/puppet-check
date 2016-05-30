@@ -2,7 +2,7 @@ require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 require 'reek/rake/task' if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
 
-task default: [:rubocop, :reek, :unit, :integration]
+task default: [:rubocop, :reek, :unit, :system]
 
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.formatters = ['simple']
@@ -15,10 +15,12 @@ if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
   end
 end
 
+desc 'Execute unit spec tests'
 RSpec::Core::RakeTask.new(:unit) do |task|
   task.pattern = 'spec/{puppet-check_spec.rb, puppet-check/*_spec.rb}'
 end
 
-RSpec::Core::RakeTask.new(:integration) do |task|
-  task.pattern = 'spec/integration/*_spec.rb'
+desc 'Execute system spec tests'
+RSpec::Core::RakeTask.new(:system) do |task|
+  task.pattern = 'spec/system/*_spec.rb'
 end

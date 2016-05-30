@@ -35,8 +35,8 @@ class DataParser
         warnings = []
 
         # check metadata.json
-        if file =~ /.*metadata\.json$/
-          # metadata-json-lint has issues and is essentially no longer maintained so here is an improved and leaner version of it
+        if File.basename(file) == 'metadata.json'
+          # metadata-json-lint has issues and is essentially no longer maintained, so here is an improved and leaner version of it
           require 'spdx-licenses'
 
           # check for errors

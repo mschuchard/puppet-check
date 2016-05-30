@@ -41,10 +41,11 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
 
     # setup fixtures for rspec-puppet testing
     specdirs.each do |specdir|
-      Dir.chdir(specdir + '/..')
-
       # skip to next specdir if it does not seem like a puppet module
-      next unless File.directory?('manifests')
+      next unless File.directory?(specdir + '/../manifests')
+
+      # move up to module directory
+      Dir.chdir(specdir + '/..')
 
       # grab the module name from the directory name of the module
       module_name = File.basename(Dir.pwd)

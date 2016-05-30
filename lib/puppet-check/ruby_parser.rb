@@ -21,7 +21,7 @@ class RubyParser
           rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
           warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
-          # check Reek
+          # check Reek and collect warnings
           if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
             require 'reek'
             require 'reek/cli/application'
