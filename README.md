@@ -1,6 +1,14 @@
 # Puppet Check
 [![Build Status](https://travis-ci.org/mschuchard/puppet-check.svg?branch=master)](https://travis-ci.org/mschuchard/puppet-check)
 
+- [Description](#description)
+- [Usage](#usage)
+  - [CLI](#cli)
+  - [Rake](#rake)
+  - [Exit Codes](#exit-codes)
+  - [Optional Dependencies](#optional-dependencies)
+- [Contributing](#contributing)
+
 ## Description
 Puppet Check is a gem that provides a comprehensive, streamlined, and efficient analysis of the syntax, style, and validity of your entire Puppet code and data.
 
@@ -147,9 +155,9 @@ The style checks from within `rake puppetcheck:file` are directly interfaced to 
 #### puppetcheck:spec
 The spec tests will be executed against everything that matches the pattern `**/{classes, defines, facter, functions, hosts, puppet, unit, types}/**/*_spec.rb`. This means everything in the current path that appears to be a Puppet module spec test will be regarded as such and executed during this rake task.
 
-Please note it is perfectly acceptable to only execute standard RSpec tests in your modules and not use the extended RSpec Puppet matchers. If RSpec Puppet is not installed, then no RSpec Puppet related actions (including those described below) will be performed.
+Please note it is perfectly acceptable to only execute standard RSpec tests in your modules and not use the extended RSpec Puppet matchers. If no Puppet module directories are identified during directory parsing, then no RSpec Puppet related actions (including those described below) will be performed.
 
-Prior to executing the spec tests, Puppet Check will parse everything in the current path and identify all `spec` directories. It will then execute `RSpec::Puppet::Setup` inside each assumed module directory containing these `spec` directories. This ensures any missing configuration items or non-current symlinks are created without altering your current configuration items, directories, or symlinks. The drawback to this is that your modules will be populated with useless `Rakefiles` if they do not already exist.
+Prior to executing the spec tests, Puppet Check will parse everything in the current path and identify all `spec` directories not within `fixtures` directories. It will then execute RSpec Puppet setup actions inside all directories one level above that contain a `manifests` directory. This is assumed to be a Puppet module directory. These setup actions include creating all of the necessary directories inside of `spec/fixtures`, creating a blank `site.pp` if it is missing, symlinking everything from the module that is needed into fixtures (automatically replaces functionality of self module symlink in `.fixtures.yaml` from Puppetlabs Spec Helper), and creates the `spec_helper.rb` if it is missing.
 
 #### puppetcheck:beaker
 The spec tests will be executed against everything that matches the pattern `**/acceptance`. This means everything in the current path that appears to be a Puppet module acceptance test will be regarded as such and executed during this rake task.
@@ -171,6 +179,6 @@ Please note this is merely a frontend to Beaker and that Beaker itself has a sel
 ## Contributing
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
 
-A `Dockerfile` is provided for easy `rake` testing. A `Vagrantfile` is provided for easy gem building, installation, and post-installation testing.
+A [Dockerfile](Dockerfile) is provided for easy rake testing. A [Vagrantfile](Vagrantfile) is provided for easy gem building, installation, and post-installation testing.
 
-Please consult the `CHANGELOG` for the current development roadmap.
+Please consult the [CHANGELOG](CHANGELOG.md) for the current development roadmap.

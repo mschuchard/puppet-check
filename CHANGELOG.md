@@ -10,8 +10,7 @@
 - add additional hiera checks, including nested hash parsing
 - rudimentary catalog compilation testing
 
-### 1.1.1 (Roadmap)
-- refactor and cleanup
+### 1.1.1
 - Rewrote and optimized RSpec Puppet module support.
 - A variety of minor fixes, cleanup, and improvements (e.g. ignored files now outputs in cyan and not blue)
 
