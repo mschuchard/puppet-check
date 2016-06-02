@@ -22,13 +22,16 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
       desc 'Execute RSpec and RSpec-Puppet tests'
       RSpec::Core::RakeTask.new(:spec) do |task|
         self.class.rspec_puppet_setup
-        # generate tasks for all recognized directories
-        task.pattern = '**/{classes, defines, facter, functions, hosts, puppet, unit, types}/**/*_spec.rb'
+        # generate tasks for all recognized directories and ensure spec tests inside module dependencies are ignored
+        spec_dirs = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').reject { |dir| dir =~ /fixtures/ }
+        task.pattern = spec_dirs.empty? ? 'skip_rspec' : spec_dirs
       end
 
       desc 'Execute Beaker acceptance tests'
       RSpec::Core::RakeTask.new(:beaker) do |task|
-        task.pattern = '**/acceptance'
+        # generate tasks for all recognized directories and ensure acceptance tests inside module dependencies are ignored
+        acceptance_dirs = Dir.glob('**/acceptance').reject { |dir| dir =~ /fixtures/ }
+        task.pattern = acceptance_dirs.empty? ? 'skip_beaker' : acceptance_dirs
       end
     end
   end
@@ -60,7 +63,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
 
       # symlink over everything the module needs for compilation
       %w(hiera.yaml data hieradata functions manifests lib files templates).each do |file|
-        FileUtils.ln_s("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file)
+        FileUtils.ln_s("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
       end
 
       # create spec_helper if missing

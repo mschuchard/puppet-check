@@ -9,8 +9,9 @@
 - rspec-puppet external dependencies support
 - add additional hiera checks, including nested hash parsing
 - rudimentary catalog compilation testing
+- A few bug fixes for RSpec-Puppet support.
 
-### 1.1.1
+### 1.1.1 (yanked from rubygems.org)
 - Rewrote and optimized RSpec Puppet module support.
 - A variety of minor fixes, cleanup, and improvements (e.g. ignored files now outputs in cyan and not blue)
 

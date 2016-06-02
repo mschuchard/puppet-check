@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 1.9.3'
   spec.add_dependency 'puppet', '>= 3.2', '< 5'
   spec.add_dependency 'rubocop', '~> 0'
-  spec.add_dependency 'reek', '~> 4.0' if RUBY_VERSION >= '2.1.0'
   spec.add_dependency 'puppet-lint', '~> 1.1'
   spec.add_dependency 'spdx-licenses', '~> 1.0'
   spec.add_development_dependency 'rspec', '~> 3.0'

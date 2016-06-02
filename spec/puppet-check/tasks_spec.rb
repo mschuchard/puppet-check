@@ -10,7 +10,7 @@ describe PuppetCheck::Tasks do
       Dir.chdir(fixtures_dir)
 
       # rspec task executed
-      expect { spec_tasks }.to output(/ruby.*rspec/).to_stdout
+      expect { spec_tasks }.to output(%r{spec/facter/facter_spec.rb}).to_stdout
       # if this is first then the stdout is not captured for testing
       expect { spec_tasks }.not_to raise_exception
 
@@ -21,9 +21,14 @@ describe PuppetCheck::Tasks do
   end
 
   context 'puppetcheck:beaker' do
+    let(:beaker_tasks) { Rake::Task['puppetcheck:beaker'.to_sym].invoke }
+
     it 'verifies the Beaker task exists' do
       Dir.chdir(fixtures_dir)
-      expect { Rake::Task['puppetcheck:beaker'.to_sym].invoke }.not_to raise_exception
+
+      # beaker task executed
+      expect { beaker_tasks }.to output(%r{spec/acceptance}).to_stdout
+      expect { beaker_tasks }.not_to raise_exception
     end
   end
 

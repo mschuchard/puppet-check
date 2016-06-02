@@ -170,7 +170,7 @@ Please note this is merely a frontend to Beaker and that Beaker itself has a sel
 - 2: PuppetCheck exited with errors in your Puppet code and data.
 
 ### Optional dependencies
-- **reek**: will automatically be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1.0`.
+- **reek**: will automatically (with `bundler`, otherwise manually) be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1.0`.
 - **rake**: install this if you want to use Puppet Check with `rake` tasks in addition to the CLI.
 - **rspec**: install this if you want to use Puppet Check to execute the spec tests for your ruby files during `rake`.
 - **rspec-puppet**: install this if you want to use Puppet Check to execute the spec tests for your Puppet files during `rake`.
