@@ -1,0 +1,49 @@
+{
+  "name": "puppetlabs-awesomesauce",
+  "version": "1.1.1",
+  "author": "puppetlabs",
+  "summary": "Makes sauce that is awesome.",
+  "license": "Proprietary",
+  "source": "https://github.com/puppetlabs/puppetlabs-awesomesauce",
+  "project_page": "https://github.com/puppetlabs/puppetlabs-awesomesauce",
+  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "100",
+        "5",
+        "6",
+        "7"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": ">= 3.0.0 < 2035.1.0"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": ">=2.7.20 <5.0.0"
+    }
+  ],
+  "description": "Makes sauce that is awesome. What part of that is confusing?",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.1.0 < 5.0.0",
+      "forge": ""
+    },
+    {
+      "name": "puppetlabs/lvm",
+      "version_requirement": ">= 0.5.0 < 1.0.0",
+      "git": ""
+    },
+    {
+      "name": "puppetlabs/gruntmaster",
+      "version_requirement": ">= 6000 < 9000",
+      "software": "upgradeable"
+    }
+  ]
+}

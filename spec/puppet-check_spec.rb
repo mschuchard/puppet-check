@@ -42,7 +42,7 @@ describe PuppetCheck do
 
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
-      expect(dir.length).to eql(27)
+      expect(dir.length).to eql(28)
     end
 
     it 'correctly parses multiple directories and returns all of their files' do

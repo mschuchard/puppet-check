@@ -36,7 +36,12 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
     end
   end
 
-  # prepare the directories for rspec-puppet testing
+  # code diagram for rspec-puppet support:
+  # puppetcheck:spec task invokes rspec_puppet_setup
+  # rspec_puppet_setup invokes rspec_puppet_file_setup always and rspec_puppet_dependency_setup if metadata.json exists
+  # rspec_puppet_dependency_setup invokes
+
+  # prepare the spec fixtures directory for rspec-puppet testing
   def self.rspec_puppet_setup
     # ensure this method does not do anything inside module dependencies
     specdirs = Dir.glob('**/spec').reject { |dir| dir =~ /fixtures/ }
@@ -50,26 +55,51 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
       # move up to module directory
       Dir.chdir(specdir + '/..')
 
-      # grab the module name from the directory name of the module
-      module_name = File.basename(Dir.pwd)
+      # grab the module name from the directory name of the module to pass to rspec_puppet_file_setup
+      rspec_puppet_file_setup(File.basename(Dir.pwd))
 
-      # create all the necessary fixture dirs that are missing
-      ['spec/fixtures', 'spec/fixtures/manifests', 'spec/fixtures/modules', "spec/fixtures/modules/#{module_name}"].each do |dir|
-        FileUtils.mkdir(dir) unless File.directory?(dir)
-      end
+      # invoke rspec_puppet_dependency_setup for module dependencies if metadata.json present
+      rspec_puppet_dependency_setup if File.file?('metadata.json')
+    end
+  end
 
-      # create empty site.pp if missing
-      FileUtils.touch('spec/fixtures/manifests/site.pp') unless File.file?('spec/fixtures/manifests/site.pp')
+  # setup the files, directories, and symlinks for rspec-puppet testing
+  def self.rspec_puppet_file_setup(module_name)
+    # create all the necessary fixture dirs that are missing
+    ['spec/fixtures', 'spec/fixtures/manifests', 'spec/fixtures/modules', "spec/fixtures/modules/#{module_name}"].each do |dir|
+      FileUtils.mkdir(dir) unless File.directory?(dir)
+    end
 
-      # symlink over everything the module needs for compilation
-      %w(hiera.yaml data hieradata functions manifests lib files templates).each do |file|
-        FileUtils.ln_s("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
-      end
+    # create empty site.pp if missing
+    FileUtils.touch('spec/fixtures/manifests/site.pp') unless File.file?('spec/fixtures/manifests/site.pp')
 
-      # create spec_helper if missing
-      next if File.file?('spec/spec_helper.rb')
-      File.open('spec/spec_helper.rb', 'w') do |file|
-        file.puts "require 'rspec-puppet/spec_helper'\n"
+    # symlink over everything the module needs for compilation
+    %w(hiera.yaml data hieradata functions manifests lib files templates).each do |file|
+      FileUtils.ln_s("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
+    end
+
+    # create spec_helper if missing
+    unless File.file?('spec/spec_helper.rb')
+      File.open('spec/spec_helper.rb', 'w') { |file| file.puts "require 'rspec-puppet/spec_helper'\n" }
+    end
+  end
+
+  # setup the module dependencies for rspec-puppet testing
+  def self.rspec_puppet_dependency_setup
+    # parse the metadata.json (assumes PuppetCheck file checks have already given it a pass)
+    parsed = JSON.parse(File.read('metadata.json'))
+
+    # grab dependencies if they exist
+    unless parsed['dependencies'].empty?
+      parsed['dependencies'].each do |dependency_hash|
+        # determine how the user wants to download the module dependency
+        if dependency_hash.key?('git')
+          puts dependency_hash['name'] + ' uses git'
+        elsif dependency_hash.key?('forge')
+          puts dependency_hash['name'] + ' uses forge'
+        else
+          puts dependency_hash['name'] + ' uses something else'
+        end
       end
     end
   end
