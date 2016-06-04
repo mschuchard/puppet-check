@@ -3,12 +3,15 @@
 
 ### 1.3.0 (Roadmap)
 - minimum ruby version bump to 2.0.0 (switch vagrant to centos7, remove 1.9.3 from travis.yml, add 2.3.x to travis.yml, update readme, remove psych::syntaxerror from dataparser.yaml, and remove 1.9.3 test from rubyparser.template style spec)
+- rakefile interface with puppet-lint, rubocop, reek
+- direct interface to rubocop and reek in rubyparser
+- json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
 
 ### 1.2.0 (Roadmap)
-- json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
-- rspec-puppet external dependencies support
+- rspec-puppet external dependencies support (in progress)
 - add additional hiera checks, including nested hash parsing
 - rudimentary catalog compilation testing
+- Support for `.puppet-lint.rc` config files in manually specified paths.
 - A few bug fixes for RSpec-Puppet support.
 
 ### 1.1.1 (yanked from rubygems.org)
