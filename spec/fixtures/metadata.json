@@ -33,12 +33,12 @@
     {
       "name": "puppetlabs/stdlib",
       "version_requirement": ">= 4.1.0 < 5.0.0",
-      "forge": ""
+      "forge": "puppetlabs-stdlib"
     },
     {
       "name": "puppetlabs/lvm",
       "version_requirement": ">= 0.5.0 < 1.0.0",
-      "git": ""
+      "git": "https://github.com/puppetlabs/puppetlabs-lvm.git"
     },
     {
       "name": "puppetlabs/gruntmaster",

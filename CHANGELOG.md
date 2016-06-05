@@ -7,19 +7,24 @@
 - direct interface to rubocop and reek in rubyparser
 - json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
 
+### 1.2.1 (Roadmap)
+- move rspec_puppet support to separate class
+- improve rspec_puppet_git and rspec_puppet_forge (check librarian puppet, git man, forge docs for ideas)
+- add rspec_puppet_hg
+
 ### 1.2.0 (Roadmap)
-- rspec-puppet external dependencies support (in progress)
+- Support for external module dependencies with RSpecPuppet.
 - add additional hiera checks, including nested hash parsing
 - rudimentary catalog compilation testing
 - Support for `.puppet-lint.rc` config files in manually specified paths.
-- A few bug fixes for RSpec-Puppet support.
+- A few bug fixes for RSpecPuppet support.
 
 ### 1.1.1 (yanked from rubygems.org)
-- Rewrote and optimized RSpec Puppet module support.
+- Rewrote and optimized RSpecPuppet module support.
 - A variety of minor fixes, cleanup, and improvements (e.g. ignored files now outputs in cyan and not blue)
 
 ### 1.1.0
-- Support for RSpec, RSpec-Puppet, and Beaker.
+- Support for RSpec, RSpecPuppet, and Beaker.
 - Empty hieradata file bug fix.
 
 ### 1.0.0

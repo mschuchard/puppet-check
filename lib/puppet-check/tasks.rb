@@ -39,7 +39,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
   # code diagram for rspec-puppet support:
   # puppetcheck:spec task invokes rspec_puppet_setup
   # rspec_puppet_setup invokes rspec_puppet_file_setup always and rspec_puppet_dependency_setup if metadata.json exists
-  # rspec_puppet_dependency_setup invokes rspec_puppet_git/forge if git/forge is download option
+  # rspec_puppet_dependency_setup invokes rspec_puppet_git/forge if git/forge is download option and dependencies exist
 
   # prepare the spec fixtures directory for rspec-puppet testing
   def self.rspec_puppet_setup
@@ -94,24 +94,24 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
       parsed['dependencies'].each do |dependency_hash|
         # determine how the user wants to download the module dependency
         if dependency_hash.key?('git')
-          puts dependency_hash['name'] + ' uses git'
+          rspec_puppet_git(dependency_hash['git'])
         elsif dependency_hash.key?('forge')
-          puts dependency_hash['name'] + ' uses forge'
+          rspec_puppet_forge(dependency_hash['forge'])
         else
-          warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported download method."
+          warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported, download method."
         end
       end
     end
   end
 
   # download external module dependency with git
-  def self.rspec_puppet_git
-    #
+  def self.rspec_puppet_git(git_url)
+    system("git -C spec/fixtures/modules/ clone #{git_url}")
   end
 
   # download external module dependency with forge
-  def self.rspec_puppet_forge
-    #
+  def self.rspec_puppet_forge(forge_name)
+    system("puppet module install #{forge_name} --modulepath spec/fixtures/modules/ --force")
   end
 end
 
