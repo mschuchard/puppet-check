@@ -13,7 +13,7 @@
 - direct interface to rubocop and reek in rubyparser
 - add additional hiera checks,
 
-### 1.2.0 (Roadmap)
+### 1.2.0
 - Support for external module dependencies with RSpecPuppet.
 - Support for nested hash parsing in Hieradata checks.
 - Support for `.puppet-lint.rc` config files in manually specified paths.

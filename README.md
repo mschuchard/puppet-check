@@ -79,7 +79,8 @@ double quoted string containing no variables at line 2, column 45
 2: previous definition of TEMPLATE was here
 
 -- hieradata/style.yaml:
-Values missing in key 'value'.
+Value(s) missing in key 'value'.
+Value(s) missing in key 'and'.
 
 -- metadata_style/metadata.json:
 License identifier 'Imaginary' is not in the SPDX list: http://spdx.org/licenses/
@@ -109,8 +110,9 @@ The following files have unrecognized formats and therefore were not processed:
 - Puppetlabs Spec Helper does not allow interfacing through it to the gems executing the checks.
 - Puppetlabs Spec Helper has no CLI.
 - Puppetlabs Spec Helper intrinsically only executes spec tests against one module at a time.
+- Puppetlabs Spec Helper requires an additional config file for RSpec Puppet support.
 
-It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation. Also, Puppet Check currently has no intrinsic support for external dependencies during spec testing, so you will need Puppetlabs Spec Helper or Librarian Puppet for that.
+It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
 Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 1.1.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks.
@@ -122,13 +124,14 @@ usage: puppet-check [options] paths
     -s, --style                      Enable style checks
         --puppet-lint arg_one,arg_two
                                      Arguments for PuppetLint ignored checks
+    -c, --config file                Load PuppetLint options from file.
         --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
 ```
 
-The command line interface enables the ability to select the Puppet future parser, additional style checks besides the syntax checks, and to specify PuppetLint and Rubocop checks to ignore. It should be noted that your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek` files should still be automatically respected by the individual style checkers if you prefer those to a simplified CLI.
+The command line interface enables the ability to select the Puppet future parser, additional style checks besides the syntax checks, and to specify PuppetLint and Rubocop checks to ignore. If you require a more robust interface to PuppetLint, Rubocop, and Reek, then please use `.puppet-lint.rc`, `.rubocop.yml` and `*.reek` config files. The `.puppet-lint.rc` can be specified with the `-c` argument. If it is not specified, then PuppetLint will automatically load one from `.puppet-lint.rc`, `~/.puppet-lint.rc`, or `/etc/puppet-lint.rc`, in that order of preference. The nearest `.rubocop.yml` and `*.reek` will be automatically respected.
 
-```
 Example:
+```
 puppet-check -s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/code_and_data
 ```
 
@@ -159,6 +162,40 @@ Please note it is perfectly acceptable to only execute standard RSpec tests in y
 
 Prior to executing the spec tests, Puppet Check will parse everything in the current path and identify all `spec` directories not within `fixtures` directories. It will then execute RSpec Puppet setup actions inside all directories one level above that contain a `manifests` directory. This is assumed to be a Puppet module directory. These setup actions include creating all of the necessary directories inside of `spec/fixtures`, creating a blank `site.pp` if it is missing, symlinking everything from the module that is needed into fixtures (automatically replaces functionality of self module symlink in `.fixtures.yaml` from Puppetlabs Spec Helper), and creates the `spec_helper.rb` if it is missing.
 
+Puppet Check will also automatically download specified external module dependencies for and during RSpec Puppet testing. Currently both `git` and `puppet forge` commands are supported. They can be implemented in the following way in your modules' `metadata.json`:
+
+```json
+"dependencies": [
+  {
+    "name": "module-name",
+    "forge": "forge-name"
+  },
+  {
+    "name": "module-name",
+    "git": "git-url"
+  },
+  {
+    "name": "module-name",
+    "hg": "hg-url"
+  }
+]
+```
+
+Example:
+
+```json
+"dependencies": [
+  {
+    "name": "puppetlabs/stdlib",
+    "forge": "puppetlabs-stdlib"
+  },
+  {
+    "name": "puppetlabs/lvm",
+    "git": "https://github.com/puppetlabs/puppetlabs-lvm.git"
+  }
+]
+```
+
 #### puppetcheck:beaker
 The spec tests will be executed against everything that matches the pattern `**/acceptance`. This means everything in the current path that appears to be a Puppet module acceptance test will be regarded as such and executed during this rake task.
 
@@ -175,6 +212,7 @@ Please note this is merely a frontend to Beaker and that Beaker itself has a sel
 - **rspec**: install this if you want to use Puppet Check to execute the spec tests for your ruby files during `rake`.
 - **rspec-puppet**: install this if you want to use Puppet Check to execute the spec tests for your Puppet files during `rake`.
 - **beaker**: install this if you want to use Puppet Check to execute the acceptance tests during `rake`.
+- **git**: install this if you want to use Puppet Check to download external module dependencies with `git` commands during RSpec Puppet testing.
 
 ## Contributing
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
