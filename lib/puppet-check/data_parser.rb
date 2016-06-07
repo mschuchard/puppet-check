@@ -73,6 +73,7 @@ class DataParser
           if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
             warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
           end
+        # assume this is hieradata
         else
           # perform some rudimentary hiera checks if data exists
           warnings = hiera(parsed) unless parsed.class.to_s == 'NilClass'
@@ -87,7 +88,10 @@ class DataParser
   def self.hiera(data)
     warnings = []
     data.each do |key, value|
-      warnings.push("Values missing in key '#{key}'.") if value.class.to_s == 'NilClass'
+      # check for nil values in the data (nil keys are fine)
+      if (value.is_a?(Hash) && value.values.any?(&:nil?)) || (value.class.to_s == 'NilClass')
+        warnings.push("Value(s) missing in key '#{key}'.")
+      end
     end
     warnings
   end

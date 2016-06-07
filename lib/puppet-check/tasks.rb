@@ -39,7 +39,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
   # code diagram for rspec-puppet support:
   # puppetcheck:spec task invokes rspec_puppet_setup
   # rspec_puppet_setup invokes rspec_puppet_file_setup always and rspec_puppet_dependency_setup if metadata.json exists
-  # rspec_puppet_dependency_setup invokes rspec_puppet_git/forge if git/forge is download option and dependencies exist
+  # rspec_puppet_dependency_setup invokes rspec_puppet_git/forge/hg if git/forge/hg is download option and dependencies exist
 
   # prepare the spec fixtures directory for rspec-puppet testing
   def self.rspec_puppet_setup
@@ -97,6 +97,8 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
           rspec_puppet_git(dependency_hash['git'])
         elsif dependency_hash.key?('forge')
           rspec_puppet_forge(dependency_hash['forge'])
+        elsif dependency_hash.key?('hg')
+          rspec_puppet_hg(dependency_hash['hg'])
         else
           warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported, download method."
         end
@@ -112,6 +114,11 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
   # download external module dependency with forge
   def self.rspec_puppet_forge(forge_name)
     system("puppet module install #{forge_name} --modulepath spec/fixtures/modules/ --force")
+  end
+
+  # download external module dependency with hg
+  def self.rspec_puppet_hg(hg_url)
+    system("hg --cwd spec/fixtures/modules/ clone #{hg_url}")
   end
 end
 
