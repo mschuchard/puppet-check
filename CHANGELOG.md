@@ -6,12 +6,14 @@
 - rakefile interface with puppet-lint, rubocop, reek
 - json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
 - rudimentary catalog compilation testing?
+- rspec puppet stubbing
+- infrataster and analogous docker task like thing ripienaar did?
 
 ### 1.2.1 (Roadmap)
-- move rspec_puppet support to separate class
+- Code cleanup.
 - improve rspec_puppet_git/forge/hg (check librarian puppet, git man, hg man, forge docs for ideas)
 - direct interface to rubocop and reek in rubyparser
-- add additional hiera checks,
+- add additional hiera checks
 
 ### 1.2.0
 - Support for external module dependencies with RSpecPuppet.
