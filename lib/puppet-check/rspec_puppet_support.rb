@@ -1,9 +1,9 @@
 # class to prepare spec directory for rspec puppet testing
 class RSpecPuppetSupport
-  # code diagram for RSpecPuppetSupport:
-  # puppetcheck:spec task invokes run
-  # run invokes file_setup always and dependency_setup if metadata.json exists
-  # dependency_setup invokes git/forge/hg if git/forge/hg is download option and dependencies exist
+  # code diagram:
+  # 'puppetcheck:spec' task invokes 'run'
+  # 'run' invokes 'file_setup' always and 'dependency_setup' if metadata.json exists
+  # 'dependency_setup' invokes 'git/forge/hg' if dependencies exist and git/forge/hg is download option
 
   # prepare the spec fixtures directory for rspec-puppet testing
   def self.run
@@ -54,7 +54,7 @@ class RSpecPuppetSupport
   def self.dependency_setup
     require 'json'
 
-    # parse the metadata.json (assumes PuppetCheck file checks have already given it a pass)
+    # parse the metadata.json (assumes DataParser.json has already given it a pass)
     parsed = JSON.parse(File.read('metadata.json'))
 
     # grab dependencies if they exist
@@ -62,11 +62,11 @@ class RSpecPuppetSupport
       parsed['dependencies'].each do |dependency_hash|
         # determine how the user wants to download the module dependency
         if dependency_hash.key?('git')
-          git(dependency_hash['git'])
+          git(dependency_hash['git'], dependency_hash['args'])
         elsif dependency_hash.key?('forge')
-          forge(dependency_hash['forge'])
+          forge(dependency_hash['forge'], dependency_hash['args'])
         elsif dependency_hash.key?('hg')
-          hg(dependency_hash['hg'])
+          hg(dependency_hash['hg'], dependency_hash['args'])
         else
           warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported, download method."
         end
@@ -75,17 +75,17 @@ class RSpecPuppetSupport
   end
 
   # download external module dependency with git
-  def self.git(git_url)
-    system("git -C spec/fixtures/modules/ clone #{git_url}")
+  def self.git(git_url, args = '')
+    system("git -C spec/fixtures/modules/ clone #{args} #{git_url}")
   end
 
   # download external module dependency with forge
-  def self.forge(forge_name)
-    system("puppet module install #{forge_name} --modulepath spec/fixtures/modules/ --force")
+  def self.forge(forge_name, args = '')
+    system("puppet module install --modulepath spec/fixtures/modules/ --force #{args} #{forge_name}")
   end
 
   # download external module dependency with hg
-  def self.hg(hg_url)
-    system("hg --cwd spec/fixtures/modules/ clone #{hg_url}")
+  def self.hg(hg_url, args = '')
+    system("hg --cwd spec/fixtures/modules/ clone #{args} #{hg_url}")
   end
 end

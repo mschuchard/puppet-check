@@ -11,7 +11,7 @@
 
 ### 1.2.1 (Roadmap)
 - Code cleanup.
-- improve rspec_puppet_git/forge/hg (check librarian puppet, git man, hg man, forge docs for ideas)
+- Add arguments support to external module download methods.
 - direct interface to rubocop and reek in rubyparser
 - add additional hiera checks
 

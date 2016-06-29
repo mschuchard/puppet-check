@@ -9,6 +9,7 @@ describe RSpecPuppetSupport do
     it 'creates missing directories, missing site.pp, missing symlinks, and a missing spec_helper' do
       expect { rspec_puppet_setup }.to output("puppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
 
+      # .file_setup
       expect(File.directory?('spec/fixtures/manifests')).to be true
       expect(File.directory?('spec/fixtures/modules/fixtures')).to be true
       expect(File.file?('spec/fixtures/manifests/site.pp')).to be true
@@ -18,6 +19,7 @@ describe RSpecPuppetSupport do
       expect(File.symlink?('spec/fixtures/modules/fixtures/templates')).to be true
       expect(File.file?('spec/spec_helper.rb')).to be true
 
+      # .dependency_setup
       expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true
       expect(File.directory?('spec/fixtures/modules/stdlib')).to be true
 

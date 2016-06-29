@@ -76,7 +76,7 @@ class RubyParser
 
           # check Rubocop
           rubocop_args = PuppetCheck.rubocop_args.clone
-          # RuboCop is confused about the first 'mod' argument in librarian puppet (and first requires in Rakefiles and Gemfiles) so disable the Style/FileName check
+          # RuboCop is grumpy about non-snake_case filenames so disable the Style/FileName check
           rubocop_args.include?('--except') ? rubocop_args[rubocop_args.index('--except') + 1] = "#{rubocop_args[rubocop_args.index('--except') + 1]},Style/FileName" : rubocop_args.concat(['--except', 'Style/FileName'])
           warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rubocop_args + ['--format', 'emacs', file]) }
 
