@@ -37,7 +37,7 @@ class PuppetParser
         begin
           PuppetLint::OptParser.build.parse!(PuppetCheck.puppetlint_args)
         rescue OptionParser::InvalidOption
-          raise 'puppet-lint: invalid option'
+          raise 'puppet-lint: invalid option supplied'
         end
 
         # prepare the PuppetLint object for style checks

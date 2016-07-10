@@ -12,7 +12,6 @@
 ### 1.2.1 (Roadmap)
 - Code cleanup.
 - Add arguments support to external module download methods.
-- direct interface to rubocop and reek in rubyparser
 - add additional hiera checks
 
 ### 1.2.0

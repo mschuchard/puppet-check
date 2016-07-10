@@ -26,7 +26,7 @@ class PuppetCheck
   # main runner for PuppetCheck
   def run(paths)
     # grab all of the files to be processed
-    files = parse_paths(paths)
+    files = self.class.parse_paths(paths)
 
     # parse the files
     execute_parsers(files)
@@ -39,7 +39,7 @@ class PuppetCheck
   end
 
   # parse the paths and return the array of files
-  def parse_paths(paths)
+  def self.parse_paths(paths)
     files = []
 
     # traverse the unique paths and return all files
