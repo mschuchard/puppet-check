@@ -1,18 +1,18 @@
-### 1.4.0 (Roadmap)
-- minimum puppet version bump to 3.5 and future parser enabled by force for version < 4 (search code on 'future')
-
 ### 1.3.0 (Roadmap)
 - minimum ruby version bump to 2.0.0 (switch vagrant to centos7, remove 1.9.3 from travis.yml, add 2.3.x to travis.yml, update readme, remove psych::syntaxerror from dataparser.yaml, and remove 1.9.3 test from rubyparser.template style spec)
+- minimum puppet version bump to 3.4
 - rakefile interface with puppet-lint, rubocop, reek
 - json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
 - rudimentary catalog compilation testing?
 - rspec puppet stubbing
 - infrataster and analogous docker task like thing ripienaar did?
+- add additional hiera checks
 
 ### 1.2.1 (Roadmap)
 - Code cleanup.
 - Add arguments support to external module download methods.
-- add additional hiera checks
+- PuppetLint dependency version updated for 2.0 release.
+- other
 
 ### 1.2.0
 - Support for external module dependencies with RSpecPuppet.

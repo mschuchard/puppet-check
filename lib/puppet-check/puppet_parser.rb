@@ -24,7 +24,7 @@ class PuppetParser
         next PuppetCheck.error_files.push("-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
       end
 
-      # initialize warnings with output from the parser if it exists since they are warnings if they did not trigger a SystemExit
+      # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = errors.empty? ? "-- #{file}:" : "-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}"
       Puppet::Util::Log.close_all
 
@@ -37,7 +37,7 @@ class PuppetParser
         begin
           PuppetLint::OptParser.build.parse!(PuppetCheck.puppetlint_args)
         rescue OptionParser::InvalidOption
-          raise 'puppet-lint: invalid option supplied'
+          raise "puppet-lint: invalid option supplied among #{PuppetCheck.puppetlint_args}"
         end
 
         # prepare the PuppetLint object for style checks

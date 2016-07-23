@@ -5,6 +5,7 @@ require_relative '../puppet-check'
 class PuppetCheck::CLI
   # run method for the cli
   def self.run(args)
+    # gather the user arguments
     parse(args)
     raise 'puppet-check: no paths specified' if args.empty?
 
@@ -21,11 +22,12 @@ class PuppetCheck::CLI
       # bool options
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.future_parser = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.style_check = true }
+
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
         PuppetCheck.puppetlint_args += puppetlint_args.map { |arg| "--#{arg}" }
       end
-      opts.on('-c', '--config file', 'Load PuppetLint options from file.') do |file|
+      opts.on('-c', '--config file', String, 'Load PuppetLint options from file.') do |file|
         PuppetCheck.puppetlint_args += File.read(file).split("\n")
       end
       opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| PuppetCheck.rubocop_args = ['--except', arg] }

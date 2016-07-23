@@ -2,8 +2,6 @@ require_relative 'spec_helper'
 require_relative '../lib/puppet-check'
 
 describe PuppetCheck do
-  let(:puppetcheck) { PuppetCheck.new }
-
   context 'self' do
     it 'future parser can be altered' do
       PuppetCheck.future_parser = true
@@ -26,11 +24,11 @@ describe PuppetCheck do
   context '.parse_paths' do
     before(:each) { Dir.chdir(fixtures_dir) }
 
-    let(:no_files) { puppetcheck.parse_paths(%w(foo bar baz)) }
-    let(:file) { puppetcheck.parse_paths(['lib/good.rb']) }
-    let(:dir) { puppetcheck.parse_paths(['.']) }
-    let(:multi_dir) { puppetcheck.parse_paths(%w(hieradata lib manifests)) }
-    let(:repeats) { puppetcheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
+    let(:no_files) { PuppetCheck.parse_paths(%w(foo bar baz)) }
+    let(:file) { PuppetCheck.parse_paths(['lib/good.rb']) }
+    let(:dir) { PuppetCheck.parse_paths(['.']) }
+    let(:multi_dir) { PuppetCheck.parse_paths(%w(hieradata lib manifests)) }
+    let(:repeats) { PuppetCheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
 
     it 'raises an error if no files were found' do
       expect { no_files }.to raise_error(RuntimeError, 'puppet-check: no files found in supplied paths foo, bar, baz.')
