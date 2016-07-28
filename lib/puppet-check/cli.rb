@@ -19,6 +19,12 @@ class PuppetCheck::CLI
       # usage
       opts.banner = 'usage: puppet-check [options] paths'
 
+      # base options
+      opts.on('--version', 'Display the current version.') do
+        puts 'puppet-check 1.2.0'
+        exit 0
+      end
+
       # bool options
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.future_parser = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.style_check = true }
