@@ -8,11 +8,10 @@
 - infrataster and analogous docker task like thing ripienaar did?
 - add additional hiera checks
 
-### 1.2.1 (Roadmap)
-- Code cleanup.
+### 1.2.1
+- Code and output cleanup.
 - Add arguments support to external module download methods.
 - PuppetLint dependency version updated for 2.0 release.
-- other
 
 ### 1.2.0
 - Support for external module dependencies with RSpecPuppet.

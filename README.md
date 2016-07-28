@@ -5,6 +5,7 @@
 - [Usage](#usage)
   - [CLI](#cli)
   - [Rake](#rake)
+  - [Docker](#docker)
   - [Exit Codes](#exit-codes)
   - [Optional Dependencies](#optional-dependencies)
 - [Contributing](#contributing)
@@ -115,7 +116,10 @@ The following files have unrecognized formats and therefore were not processed:
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
-Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 1.1.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
+Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
+
+#### Important Note for Ruby 1.9.3
+If you are using Ruby 1.9.3, there is currently an issue where Hiera has an unspecified version dependency on JSonPure. Since JSonPure 2.0.2 requires `ruby >= 2.0.0`, this breaks Hiera installs on Ruby 1.9.3, which breaks Puppet installs, which breaks PuppetCheck installs. Therefore, you will need to restrict your installed version of JSonPure to something lower than 2.0.2 if you are using Ruby 1.9.3. A ticket with Puppet has been filed by me for this issue, so hopefully a resolution is forthcoming.
 
 ### CLI
 ```
@@ -132,7 +136,7 @@ The command line interface enables the ability to select the Puppet future parse
 
 Example:
 ```
-puppet-check -s --puppet-lint no-hard_tabs-check,no-80chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/code_and_data
+puppet-check -s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/code_and_data
 ```
 
 ### Rake
@@ -168,15 +172,18 @@ Puppet Check will also automatically download specified external module dependen
 "dependencies": [
   {
     "name": "module-name",
-    "forge": "forge-name"
+    "forge": "forge-name",
+    "args": "puppet module install optional-arguments"
   },
   {
     "name": "module-name",
-    "git": "git-url"
+    "git": "git-url",
+    "args": "git clone optional-arguments"
   },
   {
     "name": "module-name",
-    "hg": "hg-url"
+    "hg": "hg-url",
+    "args": "hg clone optional-arguments"
   }
 ]
 ```
@@ -187,7 +194,8 @@ Example:
 "dependencies": [
   {
     "name": "puppetlabs/stdlib",
-    "forge": "puppetlabs-stdlib"
+    "forge": "puppetlabs-stdlib",
+    "args": "--do-something-cool"
   },
   {
     "name": "puppetlabs/lvm",
@@ -201,10 +209,33 @@ The spec tests will be executed against everything that matches the pattern `**/
 
 Please note this is merely a frontend to Beaker and that Beaker itself has a self-contained scope compared to all the other tools Puppet Check interfaces with and utilizes. This means if you want to add Beaker-RSpec, Serverspec, etc., or perform advanced configurations, those would be all be performed within Beaker itself. This task merely provides an interface to integrate Beaker in with your other testing infrastructure.
 
+### Docker
+
+You can also use Puppet Check inside of Docker for quick, portable, and disposable testing. Below is an example Dockerfile for this purpose:
+
+```dockerfile
+# a reliable and small container at the moment
+FROM ubuntu:16.04
+# you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
+RUN apt-get update && apt-get install ruby git -y
+# you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.3 and then rspec-puppet and rake for extra testing
+RUN gem install --no-rdoc --no-ri puppet-check reek rspec-puppet rake
+# this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
+ENV LANG en_US.UTF-8
+# create the directory for your module and change directory into it
+WORKDIR /module_name
+# copy the module contents into the module directory inside the container
+COPY / .
+# execute your tests; in this example we are executing the full suite of tests for this module
+RUN rake puppetcheck
+```
+
+You can also build your own general container for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a Dockerfile that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
+
 ### Exit Codes
 - 0: PuppetCheck exited with no internal exceptions or errors in your Puppet code and data.
 - 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes).
-- 2: PuppetCheck exited with errors in your Puppet code and data.
+- 2: PuppetCheck exited with one or more errors in your Puppet code and data.
 
 ### Optional dependencies
 - **reek**: will automatically (with `bundler`, otherwise manually) be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1.0`.
