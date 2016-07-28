@@ -1,6 +1,6 @@
 ### 1.3.0 (Roadmap)
-- minimum ruby version bump to 2.0.0 (switch vagrant to centos7, remove 1.9.3 from travis.yml, add 2.3.x to travis.yml, update readme, remove psych::syntaxerror from dataparser.yaml, and remove 1.9.3 test from rubyparser.template style spec)
-- minimum puppet version bump to 3.4
+- Minimum Ruby version increased from 1.9.3 to 2.0.0.
+- Minimum Puppet version increased from 3.2 to 3.4.
 - rakefile interface with puppet-lint, rubocop, reek
 - json and yaml output formats support (error_files becomes hash with file keys and array of issues; refactor output_results)
 - rudimentary catalog compilation testing?

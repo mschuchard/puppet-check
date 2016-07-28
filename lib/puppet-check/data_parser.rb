@@ -10,7 +10,7 @@ class DataParser
       # check yaml syntax
       begin
         parsed = YAML.load_file(file)
-      rescue Psych::SyntaxError, StandardError => err
+      rescue StandardError => err
         PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
         # perform some rudimentary hiera checks if data exists
