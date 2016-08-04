@@ -112,11 +112,21 @@ class PuppetCheck
 
   # output the results as yaml
   def self.output_results_yaml
-    #
+    hash = {}
+    hash['errors'] = error_files unless error_files.empty?
+    hash['warnings'] = warning_files unless warning_files.empty?
+    hash['clean'] = clean_files unless clean_files.empty?
+    hash['ignored'] = ignored_files unless ignored_files.empty?
+    puts Psych.dump(hash, indentation: 2)
   end
 
   # output the results as json
   def self.output_results_json
-    #
+    hash = {}
+    hash['errors'] = error_files unless error_files.empty?
+    hash['warnings'] = warning_files unless warning_files.empty?
+    hash['clean'] = clean_files unless clean_files.empty?
+    hash['ignored'] = ignored_files unless ignored_files.empty?
+    puts JSON.pretty_generate(hash)
   end
 end
