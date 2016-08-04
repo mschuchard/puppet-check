@@ -8,6 +8,9 @@ class PuppetCheck
   @future_parser = false
   @style_check = false
 
+  # initialize output format option
+  @output_format = 'text'
+
   # initialize diagnostic output arrays
   @error_files = []
   @warning_files = []
@@ -20,7 +23,7 @@ class PuppetCheck
 
   # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
+    attr_accessor :future_parser, :style_check, :output_format, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
 
   # main runner for PuppetCheck
@@ -80,6 +83,15 @@ class PuppetCheck
 
   # output the results for the files that were requested to be checked
   def self.output_results
+    case output_format
+    when 'text' then output_results_text
+    when 'yaml' then output_results_yaml
+    when 'json' then output_results_json
+    end
+  end
+
+  # output the results as text
+  def self.output_results_text
     unless error_files.empty?
       print "\033[31mThe following files have errors:\033[0m\n-- "
       puts error_files.join("\n\n-- ")
@@ -96,5 +108,15 @@ class PuppetCheck
       print "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- "
       puts ignored_files.join("\n-- ")
     end
+  end
+
+  # output the results as yaml
+  def self.output_results_yaml
+    #
+  end
+
+  # output the results as json
+  def self.output_results_json
+    #
   end
 end

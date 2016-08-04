@@ -54,7 +54,15 @@ describe PuppetCheck do
     end
   end
 
+  context '.execute_parsers' do
+    #
+  end
+
   context '.output_results' do
+    #
+  end
+
+  context '.output_results_text' do
     before(:each) do
       PuppetCheck.error_files = []
       PuppetCheck.warning_files = []
@@ -64,19 +72,19 @@ describe PuppetCheck do
 
     it 'outputs files with errors' do
       PuppetCheck.error_files = ['foo: i had an error']
-      expect { PuppetCheck.output_results }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error").to_stdout
+      expect { PuppetCheck.output_results_text }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error\n").to_stdout
     end
     it 'outputs files with warnings' do
       PuppetCheck.warning_files = ['foo: i had a warning']
-      expect { PuppetCheck.output_results }.to output("\n\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning").to_stdout
+      expect { PuppetCheck.output_results_text }.to output("\n\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning\n").to_stdout
     end
     it 'outputs files with no errors or warnings' do
       PuppetCheck.clean_files = ['foo: i was totally good to go']
-      expect { PuppetCheck.output_results }.to output("\n\033[32mThe following files have no errors or warnings:\033[0m\n-- foo: i was totally good to go").to_stdout
+      expect { PuppetCheck.output_results_text }.to output("\n\033[32mThe following files have no errors or warnings:\033[0m\n-- foo: i was totally good to go\n").to_stdout
     end
     it 'outputs files that were not processed' do
       PuppetCheck.ignored_files = ['foo: who knows what i am']
-      expect { PuppetCheck.output_results }.to output("\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo: who knows what i am").to_stdout
+      expect { PuppetCheck.output_results_text }.to output("\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo: who knows what i am\n").to_stdout
     end
   end
 end

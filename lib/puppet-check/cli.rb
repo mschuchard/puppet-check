@@ -29,6 +29,9 @@ class PuppetCheck::CLI
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.future_parser = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.style_check = true }
 
+      # formatting options
+      opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.output_format = arg }
+
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
         PuppetCheck.puppetlint_args += puppetlint_args.map { |arg| "--#{arg}" }

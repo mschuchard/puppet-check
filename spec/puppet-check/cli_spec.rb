@@ -21,6 +21,12 @@ describe PuppetCheck::CLI do
       expect(PuppetCheck.style_check).to eql(true)
     end
 
+    it 'correctly parses a formatting option' do
+      PuppetCheck.output_format = ''
+      PuppetCheck::CLI.parse(%w(-o text))
+      expect(PuppetCheck.output_format).to eql('text')
+    end
+
     it 'correctly parses PuppetLint arguments' do
       PuppetCheck.puppetlint_args = []
       PuppetCheck::CLI.parse(%w(--puppet-lint puppetlint-arg-one,puppetlint-arg-two foo))
