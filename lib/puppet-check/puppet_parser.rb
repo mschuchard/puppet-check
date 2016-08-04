@@ -21,11 +21,11 @@ class PuppetParser
         Puppet::Face[:parser, :current].validate(file)
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
-        next PuppetCheck.error_files.push("-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
+        next PuppetCheck.error_files.push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
       end
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
-      warnings = errors.empty? ? "-- #{file}:" : "-- #{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}"
+      warnings = errors.empty? ? "#{file}:" : "#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}"
       Puppet::Util::Log.close_all
 
       # check puppet style
@@ -37,7 +37,7 @@ class PuppetParser
         begin
           PuppetLint::OptParser.build.parse!(PuppetCheck.puppetlint_args)
         rescue OptionParser::InvalidOption
-          raise "puppet-lint: invalid option supplied among #{PuppetCheck.puppetlint_args}"
+          raise "puppet-lint: invalid option supplied among #{PuppetCheck.puppetlint_args.join(' ')}"
         end
 
         # prepare the PuppetLint object for style checks
@@ -50,8 +50,8 @@ class PuppetParser
           puppet_lint.problems.each { |values| warnings += "\n#{values[:line]}:#{values[:column]}: #{values[:message]}" }
         end
       end
-      next PuppetCheck.warning_files.push(warnings) unless warnings == "-- #{file}:"
-      PuppetCheck.clean_files.push("-- #{file}")
+      next PuppetCheck.warning_files.push(warnings) unless warnings == "#{file}:"
+      PuppetCheck.clean_files.push("#{file}")
     end
   end
 
@@ -61,16 +61,16 @@ class PuppetParser
 
     files.each do |file|
       # puppet before version 4 cannot check template syntax
-      next PuppetCheck.ignored_files.push("-- #{file}: ignored due to Puppet < 4.0.0") if Puppet::PUPPETVERSION.to_i < 4
+      next PuppetCheck.ignored_files.push("#{file}: ignored due to Puppet < 4.0.0") if Puppet::PUPPETVERSION.to_i < 4
 
       # check puppet template syntax
       begin
         # credits to gds-operations/puppet-syntax for the parser function call
         Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
       rescue StandardError => err
-        PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("#{file}:", '')}")
+        PuppetCheck.error_files.push("#{file}:\n#{err.to_s.gsub("#{file}:", '')}")
       else
-        PuppetCheck.clean_files.push("-- #{file}")
+        PuppetCheck.clean_files.push("#{file}")
       end
     end
   end

@@ -11,12 +11,12 @@ class DataParser
       begin
         parsed = YAML.load_file(file)
       rescue StandardError => err
-        PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
+        PuppetCheck.error_files.push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
         # perform some rudimentary hiera checks if data exists
         warnings = parsed.class.to_s == 'NilClass' ? [] : hiera(parsed)
-        next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.clean_files.push("-- #{file}")
+        next PuppetCheck.warning_files.push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+        PuppetCheck.clean_files.push("#{file}")
       end
     end
   end
@@ -30,7 +30,7 @@ class DataParser
       begin
         parsed = JSON.parse(File.read(file))
       rescue JSON::ParserError => err
-        PuppetCheck.error_files.push("-- #{file}:\n#{err.to_s.lines.first.strip}")
+        PuppetCheck.error_files.push("#{file}:\n#{err.to_s.lines.first.strip}")
       else
         warnings = []
 
@@ -66,7 +66,7 @@ class DataParser
           # check for summary under 144 character
           errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
 
-          next PuppetCheck.error_files.push("-- #{file}:\n#{errors.join("\n")}") unless errors.empty?
+          next PuppetCheck.error_files.push("#{file}:\n#{errors.join("\n")}") unless errors.empty?
 
           # check for warnings
           # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
@@ -78,8 +78,8 @@ class DataParser
           # perform some rudimentary hiera checks if data exists
           warnings = hiera(parsed) unless parsed.class.to_s == 'NilClass'
         end
-        next PuppetCheck.warning_files.push("-- #{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.clean_files.push("-- #{file}")
+        next PuppetCheck.warning_files.push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+        PuppetCheck.clean_files.push("#{file}")
       end
     end
   end
