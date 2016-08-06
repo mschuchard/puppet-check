@@ -1,6 +1,7 @@
 require_relative 'puppet-check/puppet_parser'
 require_relative 'puppet-check/ruby_parser'
 require_relative 'puppet-check/data_parser'
+require_relative 'puppet-check/output_results'
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck
@@ -35,7 +36,7 @@ class PuppetCheck
     execute_parsers(files)
 
     # output the diagnostic results
-    self.class.output_results
+    OutputResults.run(PuppetCheck.output_format)
 
     # exit code
     self.class.error_files.empty? ? 0 : 2
@@ -78,55 +79,6 @@ class PuppetCheck
     files.reject! { |file| File.extname(file) == '.json' }
     RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ })
     files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    files.each { |file| self.class.ignored_files.push("-- #{file}") }
-  end
-
-  # output the results for the files that were requested to be checked
-  def self.output_results
-    case output_format
-    when 'text' then output_results_text
-    when 'yaml' then output_results_yaml
-    when 'json' then output_results_json
-    end
-  end
-
-  # output the results as text
-  def self.output_results_text
-    unless error_files.empty?
-      print "\033[31mThe following files have errors:\033[0m\n-- "
-      puts error_files.join("\n\n-- ")
-    end
-    unless warning_files.empty?
-      print "\n\033[33mThe following files have warnings:\033[0m\n-- "
-      puts warning_files.join("\n\n-- ")
-    end
-    unless clean_files.empty?
-      print "\n\033[32mThe following files have no errors or warnings:\033[0m\n-- "
-      puts clean_files.join("\n-- ")
-    end
-    unless ignored_files.empty?
-      print "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- "
-      puts ignored_files.join("\n-- ")
-    end
-  end
-
-  # output the results as yaml
-  def self.output_results_yaml
-    hash = {}
-    hash['errors'] = error_files unless error_files.empty?
-    hash['warnings'] = warning_files unless warning_files.empty?
-    hash['clean'] = clean_files unless clean_files.empty?
-    hash['ignored'] = ignored_files unless ignored_files.empty?
-    puts Psych.dump(hash, indentation: 2)
-  end
-
-  # output the results as json
-  def self.output_results_json
-    hash = {}
-    hash['errors'] = error_files unless error_files.empty?
-    hash['warnings'] = warning_files unless warning_files.empty?
-    hash['clean'] = clean_files unless clean_files.empty?
-    hash['ignored'] = ignored_files unless ignored_files.empty?
-    puts JSON.pretty_generate(hash)
+    files.each { |file| self.class.ignored_files.push("#{file}") }
   end
 end

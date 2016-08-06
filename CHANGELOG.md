@@ -13,8 +13,10 @@
 - change dockerfile to use entrypoint
 - due to a bug in recently updated ruby/rspec/other, the system checks are suddenly behaving extremely erratically; look into this
 - invalid puppet-lint optparser spec test
-- move output_results into own class and refactor
+- refactor output results
 - pretty up yaml output
+- check format validity of yaml and json output
+- more args, fewer self accessors
 
 ### 1.2.1
 - Code and output cleanup.
