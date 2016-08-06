@@ -35,7 +35,7 @@ class PuppetParser
 
         # check for invalid arguments to PuppetLint
         begin
-          PuppetLint::OptParser.build.parse!(PuppetCheck.puppetlint_args)
+          PuppetLint::OptParser.build.parse!(PuppetCheck.puppetlint_args.clone)
         rescue OptionParser::InvalidOption
           raise "puppet-lint: invalid option supplied among #{PuppetCheck.puppetlint_args.join(' ')}"
         end

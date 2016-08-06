@@ -4,8 +4,9 @@
 # sudo docker build -t puppetcheck .
 
 # Start and enter container for troubleshooting if necessary.
-# sudo docker run -it -d puppetcheck
-# sudo docker exec -it `sudo docker ps -qa | awk '{print $1}' | head -n 1` bash
+# sudo docker run -it --rm puppetcheck (execute tests)
+# sudo docker run -it -d puppetcheck (daemonize to enter container)
+# sudo docker exec -it puppetcheck bash
 
 # Remove running containers before rebuild.
 # sudo docker ps -qa | xargs sudo docker kill
@@ -18,5 +19,4 @@ FROM fedora:23
 RUN dnf install ruby -y
 RUN gem install --no-rdoc --no-ri puppet rubocop reek puppet-lint spdx-licenses rspec rake
 COPY / /
-# Exit 0 to ensure container is built with tag for troubleshooting.
-RUN rake; exit 0
+ENTRYPOINT ["rake"]

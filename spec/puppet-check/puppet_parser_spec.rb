@@ -48,6 +48,11 @@ describe PuppetParser do
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql(["#{fixtures_dir}manifests/good.pp"])
     end
+    it 'throws a well specified error for an invalid PuppetLint argument' do
+      PuppetCheck.style_check = true
+      PuppetCheck.puppetlint_args = ['--non-existent', '--does-not-exist']
+      expect { PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp']) }.to raise_error(RuntimeError, 'puppet-lint: invalid option supplied among --non-existent --does-not-exist')
+    end
   end
 
   context '.template' do

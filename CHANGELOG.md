@@ -1,22 +1,24 @@
 ### 1.4.0 (Roadmap)
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
 
+### 1.3.1 (Roadmap)
+- split syntax and style checks to separate methods for speedup
+- more args, fewer self accessors
+
 ### 1.3.0 (Roadmap)
 - Minimum Ruby version increased from 1.9.3 to 2.0.0.
 - Minimum Puppet version increased from 3.2 to 3.4.
-- rakefile interface with puppet-lint, rubocop, reek
+- Fixed issue where invalid arguments to PuppetLint were not displayed in error message.
 - Support for outputting the results in YAML or JSON formats.
+- rakefile interface with puppet-lint, rubocop, reek
 - rudimentary catalog compilation testing?
 - rspec puppet stubbing
 - infrataster and analogous docker task like thing ripienaar did?
 - add additional hiera checks
-- change dockerfile to use entrypoint
 - due to a bug in recently updated ruby/rspec/other, the system checks are suddenly behaving extremely erratically; look into this
-- invalid puppet-lint optparser spec test
 - refactor output results
 - pretty up yaml output
 - check format validity of yaml and json output
-- more args, fewer self accessors
 
 ### 1.2.1
 - Code and output cleanup.
