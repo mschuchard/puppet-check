@@ -36,7 +36,7 @@ class PuppetCheck
     execute_parsers(files)
 
     # output the diagnostic results
-    OutputResults.run(PuppetCheck.output_format)
+    PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
 
     # exit code
     self.class.error_files.empty? ? 0 : 2

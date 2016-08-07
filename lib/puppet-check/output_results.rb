@@ -2,15 +2,6 @@ require_relative '../puppet-check'
 
 # class to handle outputting diagnostic results in desired format
 class OutputResults
-  # output the results for the files that were requested to be checked
-  def self.run(output_format)
-    case output_format
-    when 'text' then text
-    when 'yaml' then yaml
-    when 'json' then json
-    end
-  end
-
   # output the results as text
   def self.text
     unless PuppetCheck.error_files.empty?
@@ -31,23 +22,22 @@ class OutputResults
     end
   end
 
-  # output the results as yaml
-  def self.yaml
+  # output the results as yaml or json
+  def self.markup
+    # generate output hash
     hash = {}
     hash['errors'] = PuppetCheck.error_files unless PuppetCheck.error_files.empty?
     hash['warnings'] = PuppetCheck.warning_files unless PuppetCheck.warning_files.empty?
     hash['clean'] = PuppetCheck.clean_files unless PuppetCheck.clean_files.empty?
     hash['ignored'] = PuppetCheck.ignored_files unless PuppetCheck.ignored_files.empty?
-    puts Psych.dump(hash, indentation: 2)
-  end
 
-  # output the results as json
-  def self.json
-    hash = {}
-    hash['errors'] = PuppetCheck.error_files unless PuppetCheck.error_files.empty?
-    hash['warnings'] = PuppetCheck.warning_files unless PuppetCheck.warning_files.empty?
-    hash['clean'] = PuppetCheck.clean_files unless PuppetCheck.clean_files.empty?
-    hash['ignored'] = PuppetCheck.ignored_files unless PuppetCheck.ignored_files.empty?
-    puts JSON.pretty_generate(hash)
+    # convert hash to markup language
+    if PuppetCheck.output_format == 'yaml'
+      puts Psych.dump(hash, indentation: 2)
+    elsif PuppetCheck.output_format == 'json'
+      puts JSON.pretty_generate(hash)
+    else
+      raise "puppet-check: Unsupported output format '#{PuppetCheck.output_format}' was specified."
+    end
   end
 end
