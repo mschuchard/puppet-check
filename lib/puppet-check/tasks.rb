@@ -12,9 +12,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
     namespace :puppetcheck do
       desc 'Execute Puppet-Check file checks'
       task :file do
-        exit_code = PuppetCheck.new.run(Dir.glob('*'))
-        # changes nothing if this task is run separately; aborts 'puppetcheck' task if there are errors here
-        exit exit_code if exit_code != 0
+        PuppetCheck.new.run(Dir.glob('*'))
       end
 
       desc 'Execute RSpec and RSpec-Puppet tests'

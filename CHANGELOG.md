@@ -13,7 +13,6 @@
 - rspec puppet stubbing
 - infrataster and analogous docker task like thing ripienaar did?
 - add additional hiera checks
-- due to a bug in recently updated ruby/rspec/other, the system checks are suddenly behaving extremely erratically; look into this
 
 ### 1.2.1
 - Code and output cleanup.

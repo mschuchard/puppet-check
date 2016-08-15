@@ -51,7 +51,7 @@ class PuppetParser
         end
       end
       next PuppetCheck.warning_files.push(warnings) unless warnings == "#{file}:"
-      PuppetCheck.clean_files.push("#{file}")
+      PuppetCheck.clean_files.push(file.to_s)
     end
   end
 
@@ -70,7 +70,7 @@ class PuppetParser
       rescue StandardError => err
         PuppetCheck.error_files.push("#{file}:\n#{err.to_s.gsub("#{file}:", '')}")
       else
-        PuppetCheck.clean_files.push("#{file}")
+        PuppetCheck.clean_files.push(file.to_s)
       end
     end
   end

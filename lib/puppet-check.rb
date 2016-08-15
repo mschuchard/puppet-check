@@ -79,6 +79,6 @@ class PuppetCheck
     files.reject! { |file| File.extname(file) == '.json' }
     RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ })
     files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    files.each { |file| self.class.ignored_files.push("#{file}") }
+    files.each { |file| self.class.ignored_files.push(file.to_s) }
   end
 end

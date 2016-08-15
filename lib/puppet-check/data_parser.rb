@@ -16,7 +16,7 @@ class DataParser
         # perform some rudimentary hiera checks if data exists
         warnings = parsed.class.to_s == 'NilClass' ? [] : hiera(parsed)
         next PuppetCheck.warning_files.push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.clean_files.push("#{file}")
+        PuppetCheck.clean_files.push(file.to_s)
       end
     end
   end
@@ -79,7 +79,7 @@ class DataParser
           warnings = hiera(parsed) unless parsed.class.to_s == 'NilClass'
         end
         next PuppetCheck.warning_files.push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.clean_files.push("#{file}")
+        PuppetCheck.clean_files.push(file.to_s)
       end
     end
   end
