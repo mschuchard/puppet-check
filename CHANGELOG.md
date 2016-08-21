@@ -1,3 +1,7 @@
+### 1.4.0 (Roadmap)
+- rudimentary catalog compilation testing? (only for Puppet4)
+- minimum Puppet version increased from 3.4 to 3.7.
+
 ### 1.3.1 (Roadmap)
 - split syntax and style checks to separate methods for speedup
 - more args, fewer self accessors
@@ -9,7 +13,6 @@
 - Fixed issue where invalid arguments to PuppetLint were not displayed in error message.
 - Support for outputting the results in YAML or JSON formats.
 - rakefile interface with puppet-lint, rubocop, reek
-- rudimentary catalog compilation testing?
 - rspec puppet stubbing
 - infrataster and analogous docker task like thing ripienaar did?
 - add additional hiera checks

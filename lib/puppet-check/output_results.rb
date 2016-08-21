@@ -24,6 +24,9 @@ class OutputResults
 
   # output the results as yaml or json
   def self.markup
+    require 'yaml'
+    require 'json'
+
     # generate output hash
     hash = {}
     hash['errors'] = PuppetCheck.error_files unless PuppetCheck.error_files.empty?
