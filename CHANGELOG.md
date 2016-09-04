@@ -6,12 +6,14 @@
 - split syntax and style checks to separate methods for speedup
 - more args, fewer self accessors
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
+- metadata.json checks for dependency upper bounds, dependencies/operatingsystem_support as array of hashes, and operatingsystem and operatingsystem_release within operatingsystem_support
 
 ### 1.3.0 (Roadmap)
 - Minimum Ruby version increased from 1.9.3 to 2.0.0.
 - Minimum Puppet version increased from 3.2 to 3.4.
 - Fixed issue where invalid arguments to PuppetLint were not displayed in error message.
 - Support for outputting the results in YAML or JSON formats.
+- Additional style check for `metadata.json`.
 - rakefile interface with puppet-lint, rubocop, reek
 - rspec puppet stubbing
 - infrataster and analogous docker task like thing ripienaar did?

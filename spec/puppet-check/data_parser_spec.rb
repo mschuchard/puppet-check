@@ -45,7 +45,7 @@ describe DataParser do
     it 'puts a bad style metadata json file in the warning files array' do
       DataParser.json([fixtures_dir + 'metadata_style/metadata.json'])
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style/metadata.json:\nLicense identifier})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style/metadata.json:\n.*operatingsystem_support.*\nLicense identifier})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a good json file in the clean files array' do

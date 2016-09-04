@@ -21,6 +21,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
         # generate tasks for all recognized directories and ensure spec tests inside module dependencies are ignored
         spec_dirs = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').reject { |dir| dir =~ /fixtures/ }
         task.pattern = spec_dirs.empty? ? 'skip_rspec' : spec_dirs
+        task.rspec_opts = '-f json' if PuppetCheck.output_format == 'json'
       end
 
       desc 'Execute Beaker acceptance tests'
@@ -28,6 +29,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
         # generate tasks for all recognized directories and ensure acceptance tests inside module dependencies are ignored
         acceptance_dirs = Dir.glob('**/acceptance').reject { |dir| dir =~ /fixtures/ }
         task.pattern = acceptance_dirs.empty? ? 'skip_beaker' : acceptance_dirs
+        task.rspec_opts = '-f json' if PuppetCheck.output_format == 'json'
       end
     end
   end

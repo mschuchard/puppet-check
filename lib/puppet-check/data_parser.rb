@@ -69,6 +69,9 @@ class DataParser
           next PuppetCheck.error_files.push("#{file}:\n#{errors.join("\n")}") unless errors.empty?
 
           # check for warnings
+          # check for operatingsystem_support
+          warnings.push('Recommended field \'operatingsystem_support\' not found.') unless parsed.key?('operatingsystem_support')
+
           # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
           if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
             warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
