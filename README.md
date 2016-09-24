@@ -116,16 +116,17 @@ The following files have unrecognized formats and therefore were not processed:
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
-Puppet Check requires `ruby >= 1.9.3`, `puppet >= 3.2`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
+Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
 
-#### Important Note for Ruby 1.9.3
-If you are using Ruby 1.9.3, there is currently an issue where Hiera has an unspecified version dependency on JSonPure. Since JSonPure 2.0.2 requires `ruby >= 2.0.0`, this breaks Hiera installs on Ruby 1.9.3, which breaks Puppet installs, which breaks PuppetCheck installs. Therefore, you will need to restrict your installed version of JSonPure to something lower than 2.0.2 if you are using Ruby 1.9.3. A ticket with Puppet has been filed by me for this issue, so hopefully a resolution is forthcoming.
+#### Important Note for Ruby 1.9.3 and PuppetCheck <= 1.2.1
+If you are using Ruby 1.9.3, there is an issue where `Hiera <= 3.2.0` has an unspecified version dependency on JSonPure. Since JSonPure 2.0.2 requires `ruby >= 2.0.0`, this breaks Hiera installs on Ruby 1.9.3, which breaks Puppet installs, which breaks PuppetCheck installs. Therefore, you will need to either restrict your installed version of JSonPure to something lower than 2.0.2 if you are using Ruby 1.9.3, or use `Hiera >= 3.2.1`.
 
 ### CLI
 ```
 usage: puppet-check [options] paths
     -f, --future                     Enable future parser
     -s, --style                      Enable style checks
+    -o, --output format              Format for results output (default is text): text, json, or yaml
         --puppet-lint arg_one,arg_two
                                      Arguments for PuppetLint ignored checks
     -c, --config file                Load PuppetLint options from file.
@@ -150,12 +151,15 @@ rake puppetcheck:beaker    # Execute Beaker acceptance tests
 ```
 
 #### puppetcheck:file
-You can add style checks to and select the future parser for the `rake puppetcheck:file` by adding the following after the require:
+You can add style checks to and select the future parser for the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
 
 ```ruby
 PuppetCheck.style_check = true
 PuppetCheck.future_parser = true
+PuppetCheck.output_format = yaml
 ```
+
+Please note that `rspec` does not support yaml output and therefore would still use the default 'progress' formatter even if `yaml` is specified as the format option to Puppet Check.
 
 The style checks from within `rake puppetcheck:file` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. The capability to pass style arguments and options from within the `Rakefile` task block will be considered for future versions.
 
@@ -222,19 +226,19 @@ RUN apt-get update && apt-get install ruby git -y
 RUN gem install --no-rdoc --no-ri puppet-check reek rspec-puppet rake
 # this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
 ENV LANG en_US.UTF-8
-# create the directory for your module and change directory into it
-WORKDIR /module_name
-# copy the module contents into the module directory inside the container
+# create the directory for your module, directory environment, etc. and change directory into it
+WORKDIR /module_name_or_directory_environment_name
+# copy the module, directory environment, etc. contents into the module directory inside the container
 COPY / .
-# execute your tests; in this example we are executing the full suite of tests for this module
-RUN rake puppetcheck
+# execute your tests; in this example we are executing the full suite of tests
+ENTRYPOINT ["rake", "puppetcheck"]
 ```
 
 You can also build your own general container for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a Dockerfile that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
 
 ### Exit Codes
 - 0: PuppetCheck exited with no internal exceptions or errors in your Puppet code and data.
-- 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes).
+- 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes) or failed spec test.
 - 2: PuppetCheck exited with one or more errors in your Puppet code and data.
 
 ### Optional dependencies
