@@ -13,8 +13,11 @@ class DataParser
       rescue StandardError => err
         PuppetCheck.error_files.push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
-        # perform some rudimentary hiera checks if data exists
-        warnings = parsed.class.to_s == 'NilClass' ? [] : hiera(parsed)
+        warnings = []
+
+        # perform some rudimentary hiera checks if data exists and is hieradata
+        warnings = hiera(parsed) unless (parsed.class.to_s == 'NilClass') || (file == 'hiera.yaml')
+
         next PuppetCheck.warning_files.push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.clean_files.push(file.to_s)
       end

@@ -16,7 +16,7 @@ class RSpecPuppetSupport
       # skip to next specdir if it does not seem like a puppet module
       next unless File.directory?(specdir + '/../manifests')
 
-      # move up to module directory
+      # change to module directory
       Dir.chdir(specdir + '/..')
 
       # grab the module name from the directory name of the module to pass to file_setup
@@ -29,19 +29,17 @@ class RSpecPuppetSupport
 
   # setup the files, directories, and symlinks for rspec-puppet testing
   def self.file_setup(module_name)
-    require 'fileutils'
-
     # create all the necessary fixture dirs that are missing
     ['spec/fixtures', 'spec/fixtures/manifests', 'spec/fixtures/modules', "spec/fixtures/modules/#{module_name}"].each do |dir|
-      FileUtils.mkdir(dir) unless File.directory?(dir)
+      Dir.mkdir(dir) unless File.directory?(dir)
     end
 
     # create empty site.pp if missing
-    FileUtils.touch('spec/fixtures/manifests/site.pp') unless File.file?('spec/fixtures/manifests/site.pp')
+    File.write('spec/fixtures/manifests/site.pp', '') unless File.file?('spec/fixtures/manifests/site.pp')
 
     # symlink over everything the module needs for compilation
     %w(hiera.yaml data hieradata functions manifests lib files templates).each do |file|
-      FileUtils.ln_s("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
+      File.symlink("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
     end
 
     # create spec_helper if missing

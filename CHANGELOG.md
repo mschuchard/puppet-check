@@ -1,6 +1,10 @@
 ### 1.4.0 (Roadmap)
 - rudimentary catalog compilation testing? (only for Puppet4)
 - minimum Puppet version increased from 3.4 to 3.7.
+- rakefile interface with puppet-lint, rubocop, reek
+- rspec puppet stubbing
+- infrataster and analogous docker task like thing ripienaar did?
+- add additional hiera checks
 
 ### 1.3.1 (Roadmap)
 - split syntax and style checks to separate methods for speedup
@@ -14,10 +18,10 @@
 - Fixed issue where invalid arguments to PuppetLint were not displayed in error message.
 - Support for outputting the results in YAML or JSON formats.
 - Additional style check for `metadata.json`.
-- rakefile interface with puppet-lint, rubocop, reek
-- rspec puppet stubbing
-- infrataster and analogous docker task like thing ripienaar did?
-- add additional hiera checks
+- Slight code cleanup and optimization.
+- Block hieradata checks from excuting on `hiera.yaml`.
+- do another reek and rubocop check
+- some multithreading for speedup
 
 ### 1.2.1
 - Code and output cleanup.
