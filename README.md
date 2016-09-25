@@ -6,6 +6,7 @@
   - [CLI](#cli)
   - [Rake](#rake)
   - [Docker](#docker)
+  - [Vagrant](#vagrant)
   - [Exit Codes](#exit-codes)
   - [Optional Dependencies](#optional-dependencies)
 - [Contributing](#contributing)
@@ -137,7 +138,7 @@ The command line interface enables the ability to select the Puppet future parse
 
 Example:
 ```
-puppet-check -s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding path/to/code_and_data
+puppet-check -s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding -o yaml path/to/code_and_data
 ```
 
 ### Rake
@@ -156,7 +157,7 @@ You can add style checks to and select the future parser for the `rake puppetche
 ```ruby
 PuppetCheck.style_check = true
 PuppetCheck.future_parser = true
-PuppetCheck.output_format = yaml
+PuppetCheck.output_format = 'yaml'
 ```
 
 Please note that `rspec` does not support yaml output and therefore would still use the default 'progress' formatter even if `yaml` is specified as the format option to Puppet Check.
@@ -235,6 +236,32 @@ ENTRYPOINT ["rake", "puppetcheck"]
 ```
 
 You can also build your own general container for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a Dockerfile that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
+
+### Vagrant
+
+As an alternative to Docker, you can also use Vagrant for quick and disposable testing, but it is not as portable as Docker for these testing purposes. Below is an example Vagrantfile for this purpose.
+
+```ruby
+Vagrant.configure(2) do |config|
+  # a reliable and small box at the moment
+  config.vm.box = 'fedora/23'
+
+  config.vm.provision 'shell', inline: <<-SHELL
+    # cd to 'sync' if this is recent Vagrant; cd to '/vagrant' if this is older Vagrant
+    cd sync || cd /vagrant
+    # you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
+    sudo dnf install ruby rubygems git -y
+    # you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.2 and then rspec-puppet and rake for extra testing
+    sudo gem install --no-rdoc --no-ri puppet-check reek rspec-puppet rake
+    # this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
+    export LANG='en_US.UTF-8'
+    # execute your tests; in this example we are executing the full suite of tests
+    rake puppetcheck
+  SHELL
+end
+```
+
+To overcome the lack of convenient portability, you could try spinning up the Vagrant instance at the top level of your Puppet code and data and then descend into directories to execute tests as necessary. Cleverness or patience will be necessary if you decide to use Vagrant for testing and desire portability.
 
 ### Exit Codes
 - 0: PuppetCheck exited with no internal exceptions or errors in your Puppet code and data.

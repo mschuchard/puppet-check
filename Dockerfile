@@ -18,5 +18,5 @@
 FROM fedora:23
 RUN dnf install ruby -y
 RUN gem install --no-rdoc --no-ri puppet rubocop reek puppet-lint spdx-licenses rspec rake
-COPY / /
+COPY / .
 ENTRYPOINT ["rake"]
