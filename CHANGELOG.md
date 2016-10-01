@@ -7,12 +7,14 @@
 - some multithreading for speedup
 
 ### 1.3.1 (Roadmap)
+- For the git and mercurial methods of downloading external module dependencies as spec fixtures, the module is now updated if it is already present and previously retrieved with git or mercurial respectively. Previously, a fresh clone was always attempted.
 - split syntax and style checks to separate methods for speedup
 - more args, fewer self accessors
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
 - metadata.json checks for dependency upper bounds, dependencies/operatingsystem_support as array of hashes, and operatingsystem and operatingsystem_release within operatingsystem_support
 - do another reek and rubocop check
 - add additional hiera checks
+- can RSpecPuppetSupport.git, .forge, and .hg be combined efficiently?
 
 ### 1.3.0
 - Minimum Ruby version increased from 1.9.3 to 2.0.0.
@@ -21,7 +23,7 @@
 - Support for outputting the results in YAML or JSON formats.
 - Additional style check for `metadata.json`.
 - Slight code cleanup and optimization.
-- Block hieradata checks from excuting on `hiera.yaml`.
+- Block hieradata checks from executing on `hiera.yaml`.
 
 ### 1.2.1
 - Code and output cleanup.

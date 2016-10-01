@@ -4,6 +4,7 @@ class RSpecPuppetSupport
   # 'puppetcheck:spec' task invokes 'run'
   # 'run' invokes 'file_setup' always and 'dependency_setup' if metadata.json exists
   # 'dependency_setup' invokes 'git/forge/hg' if dependencies exist and git/forge/hg is download option
+  # 'git/forge/hg' downloads module fixture appropriately
 
   # prepare the spec fixtures directory for rspec-puppet testing
   def self.run
@@ -74,7 +75,10 @@ class RSpecPuppetSupport
 
   # download external module dependency with git
   def self.git(git_url, args = '')
-    system("git -C spec/fixtures/modules/ clone #{args} #{git_url}")
+    # establish path to clone module to
+    path = "spec/fixtures/modules/#{File.basename(git_url, '.git')}"
+    # is the module present and already cloned with git? do a pull; otherwise, do a clone
+    File.dir?("#{path}/.git") ? system("git -C #{path} pull") : system("git clone #{args} #{git_url} #{path}")
   end
 
   # download external module dependency with forge
@@ -84,6 +88,9 @@ class RSpecPuppetSupport
 
   # download external module dependency with hg
   def self.hg(hg_url, args = '')
-    system("hg --cwd spec/fixtures/modules/ clone #{args} #{hg_url}")
+    # establish path to clone module to
+    path = "spec/fixtures/modules/#{File.basename(hg_url)}"
+    # is the module present and already cloned with hg? do a pull and update; otherwise do a clone
+    File.dir?("#{path}/.hg") ? system("hg --cwd #{path} pull; hg --cwd #{path} update") : system("hg clone #{args} #{hg_url} #{path}")
   end
 end
