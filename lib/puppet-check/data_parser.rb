@@ -72,8 +72,29 @@ class DataParser
           next PuppetCheck.error_files.push("#{file}:\n#{errors.join("\n")}") unless errors.empty?
 
           # check for warnings
-          # check for operatingsystem_support
-          warnings.push('Recommended field \'operatingsystem_support\' not found.') unless parsed.key?('operatingsystem_support')
+          # check for operatingsystem_support hash array
+          if parsed.key?('operatingsystem_support')
+            # check if operatingsystem_support array is actually empty
+            if parsed['operatingsystem_support'].empty? || (!parsed['operatingsystem_support'].empty? && !(parsed['operatingsystem_support'][0].is_a? Hash))
+              warnings.push('Recommended field \'operatingsystem\' not found.')
+              warnings.push('Recommended field \'operatingsystemrelease\' not found.')
+            else
+              # check for operatingsystem string
+              if parsed['operatingsystem_support'][0].key?('operatingsystem')
+                warnings.push('Field \'operatingsystem\' is not a string.') unless parsed['operatingsystem_support'][0]['operatingsystem'].is_a? String
+              else
+                warnings.push('Recommended field \'operatingsystem\' not found.')
+              end
+              # check for operatingsystemrelease string array
+              if parsed['operatingsystem_support'][0].key?('operatingsystemrelease')
+                warnings.push('Field \'operatingsystemrelease\' is not a string array.') unless parsed['operatingsystem_support'][0]['operatingsystemrelease'][0].is_a? String
+              else
+                warnings.push('Recommended field \'operatingsystemrelease\' not found.')
+              end
+            end
+          else
+            warnings.push('Recommended field \'operatingsystem_support\' not found.')
+          end
 
           # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
           if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/

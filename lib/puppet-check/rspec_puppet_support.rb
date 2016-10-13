@@ -78,7 +78,7 @@ class RSpecPuppetSupport
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(git_url, '.git')}"
     # is the module present and already cloned with git? do a pull; otherwise, do a clone
-    File.dir?("#{path}/.git") ? system("git -C #{path} pull") : system("git clone #{args} #{git_url} #{path}")
+    File.directory?("#{path}/.git") ? system("git -C #{path} pull") : system("git clone #{args} #{git_url} #{path}")
   end
 
   # download external module dependency with forge
@@ -91,6 +91,6 @@ class RSpecPuppetSupport
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(hg_url)}"
     # is the module present and already cloned with hg? do a pull and update; otherwise do a clone
-    File.dir?("#{path}/.hg") ? system("hg --cwd #{path} pull; hg --cwd #{path} update") : system("hg clone #{args} #{hg_url} #{path}")
+    File.directory?("#{path}/.hg") ? system("hg --cwd #{path} pull; hg --cwd #{path} update") : system("hg clone #{args} #{hg_url} #{path}")
   end
 end
