@@ -38,20 +38,20 @@ describe DataParser do
     end
     it 'puts a bad metadata json file in the error files array' do
       DataParser.json([fixtures_dir + 'metadata_syntax/metadata.json'])
-      expect(PuppetCheck.error_files[0]).to match(%r{^#{fixtures_dir}metadata_syntax/metadata.json:\nRequired field.*\nDuplicate dependencies.*\nDeprecated field.*\nSummary exceeds})
+      expect(PuppetCheck.error_files[0]).to match(%r{^#{fixtures_dir}metadata_syntax/metadata.json:\nRequired field.*\nField 'requirements'.*\nDuplicate dependencies.*\nDeprecated field.*\nSummary exceeds})
       expect(PuppetCheck.warning_files).to eql([])
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a bad style metadata json file in the warning files array' do
       DataParser.json([fixtures_dir + 'metadata_style/metadata.json'])
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style/metadata.json:\n.*operatingsystem_support.*\nLicense identifier})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style/metadata.json:\n.*operatingsystem_support.*\n'pe' is missing an upper bound.\nLicense identifier})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts another bad style metadata json file in the warning files array' do
       DataParser.json([fixtures_dir + 'metadata_style_two/metadata.json'])
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style_two/metadata.json:\n.*operatingsystem.*\n.*operatingsystemrelease})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style_two/metadata.json:\n.*operatingsystem.*\n.*operatingsystemrelease.*\n'puppetlabs/two' is missing an upper bound})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a good json file in the clean files array' do

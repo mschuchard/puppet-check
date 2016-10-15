@@ -11,5 +11,6 @@
     {"name": "puppetlabs/nothing", "version_requirement": ">=1.1.1 < 2.2.2"},
     {"name": "puppetlabs/nothing", "version_requirement": ">=1.1.1 < 2.2.2"}
   ],
+  "requirements": ["not an array of hashes"],
   "checksum": "foo"
 }

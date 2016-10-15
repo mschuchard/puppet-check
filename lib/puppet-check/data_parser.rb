@@ -50,9 +50,11 @@ class DataParser
             errors.push("Required field '#{key}' not found.") unless parsed.key?(key)
           end
 
-          # check for duplicate dependencies and requirements
+          # check for duplicate dependencies and requirements, and that both are an array of hashes if they exist
           %w(requirements dependencies).each do |key|
             next unless parsed.key?(key)
+            next errors.push("Field '#{key}' is not an array of hashes.") unless (parsed[key].is_a? Array) && (parsed[key].empty? || (parsed[key][0].is_a? Hash))
+
             names = []
             parsed[key].each do |req_dep|
               name = req_dep['name']
@@ -75,7 +77,7 @@ class DataParser
           # check for operatingsystem_support hash array
           if parsed.key?('operatingsystem_support')
             # check if operatingsystem_support array is actually empty
-            if parsed['operatingsystem_support'].empty? || (!parsed['operatingsystem_support'].empty? && !(parsed['operatingsystem_support'][0].is_a? Hash))
+            if !(parsed['operatingsystem_support'].is_a? Array) || parsed['operatingsystem_support'].empty? || (!parsed['operatingsystem_support'].empty? && !(parsed['operatingsystem_support'][0].is_a? Hash))
               warnings.push('Recommended field \'operatingsystem\' not found.')
               warnings.push('Recommended field \'operatingsystemrelease\' not found.')
             else
@@ -94,6 +96,14 @@ class DataParser
             end
           else
             warnings.push('Recommended field \'operatingsystem_support\' not found.')
+          end
+
+          # check for requirement and dependency upper bounds
+          %w(requirements dependencies).each do |key|
+            next if parsed[key].empty?
+            parsed[key].each do |req_dep|
+              warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
+            end
           end
 
           # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)

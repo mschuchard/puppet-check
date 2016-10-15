@@ -8,11 +8,10 @@
 
 ### 1.3.1 (Roadmap)
 - For the git and mercurial methods of downloading external module dependencies as spec fixtures, the module is now updated if it is already present and previously retrieved with git or mercurial respectively. Previously, a fresh clone was always attempted.
-- Additional style checks within the `operatingsystem_support` hash in the `metadata.json`.
+- Additional syntax and style checks within the `operatingsystem_support`, `requirements`, and `dependencies` hashes in `metadata.json`.
 - split syntax and style checks to separate methods for speedup
 - more args, fewer self accessors
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
-- metadata.json checks for dependency upper bounds and dependencies as array of hashes
 - do another reek and rubocop check
 - add additional hiera checks
 

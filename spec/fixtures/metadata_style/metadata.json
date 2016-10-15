@@ -10,7 +10,7 @@
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": ">= 3.0.0 < 2015.4.0"
+      "version_requirement": ">= 3.0.0"
     },
     {
       "name": "puppet",
@@ -18,7 +18,5 @@
     }
   ],
   "description": "Standard Library for Puppet Modules",
-  "dependencies": [
-
-  ]
+  "dependencies": []
 }

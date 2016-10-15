@@ -29,7 +29,5 @@
     }
   ],
   "description": "Standard Library for Puppet Modules",
-  "dependencies": [
-
-  ]
+  "dependencies": []
 }
