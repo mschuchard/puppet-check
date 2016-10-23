@@ -72,6 +72,7 @@ Vagrant.configure(2) do |config|
     sudo yum install ruby rubygems -y
     sudo gem build puppet-check.gemspec
     sudo gem install --no-rdoc --no-ri puppet-check*.gem
+    sudo gem install --no-rdoc --no-ri reek -v 3.11
     sudo rm -f puppet-check*.gem
     cd spec/fixtures
     sudo /usr/local/bin/puppet-check -s .

@@ -1,5 +1,5 @@
 ### 1.4.0 (Roadmap)
-- rudimentary catalog compilation testing? (only for Puppet4)
+- optional dep octocatalog-diff interface
 - minimum Puppet version increased from 3.4 to 3.7.
 - rakefile interface with puppet-lint, rubocop, reek
 - rspec puppet stubbing
@@ -9,6 +9,7 @@
 ### 1.3.1 (Roadmap)
 - For the git and mercurial methods of downloading external module dependencies as spec fixtures, the module is now updated if it is already present and previously retrieved with git or mercurial respectively. Previously, a fresh clone was always attempted.
 - Additional syntax and style checks within the `operatingsystem_support`, `requirements`, and `dependencies` hashes in `metadata.json`.
+- Reek is now required dependency for all Ruby versions and locked to 3.11 for Ruby 2.0.
 - split syntax and style checks to separate methods for speedup
 - more args, fewer self accessors
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)

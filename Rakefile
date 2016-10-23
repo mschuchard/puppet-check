@@ -1,6 +1,6 @@
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
-require 'reek/rake/task' if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
+require 'reek/rake/task'
 
 task default: [:rubocop, :reek, :unit, :system]
 
@@ -9,10 +9,8 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.fail_on_error = false
 end
 
-if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
-  Reek::Rake::Task.new do |task|
-    task.fail_on_error = false
-  end
+Reek::Rake::Task.new do |task|
+  task.fail_on_error = false
 end
 
 desc 'Execute unit spec tests'

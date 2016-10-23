@@ -22,12 +22,10 @@ class RubyParser
           warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
           # check Reek and collect warnings
-          if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
-            require 'reek'
-            require 'reek/cli/application'
-            reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
-            warnings += reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
-          end
+          require 'reek'
+          require 'reek/cli/application'
+          reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
+          warnings += reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
 
           # return warnings
           next PuppetCheck.warning_files.push("#{file}:\n#{warnings.strip}") unless warnings == ''
