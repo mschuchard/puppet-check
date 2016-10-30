@@ -5,7 +5,7 @@
 
 # Start and enter container for troubleshooting if necessary.
 # sudo docker run -it --rm puppetcheck (execute tests)
-# sudo docker run -it -d puppetcheck (daemonize to enter container)
+# sudo docker run -it --name puppetcheck -d puppetcheck (daemonize to enter container)
 # sudo docker exec -it puppetcheck bash
 
 # Remove running containers before rebuild.

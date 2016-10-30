@@ -13,7 +13,6 @@
 - split syntax and style checks to separate methods for speedup
 - more args, fewer self accessors
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
-- do another reek and rubocop check
 - add additional hiera checks
 
 ### 1.3.0

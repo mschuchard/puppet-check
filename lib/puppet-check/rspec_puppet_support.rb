@@ -44,9 +44,8 @@ class RSpecPuppetSupport
     end
 
     # create spec_helper if missing
-    unless File.file?('spec/spec_helper.rb')
-      File.open('spec/spec_helper.rb', 'w') { |file| file.puts "require 'rspec-puppet/spec_helper'\n" }
-    end
+    return if File.file?('spec/spec_helper.rb')
+    File.open('spec/spec_helper.rb', 'w') { |file| file.puts "require 'rspec-puppet/spec_helper'\n" }
   end
 
   # setup the module dependencies for rspec-puppet testing
@@ -57,18 +56,17 @@ class RSpecPuppetSupport
     parsed = JSON.parse(File.read('metadata.json'))
 
     # grab dependencies if they exist
-    unless parsed['dependencies'].empty?
-      parsed['dependencies'].each do |dependency_hash|
-        # determine how the user wants to download the module dependency
-        if dependency_hash.key?('git')
-          git(dependency_hash['git'], dependency_hash['args'])
-        elsif dependency_hash.key?('forge')
-          forge(dependency_hash['forge'], dependency_hash['args'])
-        elsif dependency_hash.key?('hg')
-          hg(dependency_hash['hg'], dependency_hash['args'])
-        else
-          warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported, download method."
-        end
+    return if parsed['dependencies'].empty?
+    parsed['dependencies'].each do |dependency_hash|
+      # determine how the user wants to download the module dependency
+      if dependency_hash.key?('git')
+        git(dependency_hash['git'], dependency_hash['args'])
+      elsif dependency_hash.key?('forge')
+        forge(dependency_hash['forge'], dependency_hash['args'])
+      elsif dependency_hash.key?('hg')
+        hg(dependency_hash['hg'], dependency_hash['args'])
+      else
+        warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported, download method."
       end
     end
   end

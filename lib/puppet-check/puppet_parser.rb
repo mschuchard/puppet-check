@@ -61,7 +61,7 @@ class PuppetParser
 
     files.each do |file|
       # puppet before version 4 cannot check template syntax
-      next PuppetCheck.ignored_files.push("#{file}: ignored due to Puppet < 4.0.0") if Puppet::PUPPETVERSION.to_i < 4
+      next PuppetCheck.ignored_files.push("#{file}: ignored due to Puppet < 4") if Puppet::PUPPETVERSION.to_i < 4
 
       # check puppet template syntax
       begin

@@ -16,17 +16,13 @@ class OutputResults
       print "\n\033[32mThe following files have no errors or warnings:\033[0m\n-- "
       puts PuppetCheck.clean_files.join("\n-- ")
     end
-    unless PuppetCheck.ignored_files.empty?
-      print "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- "
-      puts PuppetCheck.ignored_files.join("\n-- ")
-    end
+    return if PuppetCheck.ignored_files.empty?
+    print "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- "
+    puts PuppetCheck.ignored_files.join("\n-- ")
   end
 
   # output the results as yaml or json
   def self.markup
-    require 'yaml'
-    require 'json'
-
     # generate output hash
     hash = {}
     hash['errors'] = PuppetCheck.error_files unless PuppetCheck.error_files.empty?
@@ -36,8 +32,10 @@ class OutputResults
 
     # convert hash to markup language
     if PuppetCheck.output_format == 'yaml'
+      require 'yaml'
       puts Psych.dump(hash, indentation: 2)
     elsif PuppetCheck.output_format == 'json'
+      require 'json'
       puts JSON.pretty_generate(hash)
     else
       raise "puppet-check: Unsupported output format '#{PuppetCheck.output_format}' was specified."
