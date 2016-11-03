@@ -4,7 +4,7 @@ require_relative 'utils'
 # executes diagnostics on ruby files
 class RubyParser
   # checks ruby (.rb)
-  def self.ruby(files)
+  def self.ruby(files, style)
     files.each do |file|
       # check ruby syntax
       begin
@@ -14,7 +14,7 @@ class RubyParser
         PuppetCheck.error_files.push("#{file}:\n#{err}")
       else
         # check ruby style
-        if PuppetCheck.style_check
+        if style
           require 'rubocop'
 
           # check RuboCop and collect warnings
@@ -59,7 +59,7 @@ class RubyParser
   end
 
   # checks librarian puppet (Puppetfile/Modulefile) and misc ruby (Rakefile/Gemfile)
-  def self.librarian(files)
+  def self.librarian(files, style)
     files.each do |file|
       # check librarian puppet syntax
       begin
@@ -69,7 +69,7 @@ class RubyParser
         PuppetCheck.error_files.push("#{file}:\n#{err}")
       # check librarian puppet style
       else
-        if PuppetCheck.style_check
+        if style
           require 'rubocop'
 
           # check Rubocop

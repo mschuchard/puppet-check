@@ -4,12 +4,12 @@ require_relative '../puppet-check'
 # executes diagnostics on puppet files
 class PuppetParser
   # checks puppet (.pp)
-  def self.manifest(files)
+  def self.manifest(files, future, style)
     require 'puppet/face'
 
     # prepare the Puppet settings for the error checking
     Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
-    Puppet[:parser] = 'future' if PuppetCheck.future_parser && (Puppet::PUPPETVERSION.to_i < 4)
+    Puppet[:parser] = 'future' if future && (Puppet::PUPPETVERSION.to_i < 4)
 
     files.each do |file|
       # setup error logging and collection
@@ -29,7 +29,7 @@ class PuppetParser
       Puppet::Util::Log.close_all
 
       # check puppet style
-      if PuppetCheck.style_check
+      if style
         require 'puppet-lint'
         require 'puppet-lint/optparser'
 
