@@ -4,7 +4,7 @@ require_relative '../puppet-check'
 # executes diagnostics on puppet files
 class PuppetParser
   # checks puppet (.pp)
-  def self.manifest(files, future, style)
+  def self.manifest(files, future, style, pl_args)
     require 'puppet/face'
 
     # prepare the Puppet settings for the error checking
@@ -35,9 +35,9 @@ class PuppetParser
 
         # check for invalid arguments to PuppetLint
         begin
-          PuppetLint::OptParser.build.parse!(PuppetCheck.puppetlint_args.clone)
+          PuppetLint::OptParser.build.parse!(pl_args.clone)
         rescue OptionParser::InvalidOption
-          raise "puppet-lint: invalid option supplied among #{PuppetCheck.puppetlint_args.join(' ')}"
+          raise "puppet-lint: invalid option supplied among #{pl_args.join(' ')}"
         end
 
         # prepare the PuppetLint object for style checks

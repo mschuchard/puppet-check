@@ -33,7 +33,7 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, self.class.future_parser, self.class.style_check)
+    execute_parsers(files, self.class.future_parser, self.class.style_check, self.class.puppetlint_args, self.class.rubocop_args)
 
     # output the diagnostic results
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
@@ -64,12 +64,12 @@ class PuppetCheck
   end
 
   # categorize and pass the files out to the parsers to determine their status
-  def execute_parsers(files, future, style)
-    PuppetParser.manifest(files.select { |file| File.extname(file) == '.pp' }, future, style)
+  def execute_parsers(files, future, style, pl_args, rc_args)
+    PuppetParser.manifest(files.select { |file| File.extname(file) == '.pp' }, future, style, pl_args)
     files.reject! { |file| File.extname(file) == '.pp' }
     PuppetParser.template(files.select { |file| File.extname(file) == '.epp' })
     files.reject! { |file| File.extname(file) == '.epp' }
-    RubyParser.ruby(files.select { |file| File.extname(file) == '.rb' }, style)
+    RubyParser.ruby(files.select { |file| File.extname(file) == '.rb' }, style, rc_args)
     files.reject! { |file| File.extname(file) == '.rb' }
     RubyParser.template(files.select { |file| File.extname(file) == '.erb' })
     files.reject! { |file| File.extname(file) == '.erb' }
@@ -77,7 +77,7 @@ class PuppetCheck
     files.reject! { |file| File.extname(file) =~ /\.ya?ml$/ }
     DataParser.json(files.select { |file| File.extname(file) == '.json' })
     files.reject! { |file| File.extname(file) == '.json' }
-    RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }, style)
+    RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }, style, rc_args)
     files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     files.each { |file| self.class.ignored_files.push(file.to_s) }
   end

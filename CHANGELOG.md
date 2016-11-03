@@ -12,7 +12,6 @@
 - Reek is now required dependency for all Ruby versions and locked to 3.11 for Ruby 2.0.
 - Code cleanup and optimization.
 - split syntax and style checks to separate methods for speedup
-- more args, fewer self accessors
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
 - add additional hiera checks
 

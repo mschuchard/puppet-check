@@ -4,7 +4,7 @@ require_relative 'utils'
 # executes diagnostics on ruby files
 class RubyParser
   # checks ruby (.rb)
-  def self.ruby(files, style)
+  def self.ruby(files, style, rc_args)
     files.each do |file|
       # check ruby syntax
       begin
@@ -18,7 +18,7 @@ class RubyParser
           require 'rubocop'
 
           # check RuboCop and collect warnings
-          rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(PuppetCheck.rubocop_args + ['--format', 'emacs', file]) }
+          rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
           warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
           # check Reek and collect warnings
@@ -59,7 +59,7 @@ class RubyParser
   end
 
   # checks librarian puppet (Puppetfile/Modulefile) and misc ruby (Rakefile/Gemfile)
-  def self.librarian(files, style)
+  def self.librarian(files, style, rc_args)
     files.each do |file|
       # check librarian puppet syntax
       begin
@@ -73,10 +73,9 @@ class RubyParser
           require 'rubocop'
 
           # check Rubocop
-          rubocop_args = PuppetCheck.rubocop_args.clone
           # RuboCop is grumpy about non-snake_case filenames so disable the Style/FileName check
-          rubocop_args.include?('--except') ? rubocop_args[rubocop_args.index('--except') + 1] = "#{rubocop_args[rubocop_args.index('--except') + 1]},Style/FileName" : rubocop_args.concat(['--except', 'Style/FileName'])
-          warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rubocop_args + ['--format', 'emacs', file]) }
+          rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Style/FileName" : rc_args.concat(['--except', 'Style/FileName'])
+          warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
 
           # collect style warnings
           next PuppetCheck.warning_files.push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
