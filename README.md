@@ -113,14 +113,19 @@ The following files have unrecognized formats and therefore were not processed:
 - Puppetlabs Spec Helper has no CLI.
 - Puppetlabs Spec Helper intrinsically only executes spec tests against one module at a time.
 - Puppetlabs Spec Helper requires an additional config file for RSpec Puppet support.
+- Puppetlabs Spec Helper does not update external module dependencies in a stateful/persistent workspace and fails gracefully instead.
+- Puppetlabs Spec Helper requires extra configuration items to setup self-module RSpec testing.
 
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
 Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
 
+#### Reek
+Reek dropped support for Ruby 2.0 when it went to 4.0. Since dependencies by Ruby version are allowed in Gemfiles but not gemspecs, this means that PuppetCheck installed with `bundler` will automatically pick up the correct version of Reek for your Ruby version and install it. If you are installing PuppetCheck via `gem`, then you can install reek normally with `gem` with Ruby >= 2.1, but you will need to specify `gem install reek -v 3.11` if you are using Ruby 2.0.
+
 #### Important Note for Ruby 1.9.3 and PuppetCheck <= 1.2.1
-If you are using Ruby 1.9.3, there is an issue where `Hiera <= 3.2.0` has an unspecified version dependency on JSonPure. Since JSonPure 2.0.2 requires `ruby >= 2.0.0`, this breaks Hiera installs on Ruby 1.9.3, which breaks Puppet installs, which breaks PuppetCheck installs. Therefore, you will need to either restrict your installed version of JSonPure to something lower than 2.0.2 if you are using Ruby 1.9.3, or use `Hiera >= 3.2.1`.
+If you are using Ruby 1.9.3 (and therefore also PuppetCheck <= 1.2.1), there is an issue where `Hiera <= 3.2.0` has an unspecified version dependency on JSonPure. Since JSonPure 2.0.2 requires `ruby >= 2.0.0`, this breaks Hiera installs on Ruby 1.9.3, which breaks Puppet installs, which breaks PuppetCheck installs. Therefore, you will need to either restrict your installed version of JSonPure to something lower than 2.0.2 if you are using Ruby 1.9.3, or use `Hiera >= 3.2.1`.
 
 ### CLI
 ```
@@ -209,6 +214,8 @@ Example:
 ]
 ```
 
+Note that `args` will be ignored during `git pull` and `hg pull/hg update` when the modules are updated instead of freshly cloned.
+
 #### puppetcheck:beaker
 The spec tests will be executed against everything that matches the pattern `**/acceptance`. Any of these directories inside of a `fixtures` directory will be ignored. This means everything in the current path that appears to be a Puppet module acceptance test for your module (not dependencies) will be regarded as such and executed during this rake task.
 
@@ -269,9 +276,8 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 - 2: PuppetCheck exited with one or more errors in your Puppet code and data.
 
 ### Optional dependencies
-- **reek**: will automatically (with `bundler`, otherwise manually) be installed as a dependency and checks enabled during style checks if your Ruby version is `>= 2.1.0`.
 - **rake**: install this if you want to use Puppet Check with `rake` tasks in addition to the CLI.
-- **rspec**: install this if you want to use Puppet Check to execute the spec tests for your ruby files during `rake`.
+- **rspec**: install this if you want to use Puppet Check to execute the spec tests for your Ruby files during `rake`.
 - **rspec-puppet**: install this if you want to use Puppet Check to execute the spec tests for your Puppet files during `rake`.
 - **beaker**: install this if you want to use Puppet Check to execute the acceptance tests during `rake`.
 - **git**: install this if you want to use Puppet Check to download external module dependencies with `git` commands during RSpec Puppet testing.

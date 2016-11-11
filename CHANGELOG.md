@@ -1,19 +1,18 @@
 ### 1.4.0 (Roadmap)
-- optional dep octocatalog-diff interface
-- minimum Puppet version increased from 3.4 to 3.7.
-- rakefile interface with puppet-lint, rubocop, reek
-- rspec puppet stubbing
-- infrataster and analogous docker task like thing ripienaar did?
-- some multithreading for speedup
+- optional dep octocatalog-diff interface (minor)
+- minimum Puppet version increased from 3.4 to 3.7 (minor)
+- rakefile interface with puppet-lint, rubocop, reek (minor)
+- rspec puppet stubbing (minor)
+- acceptance testing with vagrant/docker+serverspec (minor)
+- improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
+- split syntax and style checks to separate methods for style (patch)
+- add additional hiera checks (patch)
 
-### 1.3.1 (Roadmap)
+### 1.3.1
 - For the git and mercurial methods of downloading external module dependencies as spec fixtures, the module is now updated if it is already present and previously retrieved with git or mercurial respectively. Previously, a fresh clone was always attempted.
 - Additional syntax and style checks within the `operatingsystem_support`, `requirements`, and `dependencies` hashes in `metadata.json`.
 - Reek is now required dependency for all Ruby versions and locked to 3.11 for Ruby 2.0.
-- Code cleanup and optimization.
-- split syntax and style checks to separate methods for speedup
-- improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting)
-- add additional hiera checks
+- Slight code cleanup and optimization.
 
 ### 1.3.0
 - Minimum Ruby version increased from 1.9.3 to 2.0.0.
