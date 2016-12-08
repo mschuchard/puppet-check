@@ -1,6 +1,6 @@
 ### 1.4.0 (Roadmap)
+- For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.
 - optional dep octocatalog-diff interface (minor)
-- minimum Puppet version increased from 3.4 to 3.7 (minor)
 - rakefile interface with puppet-lint, rubocop, reek (minor)
 - rspec puppet stubbing (minor)
 - acceptance testing with vagrant/docker+serverspec (minor)

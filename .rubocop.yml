@@ -7,11 +7,5 @@ AllCops:
   Exclude:
     - 'spec/fixtures/**/*.rb'
 
-Metrics/LineLength:
-  Enabled: false
-
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/BlockLength:
+Metrics:
   Enabled: false

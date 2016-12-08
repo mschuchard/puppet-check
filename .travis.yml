@@ -9,13 +9,13 @@ matrix:
   include:
     - rvm: 2.0.0
       env: TEST='unit system'
-    - rvm: 2.1.9
+    - rvm: 2.1.10
       env: TEST=default
-    - rvm: 2.2.5
+    - rvm: 2.2.6
       env: TEST='unit system'
-    - rvm: 2.3.1
+    - rvm: 2.3.3
       env: TEST='unit system'
 
-before_install: gem update bundler
+before_install: gem update --no-rdoc --no-ri bundler
 install: bundle install --retry=3
 script: bundle exec rake $TEST

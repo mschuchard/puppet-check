@@ -81,7 +81,11 @@ class RSpecPuppetSupport
 
   # download external module dependency with forge
   def self.forge(forge_name, args = '')
-    system("puppet module install --modulepath spec/fixtures/modules/ --force #{args} #{forge_name}")
+    if File.directory?("spec/fixtures/modules/#{forge_name}")
+      system("puppet module upgrade --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
+    else
+      system("puppet module install --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
+    end
   end
 
   # download external module dependency with hg
