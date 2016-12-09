@@ -1,12 +1,16 @@
 ### 1.4.0 (Roadmap)
-- For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.
 - optional dep octocatalog-diff interface (minor)
 - rakefile interface with puppet-lint, rubocop, reek (minor)
 - rspec puppet stubbing (minor)
 - acceptance testing with vagrant/docker+serverspec (minor)
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
+
+### 1.3.2 (Roadmap)
+- For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.
+- A good `spec_helper` for RSpec Puppet is now generated if one is missing. This is instead of the buggy one that `rspec-puppet-init` generates.
+- Fix blocking of hieradata checks on `hiera.yaml`.
+- put in check for '---' to not be within a yaml hieradata other than at the top
 - split syntax and style checks to separate methods for style (patch)
-- add additional hiera checks (patch)
 
 ### 1.3.1
 - For the git and mercurial methods of downloading external module dependencies as spec fixtures, the module is now updated if it is already present and previously retrieved with git or mercurial respectively. Previously, a fresh clone was always attempted.
