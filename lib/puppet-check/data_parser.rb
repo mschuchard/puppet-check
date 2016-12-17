@@ -18,6 +18,9 @@ class DataParser
         # perform some rudimentary hiera checks if data exists and is hieradata
         warnings = hiera(parsed) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
 
+        # check that '---' does not show up more than once in the hieradata
+        warnings.push('The string --- appears more than once in this data and Hiera will fail to parse it correctly.') if File.read(file).scan(/---/).count >= 2
+
         next PuppetCheck.warning_files.push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.clean_files.push(file.to_s)
       end
@@ -124,12 +127,14 @@ class DataParser
   # checks hieradata
   def self.hiera(data)
     warnings = []
+
     data.each do |key, value|
       # check for nil values in the data (nil keys are fine)
       if (value.is_a?(Hash) && value.values.any?(&:nil?)) || (value.class.to_s == 'NilClass')
         warnings.push("Value(s) missing in key '#{key}'.")
       end
     end
+
     warnings
   end
 end
