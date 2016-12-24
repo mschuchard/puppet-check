@@ -103,9 +103,19 @@ class DataParser
 
           # check for requirement and dependency upper bounds
           %w(requirements dependencies).each do |key|
+            # skip if key is missing or not an array
             next if parsed[key].empty?
+            next warnings.push("#{key}'s value is not an array.") unless parsed[key].is_a? Array
             parsed[key].each do |req_dep|
-              warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
+              # warn and skip if key is missing
+              next warnings.push("'#{req_dep['name']}' is missing a 'version_requirement' key.") if req_dep['version_requirement'].class.to_s == 'NilClass'
+              # warn and skip if no upper bound
+              next warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
+
+              #check for semantic versioning
+              if key == 'dependencies'
+                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d\.\d\.\d.*\d\.\d\.\d/
+              end
             end
           end
 

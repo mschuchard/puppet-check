@@ -10,6 +10,7 @@
 - A good `spec_helper` for RSpec Puppet is now generated if one is missing. This is instead of the buggy one that `rspec-puppet-init` generates.
 - Fix blocking of hieradata checks on `hiera.yaml`.
 - A check was added for '---' appearing more than once in YAML hieradata as Hiera attempts to parse these additional lines as data.
+- Additional `metadata.json` warnings for `version_requirement` nested key.
 - split syntax and style checks to separate methods for style (patch)
 
 ### 1.3.1
