@@ -15,6 +15,8 @@ matrix:
       env: TEST='unit system'
     - rvm: 2.3.3
       env: TEST='unit system'
+    - rvm: 2.4.0
+      env: TEST='unit system'
 
 before_install: gem update --no-rdoc --no-ri bundler
 install: bundle install --retry=3

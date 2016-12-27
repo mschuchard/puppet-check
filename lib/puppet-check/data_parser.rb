@@ -112,7 +112,7 @@ class DataParser
               # warn and skip if no upper bound
               next warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
 
-              #check for semantic versioning
+              # check for semantic versioning
               if key == 'dependencies'
                 warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d\.\d\.\d.*\d\.\d\.\d/
               end
