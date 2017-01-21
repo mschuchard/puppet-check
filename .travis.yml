@@ -18,6 +18,6 @@ matrix:
     - rvm: 2.4.0
       env: TEST='unit system'
 
-before_install: gem update --no-rdoc --no-ri bundler
+before_install: gem update --no-document bundler
 install: bundle install --retry=3
 script: bundle exec rake $TEST

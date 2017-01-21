@@ -15,8 +15,8 @@
 # sudo docker ps -qa | xargs sudo docker rm
 # sudo docker images | grep puppetcheck | awk '{print $3}' | xargs sudo docker rmi
 
-FROM fedora:23
+FROM fedora:24
 RUN dnf install ruby -y
-RUN gem install --no-rdoc --no-ri puppet rubocop reek puppet-lint spdx-licenses rspec rake
+RUN gem install --no-document puppet rubocop reek puppet-lint spdx-licenses rspec rake
 COPY / .
 ENTRYPOINT ["rake"]
