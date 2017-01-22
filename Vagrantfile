@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
     cd /vagrant
     yum install ruby rubygems -y
     gem build puppet-check.gemspec
-    gem install --no-rdoc --no-ri puppet-check*.gem
+    gem install --no-rdoc --no-ri rake puppet-check*.gem
     gem install --no-rdoc --no-ri reek -v 3.11
     rm -f puppet-check*.gem
     cd spec/fixtures

@@ -5,6 +5,7 @@
 - [Usage](#usage)
   - [CLI](#cli)
   - [Rake](#rake)
+  - [API](#api)
   - [Docker](#docker)
   - [Vagrant](#vagrant)
   - [Exit Codes](#exit-codes)
@@ -45,10 +46,11 @@ BEGIN {throw :good}; i => am : a '' ruby.file { with } &bad syntax
 block sequence entries are not allowed in this context at line 2 column 4
 
 -- hieradata/syntax.json:
-757: unexpected token at '{
+743: unexpected token at '{
 
 -- metadata_syntax/metadata.json:
-Required field 'version' not found in metadata.json.
+Required field 'version' not found.
+Field 'requirements' is not an array of hashes.
 Duplicate dependencies on puppetlabs/nothing.
 Deprecated field 'checksum' found.
 Summary exceeds 144 characters.
@@ -60,13 +62,13 @@ Summary exceeds 144 characters.
 
 The following files have warnings:
 -- manifests/style_lint.pp:
-double quoted string containing no variables at line 2, column 8
-indentation of => is not properly aligned at line 2, column 5
+2:8: double quoted string containing no variables
+2:5: indentation of => is not properly aligned (expected in column 8, but found it in column 5)
 
 -- manifests/style_parser.pp:
 Unrecognized escape sequence '\[' at 2:77
 Unrecognized escape sequence '\]' at 2:77
-double quoted string containing no variables at line 2, column 45
+2:45: double quoted string containing no variables
 
 -- lib/style.rb:
 1:1: W: Useless assignment to variable - `hash`.
@@ -83,9 +85,18 @@ double quoted string containing no variables at line 2, column 45
 -- hieradata/style.yaml:
 Value(s) missing in key 'value'.
 Value(s) missing in key 'and'.
+The string --- appears more than once in this data and Hiera will fail to parse it correctly.
 
 -- metadata_style/metadata.json:
+Recommended field 'operatingsystem_support' not found.
+'pe' is missing an upper bound.
 License identifier 'Imaginary' is not in the SPDX list: http://spdx.org/licenses/
+
+-- metadata_style_two/metadata.json:
+Recommended field 'operatingsystem' not found.
+Recommended field 'operatingsystemrelease' not found.
+'puppetlabs/one' has non-semantic versioning in its 'version_requirement' key.
+'puppetlabs/two' is missing an upper bound.
 
 -- librarian_style/Puppetfile:
 2:3: C: Align the parameters of a method call if they span more than one line.
@@ -94,9 +105,12 @@ License identifier 'Imaginary' is not in the SPDX list: http://spdx.org/licenses
 The following files have no errors or warnings:
 -- manifests/good.pp
 -- templates/good.epp
+-- spec/facter/facter_spec.rb
 -- lib/good.rb
+-- templates/no_method_error.erb
 -- templates/good.erb
 -- hieradata/good.yaml
+-- metadata.json
 -- hieradata/good.json
 -- metadata_good/metadata.json
 -- librarian_good/Puppetfile
@@ -116,10 +130,10 @@ The following files have unrecognized formats and therefore were not processed:
 - Puppetlabs Spec Helper does not update external module dependencies in a stateful/persistent workspace and fails gracefully instead.
 - Puppetlabs Spec Helper requires extra configuration items to setup self-module RSpec testing.
 
-It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lightweight and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
+It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lighter and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
-Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used either with a CLI or Rake tasks. Please note both interfaces will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
+Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
 
 #### Reek
 Reek dropped support for Ruby 2.0 when it went to 4.0. Since dependencies by Ruby version are allowed in Gemfiles but not gemspecs, this means that PuppetCheck installed with `bundler` will automatically pick up the correct version of Reek for your Ruby version and install it. If you are installing PuppetCheck via `gem`, then you can install reek normally with `gem` with Ruby >= 2.1, but you will need to specify `gem install reek -v 3.11` if you are using Ruby 2.0.
@@ -174,7 +188,7 @@ The spec tests will be executed against everything that matches the pattern `**/
 
 Please note it is perfectly acceptable to only execute standard RSpec tests in your modules and not use the extended RSpec Puppet matchers. If no Puppet module directories are identified during directory parsing, then no RSpec Puppet related actions (including those described below) will be performed.
 
-Prior to executing the spec tests, Puppet Check will parse everything in the current path and identify all `spec` directories not within `fixtures` directories. It will then execute RSpec Puppet setup actions inside all directories one level above that contain a `manifests` directory. This is assumed to be a Puppet module directory. These setup actions include creating all of the necessary directories inside of `spec/fixtures`, creating a blank `site.pp` if it is missing, symlinking everything from the module that is needed into fixtures (automatically replaces functionality of self module symlink in `.fixtures.yaml` from Puppetlabs Spec Helper), and creates the `spec_helper.rb` if it is missing. Note these setup actions can replace `rspec-puppet-init` from RSpec Puppet and currently are both faster and more  accurate.
+Prior to executing the spec tests, Puppet Check will parse everything in the current path and identify all `spec` directories not within `fixtures` directories. It will then execute RSpec Puppet setup actions inside all directories one level above that contain a `manifests` directory. This is assumed to be a Puppet module directory. These setup actions include creating all of the necessary directories inside of `spec/fixtures`, creating a blank `site.pp` if it is missing, symlinking everything from the module that is needed into fixtures (automatically replaces functionality of self module symlink in `.fixtures.yaml` from Puppetlabs Spec Helper), and creates the `spec_helper.rb` if it is missing. Note these setup actions can replace `rspec-puppet-init` from RSpec Puppet and currently are both faster and more accurate.
 
 Puppet Check will also automatically download specified external module dependencies for and during RSpec Puppet testing. Currently `git`, `puppet forge`, and `hg` commands are supported. They can be implemented in the following way in your modules' `metadata.json`:
 
@@ -221,6 +235,25 @@ The spec tests will be executed against everything that matches the pattern `**/
 
 Please note this is merely a frontend to Beaker and that Beaker itself has a self-contained scope compared to all the other tools Puppet Check interfaces with and utilizes. This means if you want to add Beaker-RSpec, Serverspec, etc., or perform advanced configurations, those would be all be performed within Beaker itself. This task merely provides an interface to integrate Beaker in with your other testing infrastructure.
 
+### API
+
+If you are performing your Puppet testing from within a Ruby script or your own custom Rakefile tasks, and want to execute Puppet Check intrinsically from the Ruby script or Rakefile, then you can call its API in the following simple way:
+
+```ruby
+# file checks
+PuppetCheck.future_parser = true # default false
+PuppetCheck.style_check = true # default false
+PuppetCheck.output_format = 'yaml' # also 'json'; default 'text'
+PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
+PuppetCheck.rubocop_args = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
+
+PuppetCheck.new.run([dirs, files])
+
+# rspec checks (as part of a RSpec::Core::RakeTask.new block with |task|)
+RSpecPuppetSupport.run
+task.pattern = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').reject { |dir| dir =~ /fixtures/ }
+```
+
 ### Docker
 
 You can also use Puppet Check inside of Docker for quick, portable, and disposable testing. Below is an example Dockerfile for this purpose:
@@ -231,7 +264,7 @@ FROM ubuntu:16.04
 # you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
 RUN apt-get update && apt-get install ruby git -y
 # you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.3 and then rspec-puppet and rake for extra testing
-RUN gem install --no-rdoc --no-ri puppet-check reek rspec-puppet rake
+RUN gem install --no-document puppet-check reek rspec-puppet rake
 # this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
 ENV LANG en_US.UTF-8
 # create the directory for your module, directory environment, etc. and change directory into it
@@ -251,15 +284,15 @@ As an alternative to Docker, you can also use Vagrant for quick and disposable t
 ```ruby
 Vagrant.configure(2) do |config|
   # a reliable and small box at the moment
-  config.vm.box = 'fedora/23'
+  config.vm.box = 'fedora/24-cloud-base'
 
   config.vm.provision 'shell', inline: <<-SHELL
-    # cd to 'sync' if this is recent Vagrant; cd to '/vagrant' if this is older Vagrant
-    cd sync || cd /vagrant
+    # cd to '/vagrant'
+    cd /vagrant
     # you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
     sudo dnf install ruby rubygems git -y
     # you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.2 and then rspec-puppet and rake for extra testing
-    sudo gem install --no-rdoc --no-ri puppet-check reek rspec-puppet rake
+    sudo gem install --no-document puppet-check reek rspec-puppet rake
     # this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
     export LANG='en_US.UTF-8'
     # execute your tests; in this example we are executing the full suite of tests
