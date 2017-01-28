@@ -7,7 +7,7 @@ class PuppetCheck::CLI
   def self.run(args)
     # gather the user arguments
     parse(args)
-    raise 'puppet-check: no paths specified' if args.empty?
+    raise 'puppet-check: no paths specified; try using --help' if args.empty?
 
     # run PuppetCheck
     PuppetCheck.new.run(args)

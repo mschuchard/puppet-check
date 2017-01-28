@@ -241,6 +241,8 @@ If you are performing your Puppet testing from within a Ruby script or your own 
 
 ```ruby
 # file checks
+require 'puppet-check'
+
 PuppetCheck.future_parser = true # default false
 PuppetCheck.style_check = true # default false
 PuppetCheck.output_format = 'yaml' # also 'json'; default 'text'
@@ -250,6 +252,8 @@ PuppetCheck.rubocop_args = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # def
 PuppetCheck.new.run([dirs, files])
 
 # rspec checks (as part of a RSpec::Core::RakeTask.new block with |task|)
+require 'puppet-check/rspec_puppet_support'
+
 RSpecPuppetSupport.run
 task.pattern = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').reject { |dir| dir =~ /fixtures/ }
 ```

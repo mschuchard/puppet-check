@@ -6,7 +6,7 @@
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
 - split syntax and style checks to separate methods for style (patch)
 
-### 1.3.2 (Roadmap)
+### 1.3.2
 - For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.
 - A good `spec_helper` for RSpec Puppet is now generated if one is missing. This is instead of the buggy one that `rspec-puppet-init` generates.
 - Fix blocking of hieradata checks on `hiera.yaml`.
