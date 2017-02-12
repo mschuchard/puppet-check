@@ -5,9 +5,10 @@ require_relative 'puppet-check/output_results'
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck
-  # initialize future parser and style check bools
+  # initialize future parser, style check, and regression check bools
   @future_parser = false
   @style_check = false
+  @regression_check = false
 
   # initialize output format option
   @output_format = 'text'
@@ -37,6 +38,9 @@ class PuppetCheck
 
     # output the diagnostic results
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
+
+    # perform regression checks if there were no errors and the user desires
+    RegressionCheck.compile if self.class.error_files.empty? && PuppetCheck.regression_check
 
     # exit code
     self.class.error_files.empty? ? 0 : 2

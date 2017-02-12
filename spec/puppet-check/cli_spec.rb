@@ -16,9 +16,11 @@ describe PuppetCheck::CLI do
     it 'allows future parser and style check to be enabled' do
       PuppetCheck.future_parser = false
       PuppetCheck.style_check = false
-      PuppetCheck::CLI.parse(%w(-s -f foo))
+      PuppetCheck.regression_check = false
+      PuppetCheck::CLI.parse(%w(-s -f -r foo))
       expect(PuppetCheck.future_parser).to eql(true)
       expect(PuppetCheck.style_check).to eql(true)
+      expect(PuppetCheck.regression_check).to eql(true)
     end
 
     it 'correctly parses a formatting option' do
