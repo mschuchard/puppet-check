@@ -11,6 +11,10 @@ describe PuppetCheck do
       PuppetCheck.style_check = true
       expect(PuppetCheck.style_check).to eql(true)
     end
+    it 'regression check can be altered' do
+      PuppetCheck.regression_check = true
+      expect(PuppetCheck.regression_check).to eql(true)
+    end
     it 'puppet lint arguments can be altered' do
       PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two']
       expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])

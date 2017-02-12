@@ -2,6 +2,7 @@ require_relative 'puppet-check/puppet_parser'
 require_relative 'puppet-check/ruby_parser'
 require_relative 'puppet-check/data_parser'
 require_relative 'puppet-check/output_results'
+require_relative 'puppet-check/regression_check'
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck
@@ -25,7 +26,7 @@ class PuppetCheck
 
   # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :output_format, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
+    attr_accessor :future_parser, :style_check, :regression_check, :output_format, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
 
   # main runner for PuppetCheck
