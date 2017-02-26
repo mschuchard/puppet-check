@@ -13,7 +13,7 @@ describe PuppetCheck::CLI do
       expect { PuppetCheck::CLI.parse(%w(-s -f -asdf foo)) }.to raise_error(OptionParser::InvalidOption)
     end
 
-    it 'allows future parser and style check to be enabled' do
+    it 'allows future parser and style and regression check to be enabled' do
       PuppetCheck.future_parser = false
       PuppetCheck.style_check = false
       PuppetCheck.regression_check = false
@@ -27,6 +27,12 @@ describe PuppetCheck::CLI do
       PuppetCheck.output_format = ''
       PuppetCheck::CLI.parse(%w(-o text))
       expect(PuppetCheck.output_format).to eql('text')
+    end
+
+    it 'correctly parses an octocatalog-diff config file option' do
+      PuppetCheck.octoconfig = ''
+      PuppetCheck::CLI.parse(%w(--octoconfig config.cfg.rb))
+      expect(PuppetCheck.octoconfig).to eql('config.cfg.rb')
     end
 
     it 'correctly parses PuppetLint arguments' do

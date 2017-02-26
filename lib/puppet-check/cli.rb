@@ -33,6 +33,9 @@ class PuppetCheck::CLI
       # formatting options
       opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.output_format = arg }
 
+      # octocatalog-diff options
+      opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use.') { |arg| PuppetCheck.octoconfig = arg }
+
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
         PuppetCheck.puppetlint_args += puppetlint_args.map { |arg| "--#{arg}" }

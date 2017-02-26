@@ -15,6 +15,14 @@ describe PuppetCheck do
       PuppetCheck.regression_check = true
       expect(PuppetCheck.regression_check).to eql(true)
     end
+    it 'output format can be altered' do
+      PuppetCheck.output_format = 'text'
+      expect(PuppetCheck.output_format).to eql('text')
+    end
+    it 'octocatalog-diff config file can be altered' do
+      PuppetCheck.octoconfig = '.octocatalog-diff.cfg.rb'
+      expect(PuppetCheck.octoconfig).to eql('.octocatalog-diff.cfg.rb')
+    end
     it 'puppet lint arguments can be altered' do
       PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two']
       expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
@@ -44,12 +52,12 @@ describe PuppetCheck do
 
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
-      expect(dir.length).to eql(29)
+      expect(dir.length).to eql(30)
     end
 
     it 'correctly parses multiple directories and returns all of their files' do
       multi_dir.each { |file| expect(File.file?(file)).to be true }
-      expect(multi_dir.length).to eql(13)
+      expect(multi_dir.length).to eql(14)
     end
 
     it 'correctly parses three directories (one repeated) and three files (one repeated from directories and another repeated from files) and returns the unique files' do
