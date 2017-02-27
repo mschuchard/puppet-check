@@ -44,7 +44,7 @@ class PuppetCheck
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
 
     # perform regression checks if there were no errors and the user desires
-    RegressionCheck.compile if self.class.error_files.empty? && PuppetCheck.regression_check
+    RegressionCheck.compile([''], self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.regression_check
 
     # exit code
     self.class.error_files.empty? ? 0 : 2
