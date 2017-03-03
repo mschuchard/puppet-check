@@ -45,13 +45,13 @@ describe DataParser do
     it 'puts a bad style metadata json file in the warning files array' do
       DataParser.json([fixtures_dir + 'metadata_style/metadata.json'])
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style/metadata.json:\n.*operatingsystem_support.*\n'pe' is missing an upper bound.\nLicense identifier})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style/metadata.json:\n'pe' is missing an upper bound.\n.*operatingsystem_support.*\nLicense identifier})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts another bad style metadata json file in the warning files array' do
       DataParser.json([fixtures_dir + 'metadata_style_two/metadata.json'])
       expect(PuppetCheck.error_files).to eql([])
-      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style_two/metadata.json:\n.*operatingsystem.*\n.*operatingsystemrelease.*\n'puppetlabs/one' has non-semantic versioning.*\n'puppetlabs/two' is missing an upper bound})
+      expect(PuppetCheck.warning_files[0]).to match(%r{^#{fixtures_dir}metadata_style_two/metadata.json:\n'puppetlabs/one' has non-semantic versioning.*\n'puppetlabs/two' is missing an upper bound\.\n.*operatingsystem.*\n.*operatingsystemrelease})
       expect(PuppetCheck.clean_files).to eql([])
     end
     it 'puts a good json file in the clean files array' do

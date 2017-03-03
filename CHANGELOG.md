@@ -1,4 +1,5 @@
 ### 1.4.0 (Roadmap)
+- Optimized and fixed checks on dependencies and requirements in `metadata.json`.
 - optional octocatalog-diff compilation testing (minor)
 - optional octocatalog-diff regression testing (minor)
 - optional octocatalog-diff config file support (minor)
@@ -13,6 +14,8 @@
 - deal with ruby 2.0.0 warning in Puppet 4.9
 - resolve deps in module fixtures?
 - svn support for module fixtures
+- fix octocatalog-diff not in travis tests
+- change settings to hash
 
 ### 1.3.2
 - For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.

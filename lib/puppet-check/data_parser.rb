@@ -53,16 +53,33 @@ class DataParser
             errors.push("Required field '#{key}' not found.") unless parsed.key?(key)
           end
 
-          # check for duplicate dependencies and requirements, and that both are an array of hashes if they exist
+          # check requirements and dependencies keys
           %w(requirements dependencies).each do |key|
+            # skip if key is missing or or value is an empty string, array, or hash
             next unless parsed.key?(key)
-            next errors.push("Field '#{key}' is not an array of hashes.") unless (parsed[key].is_a? Array) && (parsed[key].empty? || (parsed[key][0].is_a? Hash))
+            next if parsed[key].empty?
 
+            # check that dependencies and requirements are an array of hashes
+            next errors.push("Field '#{key}' is not an array of hashes.") unless (parsed[key].is_a? Array) && (parsed[key][0].is_a? Hash)
+
+            # check dependencies and requirements values
             names = []
             parsed[key].each do |req_dep|
+              # check for duplicate dependencies and requirements
               name = req_dep['name']
-              errors.push("Duplicate #{key} on #{name}.") if names.include?(name)
+              next errors.push("Duplicate #{key} on #{name}.") if names.include?(name)
               names << name
+
+              # warn and skip if key is missing
+              next warnings.push("'#{req_dep['name']}' is missing a 'version_requirement' key.") if req_dep['version_requirement'].class.to_s == 'NilClass'
+
+              # warn and skip if no upper bound
+              next warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
+
+              # check for semantic versioning
+              if key == 'dependencies'
+                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d\.\d\.\d.*\d\.\d\.\d/
+              end
             end
           end
 
@@ -90,6 +107,7 @@ class DataParser
               else
                 warnings.push('Recommended field \'operatingsystem\' not found.')
               end
+
               # check for operatingsystemrelease string array
               if parsed['operatingsystem_support'][0].key?('operatingsystemrelease')
                 warnings.push('Field \'operatingsystemrelease\' is not a string array.') unless parsed['operatingsystem_support'][0]['operatingsystemrelease'][0].is_a? String
@@ -99,24 +117,6 @@ class DataParser
             end
           else
             warnings.push('Recommended field \'operatingsystem_support\' not found.')
-          end
-
-          # check for requirement and dependency upper bounds
-          %w(requirements dependencies).each do |key|
-            # skip if key is missing or not an array
-            next if parsed[key].empty?
-            next warnings.push("#{key}'s value is not an array.") unless parsed[key].is_a? Array
-            parsed[key].each do |req_dep|
-              # warn and skip if key is missing
-              next warnings.push("'#{req_dep['name']}' is missing a 'version_requirement' key.") if req_dep['version_requirement'].class.to_s == 'NilClass'
-              # warn and skip if no upper bound
-              next warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
-
-              # check for semantic versioning
-              if key == 'dependencies'
-                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d\.\d\.\d.*\d\.\d\.\d/
-              end
-            end
           end
 
           # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
