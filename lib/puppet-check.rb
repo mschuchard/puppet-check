@@ -16,6 +16,7 @@ class PuppetCheck
 
   # initialize octocatalog-diff options
   @octoconfig = '.octocatalog-diff.cfg.rb'
+  @octonodes = %w(localhost.localdomain)
 
   # initialize diagnostic output arrays
   @error_files = []
@@ -29,7 +30,7 @@ class PuppetCheck
 
   # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :regression_check, :output_format, :octoconfig, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
+    attr_accessor :future_parser, :style_check, :regression_check, :output_format, :octoconfig, :octonodes, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
 
   # main runner for PuppetCheck
@@ -44,7 +45,7 @@ class PuppetCheck
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
 
     # perform regression checks if there were no errors and the user desires
-    RegressionCheck.compile([''], self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.regression_check
+    RegressionCheck.compile(self.class.octonodes, self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.regression_check
 
     # exit code
     self.class.error_files.empty? ? 0 : 2

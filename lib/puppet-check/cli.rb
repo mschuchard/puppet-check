@@ -35,6 +35,7 @@ class PuppetCheck::CLI
 
       # octocatalog-diff options
       opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use.') { |arg| PuppetCheck.octoconfig = arg }
+      opts.on('--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on.') { |arg| PuppetCheck.octonodes = arg }
 
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|

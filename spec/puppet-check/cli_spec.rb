@@ -29,10 +29,12 @@ describe PuppetCheck::CLI do
       expect(PuppetCheck.output_format).to eql('text')
     end
 
-    it 'correctly parses an octocatalog-diff config file option' do
+    it 'correctly parses octocatalog-diff options' do
       PuppetCheck.octoconfig = ''
-      PuppetCheck::CLI.parse(%w(--octoconfig config.cfg.rb))
+      PuppetCheck.octonodes = []
+      PuppetCheck::CLI.parse(%w(--octoconfig config.cfg.rb --octonodes server1,server2))
       expect(PuppetCheck.octoconfig).to eql('config.cfg.rb')
+      expect(PuppetCheck.octonodes).to eql(%w(server1 server2))
     end
 
     it 'correctly parses PuppetLint arguments' do

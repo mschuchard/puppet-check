@@ -23,6 +23,10 @@ describe PuppetCheck do
       PuppetCheck.octoconfig = '.octocatalog-diff.cfg.rb'
       expect(PuppetCheck.octoconfig).to eql('.octocatalog-diff.cfg.rb')
     end
+    it 'octocatalog-diff nodes array can be altered' do
+      PuppetCheck.octonodes = %w(localhost.localdomain)
+      expect(PuppetCheck.octonodes).to eql(%w(localhost.localdomain))
+    end
     it 'puppet lint arguments can be altered' do
       PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two']
       expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
