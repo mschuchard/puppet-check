@@ -6,11 +6,11 @@ Vagrant.configure(2) do |config|
     cd /vagrant
     yum install ruby rubygems -y
     gem build puppet-check.gemspec
-    gem install --no-rdoc --no-ri rake puppet-check*.gem
+    gem install --no-rdoc --no-ri rake octocatalog-diff puppet-check*.gem
     gem install --no-rdoc --no-ri reek -v 3.11
     rm -f puppet-check*.gem
     cd spec/fixtures
-    /usr/local/bin/puppet-check -s .
+    /usr/local/bin/puppet-check -s --smoke .
     echo $?
   SHELL
 end

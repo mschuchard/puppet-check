@@ -17,6 +17,6 @@
 
 FROM fedora:24
 RUN dnf install ruby -y
-RUN gem install --no-document puppet rubocop reek puppet-lint spdx-licenses rspec rake
+RUN gem install --no-document puppet rubocop reek puppet-lint spdx-licenses rspec rake octocatalog-diff
 COPY / .
 ENTRYPOINT ["rake"]

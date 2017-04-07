@@ -11,11 +11,11 @@ matrix:
       env: TEST='unit system'
     - rvm: 2.1.10
       env: TEST=default
-    - rvm: 2.2.6
+    - rvm: 2.2.7
       env: TEST='unit system'
-    - rvm: 2.3.3
+    - rvm: 2.3.4
       env: TEST='unit system'
-    - rvm: 2.4.0
+    - rvm: 2.4.1
       env: TEST='unit system'
 
 before_install: gem update --no-document bundler
