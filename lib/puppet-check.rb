@@ -9,6 +9,7 @@ class PuppetCheck
   # initialize future parser, style check, and regression check bools
   @future_parser = false
   @style_check = false
+  @smoke_check = false
   @regression_check = false
 
   # initialize output format option
@@ -30,7 +31,7 @@ class PuppetCheck
 
   # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :regression_check, :output_format, :octoconfig, :octonodes, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
+    attr_accessor :future_parser, :style_check, :smoke_check, :regression_check, :output_format, :octoconfig, :octonodes, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
   end
 
   # main runner for PuppetCheck
@@ -45,7 +46,10 @@ class PuppetCheck
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
 
     # perform regression checks if there were no errors and the user desires
-    RegressionCheck.compile(self.class.octonodes, self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.regression_check
+    RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.smoke_check
+
+    # perform regression checks if there were no errors and the user desires
+    RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.regression_check
 
     # exit code
     self.class.error_files.empty? ? 0 : 2

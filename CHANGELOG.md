@@ -5,20 +5,22 @@
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
 - https://blog.fluentz.io/learn-how-to-achieve-parallelism-with-ruby-i-o-bound-threads-a29c92aff58c#.zcqpibirn (parallelism/minor)
 - resolve deps in module fixtures? (minor)
+- rspec puppet stubbing (minor)
+- parallel spec option (minor)
 
 ### 1.4.1 (Roadmap)
-- rakefile interface with puppet-lint, rubocop, reek (minor)
-- rspec puppet stubbing (minor)
+- rakefile interface with puppet-lint, rubocop, reek (patch)
 - split syntax and style checks to separate methods for style (patch)
 - change settings to hash (patch)
 - add in begin/rescue on rspec, octocatalog, and rake loading (patch)
 - svn support for module fixtures (patch)
+- fail on warnings option + change exit code logic/possibilities
+- look into partition for execute_parsers optimization
 
 ### 1.4.0 (Roadmap)
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.
 - optional octocatalog-diff compilation testing (minor)
 - optional octocatalog-diff config file support (minor)
-- optional octocatalog-diff compilation testing options (patch)
 
 ### 1.3.2
 - For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.

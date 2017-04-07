@@ -28,6 +28,7 @@ class PuppetCheck::CLI
       # bool options
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.future_parser = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.style_check = true }
+      opts.on('--smoke', 'Enable smoke testing') { PuppetCheck.smoke_check = true }
       opts.on('-r', '--regression', 'Enable regression testing') { PuppetCheck.regression_check = true }
 
       # formatting options
@@ -35,7 +36,7 @@ class PuppetCheck::CLI
 
       # octocatalog-diff options
       opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use.') { |arg| PuppetCheck.octoconfig = arg }
-      opts.on('--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on.') { |arg| PuppetCheck.octonodes = arg }
+      opts.on('-n', '--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on.') { |arg| PuppetCheck.octonodes = arg }
 
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
