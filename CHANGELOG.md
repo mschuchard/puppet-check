@@ -1,12 +1,13 @@
 ### 1.5.0 (Roadmap)
 - optional octocatalog-diff regression testing (minor)
 - optional octocatalog-diff regression testing options (patch)
-- acceptance testing with vagrant/docker+serverspec (minor)
+- test-kitchen interface (minor)
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
 - https://blog.fluentz.io/learn-how-to-achieve-parallelism-with-ruby-i-o-bound-threads-a29c92aff58c#.zcqpibirn (parallelism/minor)
 - resolve deps in module fixtures? (minor)
 - rspec puppet stubbing (minor)
 - parallel spec option (minor)
+- multiple node testing with octocatalog-diff
 
 ### 1.4.1 (Roadmap)
 - rakefile interface with puppet-lint, rubocop, reek (patch)
@@ -19,8 +20,8 @@
 
 ### 1.4.0 (Roadmap)
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.
-- optional octocatalog-diff compilation testing (minor)
-- optional octocatalog-diff config file support (minor)
+- Optional octocatalog-diff smoke testing
+- Optional octocatalog-diff config file support
 
 ### 1.3.2
 - For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.
