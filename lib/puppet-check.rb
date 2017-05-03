@@ -45,14 +45,24 @@ class PuppetCheck
     # output the diagnostic results
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
 
-    # perform regression checks if there were no errors and the user desires
-    RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.smoke_check
-
-    # perform regression checks if there were no errors and the user desires
-    RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if self.class.error_files.empty? && PuppetCheck.regression_check
-
-    # exit code
-    self.class.error_files.empty? ? 0 : 2
+    if self.class.error_files.empty?
+      # perform smoke checks if there were no errors and the user desires
+      begin
+        RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.smoke_check
+      # smoke check failure? output message and return 2
+      rescue OctocatalogDiff::Errors::CatalogError => err
+        puts 'There was a smoke check error:'
+        puts err
+        2
+      end
+      # perform regression checks if there were no errors and the user desires
+      # RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.regression_check
+      # everything passed? return 0
+      0
+    else
+      # error files? return 2
+      2
+    end
   end
 
   # parse the paths and return the array of files

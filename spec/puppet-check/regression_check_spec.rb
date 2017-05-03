@@ -7,9 +7,6 @@ describe RegressionCheck do
     it 'raise an appropriate error if the file is malformed' do
       expect { RegressionCheck.config(fixtures_dir + 'metadata.json') }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
     end
-    it 'raises an appropriate error if the file was not found and test mode is true' do
-      # TODO: needs test: true
-    end
     it 'loads in a good octocatalog-diff config file' do
       expect { RegressionCheck.config(octocatalog_diff_dir + 'octocatalog-diff.cfg.rb') }.not_to raise_exception
     end

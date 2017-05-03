@@ -44,12 +44,12 @@ describe PuppetCheck do
 
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
-      expect(dir.length).to eql(31)
+      expect(dir.length).to eql(29)
     end
 
     it 'correctly parses multiple directories and returns all of their files' do
       multi_dir.each { |file| expect(File.file?(file)).to be true }
-      expect(multi_dir.length).to eql(14)
+      expect(multi_dir.length).to eql(13)
     end
 
     it 'correctly parses three directories (one repeated) and three files (one repeated from directories and another repeated from files) and returns the unique files' do

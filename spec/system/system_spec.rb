@@ -5,7 +5,7 @@ require_relative '../../lib/puppet-check/tasks'
 
 describe PuppetCheck do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
-    let(:cli) { PuppetCheck::CLI.run(%w(-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding .)) }
+    let(:cli) { PuppetCheck::CLI.run(%w(-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .)) }
 
     it 'outputs diagnostic results correctly after processing all of the files' do
       Dir.chdir(fixtures_dir)
@@ -40,6 +40,9 @@ describe PuppetCheck do
       PuppetCheck.clean_files = []
       PuppetCheck.ignored_files = []
       PuppetCheck.style_check = true
+      PuppetCheck.smoke_check = true
+      PuppetCheck.octonodes = %w(good.example.com)
+      PuppetCheck.octoconfig = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
 
       expect { tasks }.not_to raise_exception
 

@@ -29,7 +29,7 @@ class PuppetCheck::CLI
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.future_parser = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.style_check = true }
       opts.on('--smoke', 'Enable smoke testing') { PuppetCheck.smoke_check = true }
-      opts.on('-r', '--regression', 'Enable regression testing') { PuppetCheck.regression_check = true }
+      opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { PuppetCheck.regression_check = true }
 
       # formatting options
       opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.output_format = arg }
