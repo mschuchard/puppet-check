@@ -133,21 +133,23 @@ The following files have unrecognized formats and therefore were not processed:
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lighter and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
-Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 2.0.0`. All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
+Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 1.1.0`. `Octocatalog-diff >= 1.0.0` if you are performing smoke/regression checks. All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
 
-#### Reek
+#### Ruby 2.0 and Reek
 Reek dropped support for Ruby 2.0 when it went to 4.0. Since dependencies by Ruby version are allowed in Gemfiles but not gemspecs, this means that PuppetCheck installed with `bundler` will automatically pick up the correct version of Reek for your Ruby version and install it. If you are installing PuppetCheck via `gem`, then you can install reek normally with `gem` with Ruby >= 2.1, but you will need to specify `gem install reek -v 3.11` if you are using Ruby 2.0.
-
-#### Important Note for Ruby 1.9.3 and PuppetCheck <= 1.2.1
-If you are using Ruby 1.9.3 (and therefore also PuppetCheck <= 1.2.1), there is an issue where `Hiera <= 3.2.0` has an unspecified version dependency on JSonPure. Since JSonPure 2.0.2 requires `ruby >= 2.0.0`, this breaks Hiera installs on Ruby 1.9.3, which breaks Puppet installs, which breaks PuppetCheck installs. Therefore, you will need to either restrict your installed version of JSonPure to something lower than 2.0.2 if you are using Ruby 1.9.3, or use `Hiera >= 3.2.1`.
 
 ### CLI
 ```
 usage: puppet-check [options] paths
     -f, --future                     Enable future parser
     -s, --style                      Enable style checks
+    --smoke                          Enable smoke testing
+    -r, --regression                 Enable regression testing (in progress, do not use)
     -o, --output format              Format for results output (default is text): text, json, or yaml
-        --puppet-lint arg_one,arg_two
+    --octoconfig config_file         Octocatalog-diff configuration file to use.
+    -n, --octonodes node1.example.com,node2.example.com
+                                     Octocatalog-diff nodes to test catalog on.
+    --puppet-lint arg_one,arg_two
                                      Arguments for PuppetLint ignored checks
     -c, --config file                Load PuppetLint options from file.
         --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
@@ -171,12 +173,16 @@ rake puppetcheck:beaker    # Execute Beaker acceptance tests
 ```
 
 #### puppetcheck:file
-You can add style checks to and select the future parser for the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
+You can add style, smoke, and regression checks to and select the future parser for the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
 
 ```ruby
 PuppetCheck.style_check = true
 PuppetCheck.future_parser = true
+PuppetCheck.smoke_check = true
+PuppetCheck.regression_check = true # in progress, do not use
 PuppetCheck.output_format = 'yaml'
+PuppetCheck.octoconfig = '.octocatalog-diff.cfg.rb'
+PuppetCheck.octonodes = %w(localhost.localdomain)
 ```
 
 Please note that `rspec` does not support yaml output and therefore would still use the default 'progress' formatter even if `yaml` is specified as the format option to Puppet Check.
@@ -245,7 +251,11 @@ require 'puppet-check'
 
 PuppetCheck.future_parser = true # default false
 PuppetCheck.style_check = true # default false
+PuppetCheck.smoke_check = true # default false
+PuppetCheck.regression_check = true # in progress, do not use; default false
 PuppetCheck.output_format = 'yaml' # also 'json'; default 'text'
+PuppetCheck.octoconfig = '$HOME/octocatalog-diff.cfg.rb' # default '.octocatalog-diff.cfg.rb'
+PuppetCheck.octonodes = %w(server.example.com) # default: %w(localhost.localdomain)
 PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
 PuppetCheck.rubocop_args = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
 
@@ -316,6 +326,7 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 - **rake**: install this if you want to use Puppet Check with `rake` tasks in addition to the CLI.
 - **rspec**: install this if you want to use Puppet Check to execute the spec tests for your Ruby files during `rake`.
 - **rspec-puppet**: install this if you want to use Puppet Check to execute the spec tests for your Puppet files during `rake`.
+- **octocatalog-diff**: install this if you want to use Puppet Check to execute smoke or regression tests for your Puppet catalog.
 - **beaker**: install this if you want to use Puppet Check to execute the acceptance tests during `rake`.
 - **git**: install this if you want to use Puppet Check to download external module dependencies with `git` commands during RSpec Puppet testing.
 - **mercurial**: install this if you want to use Puppet Check to download external module dependencies with `hg` commands during RSpec Puppet testing.
