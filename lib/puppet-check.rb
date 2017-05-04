@@ -2,7 +2,10 @@ require_relative 'puppet-check/puppet_parser'
 require_relative 'puppet-check/ruby_parser'
 require_relative 'puppet-check/data_parser'
 require_relative 'puppet-check/output_results'
-require_relative 'puppet-check/regression_check'
+begin
+  require_relative 'puppet-check/regression_check'
+rescue LoadError
+end
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck

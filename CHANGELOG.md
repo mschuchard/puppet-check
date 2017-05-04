@@ -7,7 +7,7 @@
 - resolve deps in module fixtures? (minor)
 - rspec puppet stubbing (minor)
 - parallel spec option (minor)
-- multiple node testing with octocatalog-diff
+- multiple node testing with octocatalog-diff (minor)
 
 ### 1.4.1 (Roadmap)
 - rakefile interface with puppet-lint, rubocop, reek (patch)
@@ -15,10 +15,11 @@
 - change settings to hash (patch)
 - add in begin/rescue on rspec, octocatalog, and rake loading (patch)
 - svn support for module fixtures (patch)
-- fail on warnings option + change exit code logic/possibilities
-- look into partition for execute_parsers optimization
+- fail on warnings option + change exit code logic/possibilities (patch)
+- look into partition for execute_parsers optimization (patch)
+- handle octocatalog-diff not installed situation better (patch)
 
-### 1.4.0 (Roadmap)
+### 1.4.0
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.
 - Optional octocatalog-diff smoke testing
 - Optional octocatalog-diff config file support
