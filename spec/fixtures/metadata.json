@@ -41,6 +41,11 @@
       "git": "https://github.com/puppetlabs/puppetlabs-lvm.git"
     },
     {
+      "name": "puppetlabs/foo",
+      "version_requirement": ">= 0.0.0 < 1.0.0",
+      "svn": "https://www.doesnotexist.com/foo"
+    },
+    {
       "name": "puppetlabs/gruntmaster",
       "version_requirement": ">= 6000.0.0 < 9000.0.0",
       "software": "upgradeable"

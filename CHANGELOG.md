@@ -10,11 +10,11 @@
 - multiple node testing with octocatalog-diff (minor)
 
 ### 1.4.1 (Roadmap)
+- Support for using SVN to download external module dependencies for RSpec-Puppet.
 - rakefile interface with puppet-lint, rubocop, reek (patch)
 - split syntax and style checks to separate methods for style (patch)
 - change settings to hash (patch)
 - add in begin/rescue on rspec, octocatalog, and rake loading (patch)
-- svn support for module fixtures (patch)
 - fail on warnings option + change exit code logic/possibilities (patch)
 - look into partition for execute_parsers optimization (patch)
 - handle octocatalog-diff not installed situation better (patch)

@@ -63,6 +63,8 @@ class RSpecPuppetSupport
         git(dependency_hash['git'], dependency_hash['args'])
       elsif dependency_hash.key?('forge')
         forge(dependency_hash['forge'], dependency_hash['args'])
+      elsif dependency_hash.key?('svn')
+        svn(dependency_hash['svn'], dependency_hash['args'])
       elsif dependency_hash.key?('hg')
         hg(dependency_hash['hg'], dependency_hash['args'])
       else
@@ -81,11 +83,17 @@ class RSpecPuppetSupport
 
   # download external module dependency with forge
   def self.forge(forge_name, args = '')
-    if File.directory?("spec/fixtures/modules/#{forge_name}")
-      system("puppet module upgrade --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
-    else
-      system("puppet module install --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
-    end
+    # is the module present? do an upgrade; otherwise, do an install
+    subcommand = File.directory?("spec/fixtures/modules/#{forge_name}") ? 'upgrade' : 'install'
+    system("puppet module #{subcommand} --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
+  end
+
+  # download external module dependency with svn
+  def self.svn(svn_url, args = '')
+    # establish path to checkout module to
+    path = "spec/fixtures/modules/#{File.basename(svn_url)}"
+    # is the module present and already checked out with svn? do an update; otherwise, do a checkout
+    File.directory?("#{path}/.svn") ? system("svn update #{path}") : system("svn co #{args} #{svn_url} #{path}")
   end
 
   # download external module dependency with hg
