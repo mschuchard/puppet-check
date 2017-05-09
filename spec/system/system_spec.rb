@@ -7,9 +7,9 @@ describe PuppetCheck do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
     # see regression_check_spec
     if File.directory?('/home/travis')
-      let(:cli) { PuppetCheck::CLI.run(%w(-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding .)) }
+      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding .]) }
     else
-      let(:cli) { PuppetCheck::CLI.run(%w(-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .)) }
+      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .]) }
     end
 
     it 'outputs diagnostic results correctly after processing all of the files' do
@@ -48,7 +48,7 @@ describe PuppetCheck do
       # see regression_check_spec
       unless File.directory?('/home/travis')
         PuppetCheck.smoke_check = true
-        PuppetCheck.octonodes = %w(good.example.com)
+        PuppetCheck.octonodes = %w[good.example.com]
         PuppetCheck.octoconfig = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
       end
 

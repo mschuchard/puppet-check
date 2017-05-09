@@ -5,7 +5,7 @@ AllCops:
     - 'bin/*.rb'
     - 'spec/**/*.rb'
   Exclude:
-    - 'spec/fixtures/**/*.rb'
+    - 'spec/fixtures/**/*'
 
 Metrics:
   Enabled: false

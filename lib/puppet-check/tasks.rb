@@ -7,7 +7,7 @@ require_relative 'rspec_puppet_support'
 class PuppetCheck::Tasks < ::Rake::TaskLib
   def initialize
     desc 'Execute all Puppet-Check checks'
-    task puppetcheck: %w(puppetcheck:file puppetcheck:spec puppetcheck:beaker)
+    task puppetcheck: %w[puppetcheck:file puppetcheck:spec puppetcheck:beaker]
 
     namespace :puppetcheck do
       desc 'Execute Puppet-Check file checks'

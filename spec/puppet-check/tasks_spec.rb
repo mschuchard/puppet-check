@@ -15,8 +15,8 @@ describe PuppetCheck::Tasks do
       expect { spec_tasks }.not_to raise_exception
 
       # cleanup rspec_puppet_setup
-      %w(spec/spec_helper.rb).each { |file| File.delete(file) }
-      %w(manifests modules).each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
+      %w[spec/spec_helper.rb].each { |file| File.delete(file) }
+      %w[manifests modules].each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
     end
   end
 

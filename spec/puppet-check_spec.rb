@@ -16,8 +16,8 @@ describe PuppetCheck do
       expect(PuppetCheck.output_format).to eql('text')
       PuppetCheck.octoconfig = '.octocatalog-diff.cfg.rb'
       expect(PuppetCheck.octoconfig).to eql('.octocatalog-diff.cfg.rb')
-      PuppetCheck.octonodes = %w(localhost.localdomain)
-      expect(PuppetCheck.octonodes).to eql(%w(localhost.localdomain))
+      PuppetCheck.octonodes = %w[localhost.localdomain]
+      expect(PuppetCheck.octonodes).to eql(%w[localhost.localdomain])
       PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two']
       expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
       PuppetCheck.rubocop_args = ['--rubocop-arg-one', '--rubocop-arg-two']
@@ -28,10 +28,10 @@ describe PuppetCheck do
   context '.parse_paths' do
     before(:each) { Dir.chdir(fixtures_dir) }
 
-    let(:no_files) { PuppetCheck.parse_paths(%w(foo bar baz)) }
+    let(:no_files) { PuppetCheck.parse_paths(%w[foo bar baz]) }
     let(:file) { PuppetCheck.parse_paths(['lib/good.rb']) }
     let(:dir) { PuppetCheck.parse_paths(['.']) }
-    let(:multi_dir) { PuppetCheck.parse_paths(%w(hieradata lib manifests)) }
+    let(:multi_dir) { PuppetCheck.parse_paths(%w[hieradata lib manifests]) }
     let(:repeats) { PuppetCheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
 
     it 'raises an error if no files were found' do

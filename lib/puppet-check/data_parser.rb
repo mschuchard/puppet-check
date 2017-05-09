@@ -49,12 +49,12 @@ class DataParser
           errors = []
 
           # check for required keys
-          %w(name version author license summary source dependencies).each do |key|
+          %w[name version author license summary source dependencies].each do |key|
             errors.push("Required field '#{key}' not found.") unless parsed.key?(key)
           end
 
           # check requirements and dependencies keys
-          %w(requirements dependencies).each do |key|
+          %w[requirements dependencies].each do |key|
             # skip if key is missing or or value is an empty string, array, or hash
             next unless parsed.key?(key)
             next if parsed[key].empty?
@@ -84,7 +84,7 @@ class DataParser
           end
 
           # check for deprecated fields
-          %w(types checksum).each do |key|
+          %w[types checksum].each do |key|
             errors.push("Deprecated field '#{key}' found.") if parsed.key?(key)
           end
 

@@ -20,7 +20,7 @@ class PuppetCheck
 
   # initialize octocatalog-diff options
   @octoconfig = '.octocatalog-diff.cfg.rb'
-  @octonodes = %w(localhost.localdomain)
+  @octonodes = %w[localhost.localdomain]
 
   # initialize diagnostic output arrays
   @error_files = []

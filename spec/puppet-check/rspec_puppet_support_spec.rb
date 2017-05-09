@@ -25,8 +25,8 @@ describe RSpecPuppetSupport do
       expect(File.directory?('spec/fixtures/modules/stdlib')).to be true
 
       # cleanup rspec_puppet_setup
-      %w(spec/spec_helper.rb).each { |file| File.delete(file) }
-      %w(manifests modules).each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
+      %w[spec/spec_helper.rb].each { |file| File.delete(file) }
+      %w[manifests modules].each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
     end
   end
 end

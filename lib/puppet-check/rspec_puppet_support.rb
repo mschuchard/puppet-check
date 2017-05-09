@@ -39,7 +39,7 @@ class RSpecPuppetSupport
     File.write('spec/fixtures/manifests/site.pp', '') unless File.file?('spec/fixtures/manifests/site.pp')
 
     # symlink over everything the module needs for compilation
-    %w(hiera.yaml data hieradata functions manifests lib files templates).each do |file|
+    %w[hiera.yaml data hieradata functions manifests lib files templates].each do |file|
       File.symlink("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
     end
 
