@@ -4,7 +4,7 @@ class RSpecPuppetSupport
   # 'puppetcheck:spec' task invokes 'run'
   # 'run' invokes 'file_setup' always and 'dependency_setup' if metadata.json exists
   # 'dependency_setup' invokes 'git/forge/hg' if dependencies exist and git/forge/hg is download option
-  # 'git/forge/hg' downloads module fixture appropriately
+  # 'git/forge/svn/hg' downloads module fixture appropriately
 
   # prepare the spec fixtures directory for rspec-puppet testing
   def self.run

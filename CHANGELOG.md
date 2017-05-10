@@ -11,18 +11,17 @@
 
 ### 1.4.1 (Roadmap)
 - Support for using SVN to download external module dependencies for RSpec-Puppet.
+- Better handled situations with uninstalled optional dependencies.
 - rakefile interface with puppet-lint, rubocop, reek (patch)
 - split syntax and style checks to separate methods for style (patch)
 - change settings to hash (patch)
-- add in begin/rescue on rspec, octocatalog, and rake loading (patch)
 - fail on warnings option + change exit code logic/possibilities (patch)
 - look into partition for execute_parsers optimization (patch)
-- handle octocatalog-diff not installed situation better (patch)
 
 ### 1.4.0
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.
-- Optional octocatalog-diff smoke testing
-- Optional octocatalog-diff config file support
+- Optional octocatalog-diff smoke testing.
+- Optional octocatalog-diff config file support.
 
 ### 1.3.2
 - For the Puppet Forge method of downloading external module dependencies as spec fixtures, the module is now updated if it is already present. Previously, a fresh forced install was always attempted.

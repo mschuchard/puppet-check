@@ -2,10 +2,6 @@ require_relative 'puppet-check/puppet_parser'
 require_relative 'puppet-check/ruby_parser'
 require_relative 'puppet-check/data_parser'
 require_relative 'puppet-check/output_results'
-begin
-  require_relative 'puppet-check/regression_check'
-rescue LoadError
-end
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck
@@ -49,6 +45,11 @@ class PuppetCheck
     PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
 
     if self.class.error_files.empty?
+      begin
+        require_relative 'puppet-check/regression_check'
+      rescue LoadError
+      end
+      
       # perform smoke checks if there were no errors and the user desires
       begin
         RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.smoke_check
@@ -59,7 +60,14 @@ class PuppetCheck
         2
       end
       # perform regression checks if there were no errors and the user desires
-      # RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.regression_check
+      # begin
+      #   RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.regression_check
+      # rescue OctocatalogDiff::Errors::CatalogError => err
+      #   puts 'There was a catalog compilation error during the regression check:'
+      #   puts err
+      #   2
+      # end
+      # code to output differences in catalog?
       # everything passed? return 0
       0
     else

@@ -14,8 +14,8 @@ class RegressionCheck
 
   # regression testing
   # def self.regression(nodes, octoconfig)
-    # options = RegressionCheck.config(octoconfig)
-    # nodes.each { |node| stuff }
+  #   options = RegressionCheck.config(octoconfig)
+  #   nodes.each { |node| stuff }
   # end
 
   # config file loading

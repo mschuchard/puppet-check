@@ -47,7 +47,7 @@ describe PuppetCheck::CLI do
 
     it 'correctly loads a .puppet-lint.rc' do
       PuppetCheck.puppetlint_args = []
-      PuppetCheck::CLI.parse(%w[-c #{fixtures_dir}/manifests/.puppet-lint.rc])
+      PuppetCheck::CLI.parse(%W[-c #{fixtures_dir}/manifests/.puppet-lint.rc])
       expect(PuppetCheck.puppetlint_args).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
     end
 
