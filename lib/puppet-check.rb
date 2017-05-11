@@ -5,32 +5,35 @@ require_relative 'puppet-check/output_results'
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck
+  # initialize settings hash
+  @settings = {}
+
   # initialize future parser, style check, and regression check bools
-  @future_parser = false
-  @style_check = false
-  @smoke_check = false
-  @regression_check = false
+  @settings['future_parser'] = false
+  @settings['style_check'] = false
+  @settings['smoke_check'] = false
+  @settings['regression_check'] = false
 
   # initialize output format option
-  @output_format = 'text'
+  @settings['output_format'] = 'text'
 
   # initialize octocatalog-diff options
-  @octoconfig = '.octocatalog-diff.cfg.rb'
-  @octonodes = %w[localhost.localdomain]
+  @settings['octoconfig'] = '.octocatalog-diff.cfg.rb'
+  @settings['octonodes'] = %w[localhost.localdomain]
 
   # initialize diagnostic output arrays
-  @error_files = []
-  @warning_files = []
-  @clean_files = []
-  @ignored_files = []
+  @settings['error_files'] = []
+  @settings['warning_files'] = []
+  @settings['clean_files'] = []
+  @settings['ignored_files'] = []
 
   # initialize style arg arrays
-  @puppetlint_args = []
-  @rubocop_args = []
+  @settings['puppetlint_args'] = []
+  @settings['rubocop_args'] = []
 
   # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
-    attr_accessor :future_parser, :style_check, :smoke_check, :regression_check, :output_format, :octoconfig, :octonodes, :error_files, :warning_files, :clean_files, :ignored_files, :puppetlint_args, :rubocop_args
+    attr_accessor :settings
   end
 
   # main runner for PuppetCheck
@@ -39,20 +42,20 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, self.class.future_parser, self.class.style_check, self.class.puppetlint_args, self.class.rubocop_args)
+    execute_parsers(files, self.class.settings['future_parser'], self.class.settings['style_check'], self.class.settings['puppetlint_args'], self.class.settings['rubocop_args'])
 
     # output the diagnostic results
-    PuppetCheck.output_format == 'text' ? OutputResults.text : OutputResults.markup
+    PuppetCheck.settings['output_format'] == 'text' ? OutputResults.text : OutputResults.markup
 
-    if self.class.error_files.empty?
+    if self.class.settings['error_files'].empty?
       begin
         require_relative 'puppet-check/regression_check'
       rescue LoadError
       end
-      
+
       # perform smoke checks if there were no errors and the user desires
       begin
-        RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.smoke_check
+        RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings['smoke_check']
       # smoke check failure? output message and return 2
       rescue OctocatalogDiff::Errors::CatalogError => err
         puts 'There was a smoke check error:'
@@ -61,12 +64,12 @@ class PuppetCheck
       end
       # perform regression checks if there were no errors and the user desires
       # begin
-      #   RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.regression_check
+      #   RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings['regression_check']
       # rescue OctocatalogDiff::Errors::CatalogError => err
       #   puts 'There was a catalog compilation error during the regression check:'
       #   puts err
       #   2
-      # end
+      # enddarkness nova
       # code to output differences in catalog?
       # everything passed? return 0
       0
@@ -113,6 +116,6 @@ class PuppetCheck
     files.reject! { |file| File.extname(file) == '.json' }
     RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }, style, rc_args)
     files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    files.each { |file| self.class.ignored_files.push(file.to_s) }
+    files.each { |file| self.class.settings['ignored_files'].push(file.to_s) }
   end
 end

@@ -17,16 +17,16 @@ describe PuppetCheck do
 
       expect { cli }.not_to raise_exception
 
-      expect(PuppetCheck.error_files.length).to eql(8)
+      expect(PuppetCheck.settings['error_files'].length).to eql(8)
       # stupid Puppet deprecation warning
       if RUBY_VERSION.to_f < 2.1
-        expect(PuppetCheck.warning_files.length).to eql(10)
-        expect(PuppetCheck.clean_files.length).to eql(10)
+        expect(PuppetCheck.settings['warning_files'].length).to eql(10)
+        expect(PuppetCheck.settings['clean_files'].length).to eql(10)
       else
-        expect(PuppetCheck.warning_files.length).to eql(9)
-        expect(PuppetCheck.clean_files.length).to eql(11)
+        expect(PuppetCheck.settings['warning_files'].length).to eql(9)
+        expect(PuppetCheck.settings['clean_files'].length).to eql(11)
       end
-      expect(PuppetCheck.ignored_files.length).to eql(1)
+      expect(PuppetCheck.settings['ignored_files'].length).to eql(1)
 
       expect(cli).to eql(2)
     end
@@ -40,24 +40,24 @@ describe PuppetCheck do
       Dir.chdir(fixtures_dir)
 
       # clear out arrays from previous system test
-      PuppetCheck.error_files = []
-      PuppetCheck.warning_files = []
-      PuppetCheck.clean_files = []
-      PuppetCheck.ignored_files = []
-      PuppetCheck.style_check = true
+      PuppetCheck.settings['error_files'] = []
+      PuppetCheck.settings['warning_files'] = []
+      PuppetCheck.settings['clean_files'] = []
+      PuppetCheck.settings['ignored_files'] = []
+      PuppetCheck.settings['style_check'] = true
       # see regression_check_spec
       unless File.directory?('/home/travis')
-        PuppetCheck.smoke_check = true
-        PuppetCheck.octonodes = %w[good.example.com]
-        PuppetCheck.octoconfig = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
+        PuppetCheck.settings['smoke_check'] = true
+        PuppetCheck.settings['octonodes'] = %w[good.example.com]
+        PuppetCheck.settings['octoconfig'] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
       end
 
       expect { tasks }.not_to raise_exception
 
-      expect(PuppetCheck.error_files.length).to eql(8)
-      expect(PuppetCheck.warning_files.length).to eql(9)
-      expect(PuppetCheck.clean_files.length).to eql(11)
-      expect(PuppetCheck.ignored_files.length).to eql(1)
+      expect(PuppetCheck.settings['error_files'].length).to eql(8)
+      expect(PuppetCheck.settings['warning_files'].length).to eql(9)
+      expect(PuppetCheck.settings['clean_files'].length).to eql(11)
+      expect(PuppetCheck.settings['ignored_files'].length).to eql(1)
     end
   end
 end
