@@ -13,13 +13,15 @@ describe PuppetCheck::CLI do
       expect { PuppetCheck::CLI.parse(%w[-s -f -asdf foo]) }.to raise_error(OptionParser::InvalidOption)
     end
 
-    it 'allows future parser, style, smoke, and regression checks to be enabled' do
+    it 'allows future parser, fail on warnings, style, smoke, and regression checks to be enabled' do
       PuppetCheck.settings[:future_parser] = false
+      PuppetCheck.settings[:fail_on_warnings] = false
       PuppetCheck.settings[:style_check] = false
       PuppetCheck.settings[:smoke_check] = false
       PuppetCheck.settings[:regression_check] = false
-      PuppetCheck::CLI.parse(%w[-s -f -r --smoke foo])
+      PuppetCheck::CLI.parse(%w[-f --fail-on-warnings -s -r --smoke foo])
       expect(PuppetCheck.settings[:future_parser]).to eql(true)
+      expect(PuppetCheck.settings[:fail_on_warnings]).to eql(true)
       expect(PuppetCheck.settings[:style_check]).to eql(true)
       expect(PuppetCheck.settings[:smoke_check]).to eql(true)
       expect(PuppetCheck.settings[:regression_check]).to eql(true)

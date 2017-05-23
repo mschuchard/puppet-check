@@ -13,9 +13,9 @@
 - Support for using SVN to download external module dependencies for RSpec Puppet.
 - Better handled situations with uninstalled optional dependencies.
 - Code cleanup and optimization.
+- Added option to fail on warnings.
 - rakefile interface with puppet-lint, rubocop, reek (patch)
 - split syntax and style checks to separate methods for style (patch)
-- fail on warnings option + change exit code logic/possibilities (patch)
 - look into partition for execute_parsers optimization (patch)
 
 ### 1.4.0

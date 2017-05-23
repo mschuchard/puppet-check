@@ -27,6 +27,7 @@ class PuppetCheck::CLI
 
       # bool options
       opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.settings[:future_parser] = true }
+      opts.on('--fail-on-warnings', 'Fail on warnings') { PuppetCheck.settings[:fail_on_warnings] = true }
       opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.settings[:style_check] = true }
       opts.on('--smoke', 'Enable smoke testing') { PuppetCheck.settings[:smoke_check] = true }
       opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { PuppetCheck.settings[:regression_check] = true }

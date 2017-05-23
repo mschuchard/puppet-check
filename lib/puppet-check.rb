@@ -8,8 +8,9 @@ class PuppetCheck
   # initialize settings hash
   @settings = {}
 
-  # initialize future parser, style check, and regression check bools
+  # initialize future parser, fail on warning,  style check, and regression check bools
   @settings[:future_parser] = false
+  @settings[:fail_on_warning] = false
   @settings[:style_check] = false
   @settings[:smoke_check] = false
   @settings[:regression_check] = false
@@ -47,7 +48,7 @@ class PuppetCheck
     # output the diagnostic results
     PuppetCheck.settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
 
-    if self.class.settings[:error_files].empty?
+    if self.class.settings[:error_files].empty? && (!self.class.settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
       begin
         require_relative 'puppet-check/regression_check'
       rescue LoadError

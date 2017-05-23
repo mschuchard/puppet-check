@@ -6,6 +6,8 @@ describe PuppetCheck do
     it 'settings can be altered' do
       PuppetCheck.settings[:future_parser] = true
       expect(PuppetCheck.settings[:future_parser]).to eql(true)
+      PuppetCheck.settings[:fail_on_warnings] = true
+      expect(PuppetCheck.settings[:fail_on_warnings]).to eql(true)
       PuppetCheck.settings[:style_check] = true
       expect(PuppetCheck.settings[:style_check]).to eql(true)
       PuppetCheck.settings[:smoke_check] = true
