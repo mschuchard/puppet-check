@@ -26,26 +26,26 @@ class PuppetCheck::CLI
       end
 
       # bool options
-      opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.settings['future_parser'] = true }
-      opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.settings['style_check'] = true }
-      opts.on('--smoke', 'Enable smoke testing') { PuppetCheck.settings['smoke_check'] = true }
-      opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { PuppetCheck.settings['regression_check'] = true }
+      opts.on('-f', '--future', 'Enable future parser') { PuppetCheck.settings[:future_parser] = true }
+      opts.on('-s', '--style', 'Enable style checks') { PuppetCheck.settings[:style_check] = true }
+      opts.on('--smoke', 'Enable smoke testing') { PuppetCheck.settings[:smoke_check] = true }
+      opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { PuppetCheck.settings[:regression_check] = true }
 
       # formatting options
-      opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.settings['output_format'] = arg }
+      opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.settings[:output_format] = arg }
 
       # octocatalog-diff options
-      opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use.') { |arg| PuppetCheck.settings['octoconfig'] = arg }
-      opts.on('-n', '--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on.') { |arg| PuppetCheck.settings['octonodes'] = arg }
+      opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use.') { |arg| PuppetCheck.settings[:octoconfig] = arg }
+      opts.on('-n', '--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on.') { |arg| PuppetCheck.settings[:octonodes] = arg }
 
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
-        PuppetCheck.settings['puppetlint_args'] += puppetlint_args.map { |arg| "--#{arg}" }
+        PuppetCheck.settings[:puppetlint_args] += puppetlint_args.map { |arg| "--#{arg}" }
       end
       opts.on('-c', '--config file', String, 'Load PuppetLint options from file.') do |file|
-        PuppetCheck.settings['puppetlint_args'] += File.read(file).split("\n")
+        PuppetCheck.settings[:puppetlint_args] += File.read(file).split("\n")
       end
-      opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| PuppetCheck.settings['rubocop_args'] = ['--except', arg] }
+      opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| PuppetCheck.settings[:rubocop_args] = ['--except', arg] }
     end
 
     opt_parser.parse!(args)

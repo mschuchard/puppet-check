@@ -4,24 +4,24 @@ require_relative '../lib/puppet-check'
 describe PuppetCheck do
   context 'self' do
     it 'settings can be altered' do
-      PuppetCheck.settings['future_parser'] = true
-      expect(PuppetCheck.settings['future_parser']).to eql(true)
-      PuppetCheck.settings['style_check'] = true
-      expect(PuppetCheck.settings['style_check']).to eql(true)
-      PuppetCheck.settings['smoke_check'] = true
-      expect(PuppetCheck.settings['smoke_check']).to eql(true)
-      PuppetCheck.settings['regression_check'] = true
-      expect(PuppetCheck.settings['regression_check']).to eql(true)
-      PuppetCheck.settings['output_format'] = 'text'
-      expect(PuppetCheck.settings['output_format']).to eql('text')
-      PuppetCheck.settings['octoconfig'] = '.octocatalog-diff.cfg.rb'
-      expect(PuppetCheck.settings['octoconfig']).to eql('.octocatalog-diff.cfg.rb')
-      PuppetCheck.settings['octonodes'] = %w[localhost.localdomain]
-      expect(PuppetCheck.settings['octonodes']).to eql(%w[localhost.localdomain])
-      PuppetCheck.settings['puppetlint_args'] = ['--puppetlint-arg-one', '--puppetlint-arg-two']
-      expect(PuppetCheck.settings['puppetlint_args']).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
-      PuppetCheck.settings['rubocop_args'] = ['--rubocop-arg-one', '--rubocop-arg-two']
-      expect(PuppetCheck.settings['rubocop_args']).to eql(['--rubocop-arg-one', '--rubocop-arg-two'])
+      PuppetCheck.settings[:future_parser] = true
+      expect(PuppetCheck.settings[:future_parser]).to eql(true)
+      PuppetCheck.settings[:style_check] = true
+      expect(PuppetCheck.settings[:style_check]).to eql(true)
+      PuppetCheck.settings[:smoke_check] = true
+      expect(PuppetCheck.settings[:smoke_check]).to eql(true)
+      PuppetCheck.settings[:regression_check] = true
+      expect(PuppetCheck.settings[:regression_check]).to eql(true)
+      PuppetCheck.settings[:output_format] = 'text'
+      expect(PuppetCheck.settings[:output_format]).to eql('text')
+      PuppetCheck.settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
+      expect(PuppetCheck.settings[:octoconfig]).to eql('.octocatalog-diff.cfg.rb')
+      PuppetCheck.settings[:octonodes] = %w[localhost.localdomain]
+      expect(PuppetCheck.settings[:octonodes]).to eql(%w[localhost.localdomain])
+      PuppetCheck.settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two']
+      expect(PuppetCheck.settings[:puppetlint_args]).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
+      PuppetCheck.settings[:rubocop_args] = ['--rubocop-arg-one', '--rubocop-arg-two']
+      expect(PuppetCheck.settings[:rubocop_args]).to eql(['--rubocop-arg-one', '--rubocop-arg-two'])
     end
   end
 

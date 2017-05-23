@@ -10,7 +10,7 @@
 - multiple node testing with octocatalog-diff (minor)
 
 ### 1.4.1 (Roadmap)
-- Support for using SVN to download external module dependencies for RSpec-Puppet.
+- Support for using SVN to download external module dependencies for RSpec Puppet.
 - Better handled situations with uninstalled optional dependencies.
 - Code cleanup and optimization.
 - rakefile interface with puppet-lint, rubocop, reek (patch)

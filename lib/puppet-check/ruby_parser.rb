@@ -11,7 +11,7 @@ class RubyParser
         # prevents ruby code from actually executing
         catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}") }
       rescue ScriptError, StandardError => err
-        PuppetCheck.settings['error_files'].push("#{file}:\n#{err}")
+        PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
       else
         # check ruby style
         if style
@@ -28,9 +28,9 @@ class RubyParser
           warnings += reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
 
           # return warnings
-          next PuppetCheck.settings['warning_files'].push("#{file}:\n#{warnings.strip}") unless warnings == ''
+          next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.strip}") unless warnings == ''
         end
-        PuppetCheck.settings['clean_files'].push(file.to_s)
+        PuppetCheck.settings[:clean_files].push(file.to_s)
       end
     end
   end
@@ -49,11 +49,11 @@ class RubyParser
         # empty out warnings since it would contain an error if this pass triggers
         warnings = ''
       rescue ScriptError => err
-        next PuppetCheck.settings['error_files'].push("#{file}:\n#{err}")
+        next PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
       end
       # return warnings from the check if there were any
-      next PuppetCheck.settings['warning_files'].push("#{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join('').strip}") unless warnings == ''
-      PuppetCheck.settings['clean_files'].push(file.to_s)
+      next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join('').strip}") unless warnings == ''
+      PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end
 
@@ -65,7 +65,7 @@ class RubyParser
         # prevents ruby code from actually executing
         catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}") }
       rescue SyntaxError, LoadError, ArgumentError => err
-        PuppetCheck.settings['error_files'].push("#{file}:\n#{err}")
+        PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
       # check librarian puppet style
       else
         if style
@@ -77,9 +77,9 @@ class RubyParser
           warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
 
           # collect style warnings
-          next PuppetCheck.settings['warning_files'].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
+          next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
         end
-        PuppetCheck.settings['clean_files'].push(file.to_s)
+        PuppetCheck.settings[:clean_files].push(file.to_s)
       end
     end
   end

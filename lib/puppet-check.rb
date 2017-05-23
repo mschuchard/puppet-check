@@ -9,27 +9,27 @@ class PuppetCheck
   @settings = {}
 
   # initialize future parser, style check, and regression check bools
-  @settings['future_parser'] = false
-  @settings['style_check'] = false
-  @settings['smoke_check'] = false
-  @settings['regression_check'] = false
+  @settings[:future_parser] = false
+  @settings[:style_check] = false
+  @settings[:smoke_check] = false
+  @settings[:regression_check] = false
 
   # initialize output format option
-  @settings['output_format'] = 'text'
+  @settings[:output_format] = 'text'
 
   # initialize octocatalog-diff options
-  @settings['octoconfig'] = '.octocatalog-diff.cfg.rb'
-  @settings['octonodes'] = %w[localhost.localdomain]
+  @settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
+  @settings[:octonodes] = %w[localhost.localdomain]
 
   # initialize diagnostic output arrays
-  @settings['error_files'] = []
-  @settings['warning_files'] = []
-  @settings['clean_files'] = []
-  @settings['ignored_files'] = []
+  @settings[:error_files] = []
+  @settings[:warning_files] = []
+  @settings[:clean_files] = []
+  @settings[:ignored_files] = []
 
   # initialize style arg arrays
-  @settings['puppetlint_args'] = []
-  @settings['rubocop_args'] = []
+  @settings[:puppetlint_args] = []
+  @settings[:rubocop_args] = []
 
   # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
   class << self
@@ -42,12 +42,12 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, self.class.settings['future_parser'], self.class.settings['style_check'], self.class.settings['puppetlint_args'], self.class.settings['rubocop_args'])
+    execute_parsers(files, self.class.settings[:future_parser], self.class.settings[:style_check], self.class.settings[:puppetlint_args], self.class.settings[:rubocop_args])
 
     # output the diagnostic results
-    PuppetCheck.settings['output_format'] == 'text' ? OutputResults.text : OutputResults.markup
+    PuppetCheck.settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
 
-    if self.class.settings['error_files'].empty?
+    if self.class.settings[:error_files].empty?
       begin
         require_relative 'puppet-check/regression_check'
       rescue LoadError
@@ -55,7 +55,7 @@ class PuppetCheck
 
       # perform smoke checks if there were no errors and the user desires
       begin
-        RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings['smoke_check']
+        RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings[:smoke_check]
       # smoke check failure? output message and return 2
       rescue OctocatalogDiff::Errors::CatalogError => err
         puts 'There was a smoke check error:'
@@ -64,12 +64,12 @@ class PuppetCheck
       end
       # perform regression checks if there were no errors and the user desires
       # begin
-      #   RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings['regression_check']
+      #   RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings[:regression_check]
       # rescue OctocatalogDiff::Errors::CatalogError => err
       #   puts 'There was a catalog compilation error during the regression check:'
       #   puts err
       #   2
-      # enddarkness nova
+      # end
       # code to output differences in catalog?
       # everything passed? return 0
       0
@@ -116,6 +116,6 @@ class PuppetCheck
     files.reject! { |file| File.extname(file) == '.json' }
     RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }, style, rc_args)
     files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    files.each { |file| self.class.settings['ignored_files'].push(file.to_s) }
+    files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }
   end
 end

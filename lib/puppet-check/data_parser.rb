@@ -11,7 +11,7 @@ class DataParser
       begin
         parsed = YAML.load_file(file)
       rescue StandardError => err
-        PuppetCheck.settings['error_files'].push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
+        PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
         warnings = []
 
@@ -21,8 +21,8 @@ class DataParser
         # check that '---' does not show up more than once in the hieradata
         warnings.push('The string --- appears more than once in this data and Hiera will fail to parse it correctly.') if File.read(file).scan(/---/).count >= 2
 
-        next PuppetCheck.settings['warning_files'].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.settings['clean_files'].push(file.to_s)
+        next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+        PuppetCheck.settings[:clean_files].push(file.to_s)
       end
     end
   end
@@ -36,7 +36,7 @@ class DataParser
       begin
         parsed = JSON.parse(File.read(file))
       rescue JSON::ParserError => err
-        PuppetCheck.settings['error_files'].push("#{file}:\n#{err.to_s.lines.first.strip}")
+        PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.lines.first.strip}")
       else
         warnings = []
 
@@ -91,7 +91,7 @@ class DataParser
           # check for summary under 144 character
           errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
 
-          next PuppetCheck.settings['error_files'].push("#{file}:\n#{errors.join("\n")}") unless errors.empty?
+          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.join("\n")}") unless errors.empty?
 
           # check for warnings
           # check for operatingsystem_support hash array
@@ -128,8 +128,8 @@ class DataParser
           # perform some rudimentary hiera checks if data exists
           warnings = hiera(parsed) unless parsed.class.to_s == 'NilClass'
         end
-        next PuppetCheck.settings['warning_files'].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.settings['clean_files'].push(file.to_s)
+        next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+        PuppetCheck.settings[:clean_files].push(file.to_s)
       end
     end
   end
