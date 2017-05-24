@@ -103,20 +103,20 @@ class PuppetCheck
 
   # categorize and pass the files out to the parsers to determine their status
   def execute_parsers(files, future, style, pl_args, rc_args)
-    PuppetParser.manifest(files.select { |file| File.extname(file) == '.pp' }, future, style, pl_args)
-    files.reject! { |file| File.extname(file) == '.pp' }
-    PuppetParser.template(files.select { |file| File.extname(file) == '.epp' })
-    files.reject! { |file| File.extname(file) == '.epp' }
-    RubyParser.ruby(files.select { |file| File.extname(file) == '.rb' }, style, rc_args)
-    files.reject! { |file| File.extname(file) == '.rb' }
-    RubyParser.template(files.select { |file| File.extname(file) == '.erb' })
-    files.reject! { |file| File.extname(file) == '.erb' }
-    DataParser.yaml(files.select { |file| File.extname(file) =~ /\.ya?ml$/ })
-    files.reject! { |file| File.extname(file) =~ /\.ya?ml$/ }
-    DataParser.json(files.select { |file| File.extname(file) == '.json' })
-    files.reject! { |file| File.extname(file) == '.json' }
-    RubyParser.librarian(files.select { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }, style, rc_args)
-    files.reject! { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
+    manifests, files = files.partition { |file| File.extname(file) == '.pp' }
+    PuppetParser.manifest(manifests, future, style, pl_args)
+    templates, files = files.partition { |file| File.extname(file) == '.epp' }
+    PuppetParser.template(templates)
+    rubies, files = files.partition { |file| File.extname(file) == '.rb' }
+    RubyParser.ruby(rubies, style, rc_args)
+    templates, files = files.partition { |file| File.extname(file) == '.erb' }
+    RubyParser.template(templates)
+    yamls, files = files.partition { |file| File.extname(file) =~ /\.ya?ml$/ }
+    DataParser.yaml(yamls)
+    jsons, files = files.partition { |file| File.extname(file) == '.json' }
+    DataParser.json(jsons)
+    librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
+    RubyParser.librarian(librarians, style, rc_args)
     files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }
   end
 end

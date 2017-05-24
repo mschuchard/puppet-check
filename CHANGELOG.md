@@ -16,7 +16,8 @@
 - Added option to fail on warnings.
 - rakefile interface with puppet-lint, rubocop, reek (patch)
 - split syntax and style checks to separate methods for style (patch)
-- look into partition for execute_parsers optimization (patch)
+- missing puppet binary error changed
+- use .valid? and .error_message methods from catalog class?
 
 ### 1.4.0
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.
