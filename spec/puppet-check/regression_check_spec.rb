@@ -16,11 +16,8 @@ describe RegressionCheck do
   end
 
   context '.smoke' do
-    # API requires :puppet_binary, which needs an absolute path, which is absurdly difficult to pull off for a matrix of travis ci rvm tests
-    unless File.directory?('/home/travis')
-      it 'returns a pass for a successful catalog compilation' do
-        expect { RegressionCheck.smoke(['good.example.com'], "#{octocatalog_diff_dir}octocatalog-diff.cfg.rb") }.not_to raise_exception
-      end
+    it 'returns a pass for a successful catalog compilation' do
+      expect { RegressionCheck.smoke(['good.example.com'], "#{octocatalog_diff_dir}octocatalog-diff.cfg.rb") }.not_to raise_exception
     end
     it 'returns a failure for a catalog with an error' do
       expect { RegressionCheck.smoke(['does_not_exist.example.com'], "#{octocatalog_diff_dir}octocatalog-diff.cfg.rb") }.to raise_error(OctocatalogDiff::Errors::CatalogError)

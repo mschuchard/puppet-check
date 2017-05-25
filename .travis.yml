@@ -25,5 +25,7 @@ matrix:
 
 # execute tests
 before_install: gem update --no-document bundler
-install: bundle install --retry=3
+install:
+  - bundle install --retry=3
+  - bundle binstubs puppet
 script: bundle exec rake $TEST
