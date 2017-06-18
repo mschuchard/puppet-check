@@ -61,6 +61,16 @@ describe PuppetCheck do
   end
 
   context '.execute_parsers' do
-    #
+    it 'correctly organizes a set of files and invokes the correct parsers' do
+      # parser_output = instance_double('execute_parsers', files: %w[puppet.pp puppet_template.epp ruby.rb ruby_template.erb yaml.yaml yaml.yml json.json Puppetfile Modulefile foobarbaz], future: false, style: false, pl_args: [], rc_args: [])
+      # expect(parser_output).to receive(:manifest).with(%w[puppet.pp])
+      # expect(parser_output).to receive(:template).with(%w[puppet_template.epp])
+      # expect(parser_output).to receive(:ruby).with(%w[ruby.rb])
+      # expect(parser_output).to receive(:template).with(%w[ruby_template.erb])
+      # expect(parser_output).to receive(:yaml).with(%w[yaml.yaml yaml.yml])
+      # expect(parser_output).to receive(:json).with(%w[json.json])
+      # expect(parser_output).to receive(:librarian).with(%w[Puppetfile Modulefile])
+      # expect(PuppetCheck.settings[:ignored_files]).to eql(%w[foobarbaz])
+    end
   end
 end
