@@ -14,10 +14,9 @@
 - Better handled situations with uninstalled optional dependencies.
 - Code cleanup and optimization.
 - Added option to fail on warnings.
-- rakefile interface with puppet-lint, rubocop, reek (patch)
+- Added additional error info for failed smoke checks.
 - split syntax and style checks to separate methods for style (patch)
 - missing puppet binary error changed
-- use .valid? and .error_message methods from catalog class?
 
 ### 1.4.0
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.

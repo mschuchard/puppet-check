@@ -56,19 +56,21 @@ class PuppetCheck
 
       # perform smoke checks if there were no errors and the user desires
       begin
-        RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings[:smoke_check]
+        catalog = RegressionCheck.smoke(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings[:smoke_check]
       # smoke check failure? output message and return 2
       rescue OctocatalogDiff::Errors::CatalogError => err
         puts 'There was a smoke check error:'
         puts err
+        puts catalog.error_message unless catalog.valid?
         2
       end
       # perform regression checks if there were no errors and the user desires
       # begin
-      #   RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings[:regression_check]
+      #   catalog = RegressionCheck.regression(self.class.octonodes, self.class.octoconfig) if PuppetCheck.settings[:regression_check]
       # rescue OctocatalogDiff::Errors::CatalogError => err
       #   puts 'There was a catalog compilation error during the regression check:'
       #   puts err
+      #   puts catalog.error_message unless catalog.valid?
       #   2
       # end
       # code to output differences in catalog?
