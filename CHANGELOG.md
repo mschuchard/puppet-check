@@ -8,6 +8,8 @@
 - rspec puppet stubbing (minor)
 - parallel spec option (minor)
 - multiple node testing with octocatalog-diff (minor)
+- split syntax and style checks to separate methods for style (patch)
+- missing puppet binary error changed
 
 ### 1.4.1 (Roadmap)
 - Support for using SVN to download external module dependencies for RSpec Puppet.
@@ -15,8 +17,6 @@
 - Code cleanup and optimization.
 - Added option to fail on warnings.
 - Added additional error info for failed smoke checks.
-- split syntax and style checks to separate methods for style (patch)
-- missing puppet binary error changed
 
 ### 1.4.0
 - Optimized and fixed checks on dependencies and requirements in `metadata.json`.

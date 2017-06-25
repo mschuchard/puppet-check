@@ -1,4 +1,5 @@
 # setup environment
+dist: trusty
 sudo: false
 language: ruby
 cache: bundler
@@ -15,9 +16,9 @@ matrix:
     - rvm: 2.0.0
       env: TEST='unit system'
     - rvm: 2.1.10
-      env: TEST=default
-    - rvm: 2.2.7
       env: TEST='unit system'
+    - rvm: 2.2.7
+      env: TEST=default
     - rvm: 2.3.4
       env: TEST='unit system'
     - rvm: 2.4.1
