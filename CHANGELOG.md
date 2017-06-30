@@ -10,8 +10,10 @@
 - multiple node testing with octocatalog-diff (minor)
 - split syntax and style checks to separate methods for style (patch)
 - missing puppet binary error changed
+- puppet 5
+- try closing the template to deal with the erb binding issue
 
-### 1.4.1 (Roadmap)
+### 1.4.1
 - Support for using SVN to download external module dependencies for RSpec Puppet.
 - Better handled situations with uninstalled optional dependencies.
 - Code cleanup and optimization.

@@ -129,6 +129,7 @@ The following files have unrecognized formats and therefore were not processed:
 - Puppetlabs Spec Helper requires an additional config file for RSpec Puppet support.
 - Puppetlabs Spec Helper does not update external module dependencies in a stateful/persistent workspace and fails gracefully instead.
 - Puppetlabs Spec Helper requires extra configuration items to setup self-module RSpec testing.
+- Puppetlabs Spec Helper does not frontend to Octocatalog Diff.
 
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lighter and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
@@ -141,15 +142,17 @@ Reek dropped support for Ruby 2.0 when it went to 4.0. Since dependencies by Rub
 ### CLI
 ```
 usage: puppet-check [options] paths
+        --version                    Display the current version.
     -f, --future                     Enable future parser
+        --fail-on-warnings           Fail on warnings
     -s, --style                      Enable style checks
-    --smoke                          Enable smoke testing
+        --smoke                      Enable smoke testing
     -r, --regression                 Enable regression testing (in progress, do not use)
     -o, --output format              Format for results output (default is text): text, json, or yaml
-    --octoconfig config_file         Octocatalog-diff configuration file to use.
-    -n, --octonodes node1.example.com,node2.example.com
-                                     Octocatalog-diff nodes to test catalog on.
-    --puppet-lint arg_one,arg_two
+        --octoconfig config_file     Octocatalog-diff configuration file to use.
+    -n node1.example.com,node2.example.com,
+        --octonodes                  Octocatalog-diff nodes to test catalog on.
+        --puppet-lint arg_one,arg_two
                                      Arguments for PuppetLint ignored checks
     -c, --config file                Load PuppetLint options from file.
         --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
@@ -176,13 +179,16 @@ rake puppetcheck:beaker    # Execute Beaker acceptance tests
 You can add style, smoke, and regression checks to and select the future parser for the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
 
 ```ruby
-PuppetCheck.style_check = true
-PuppetCheck.future_parser = true
-PuppetCheck.smoke_check = true
-PuppetCheck.regression_check = true # in progress, do not use
-PuppetCheck.output_format = 'yaml'
-PuppetCheck.octoconfig = '.octocatalog-diff.cfg.rb'
-PuppetCheck.octonodes = %w(localhost.localdomain)
+PuppetCheck.settings[:style_check] = true
+PuppetCheck.settings[:fail_on_warnings] = true
+PuppetCheck.settings[:future_parser] = true
+PuppetCheck.settings[:smoke_check] = true
+PuppetCheck.settings[:regression_check] = true # in progress, do not use
+PuppetCheck.settings[:output_format] = 'yaml'
+PuppetCheck.settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
+PuppetCheck.settings[:octonodes] = %w(localhost.localdomain)
+PuppetCheck.settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two']
+PuppetCheck.settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-two']
 ```
 
 Please note that `rspec` does not support yaml output and therefore would still use the default 'progress' formatter even if `yaml` is specified as the format option to Puppet Check.
@@ -196,7 +202,7 @@ Please note it is perfectly acceptable to only execute standard RSpec tests in y
 
 Prior to executing the spec tests, Puppet Check will parse everything in the current path and identify all `spec` directories not within `fixtures` directories. It will then execute RSpec Puppet setup actions inside all directories one level above that contain a `manifests` directory. This is assumed to be a Puppet module directory. These setup actions include creating all of the necessary directories inside of `spec/fixtures`, creating a blank `site.pp` if it is missing, symlinking everything from the module that is needed into fixtures (automatically replaces functionality of self module symlink in `.fixtures.yaml` from Puppetlabs Spec Helper), and creates the `spec_helper.rb` if it is missing. Note these setup actions can replace `rspec-puppet-init` from RSpec Puppet and currently are both faster and more accurate.
 
-Puppet Check will also automatically download specified external module dependencies for and during RSpec Puppet testing. Currently `git`, `puppet forge`, and `hg` commands are supported. They can be implemented in the following way in your modules' `metadata.json`:
+Puppet Check will also automatically download specified external module dependencies for and during RSpec Puppet testing. Currently `git`, `puppet forge`, `svn`, and `hg` commands are supported. They can be implemented in the following way in your modules' `metadata.json`:
 
 ```json
 "dependencies": [
@@ -214,6 +220,11 @@ Puppet Check will also automatically download specified external module dependen
     "name": "module-name",
     "hg": "hg-url",
     "args": "hg clone optional-arguments"
+  },
+  {
+    "name": "module-name",
+    "svn": "svn-url",
+    "args": "svn co optional arguments"
   }
 ]
 ```
@@ -234,7 +245,7 @@ Example:
 ]
 ```
 
-Note that `args` will be ignored during `git pull` and `hg pull/hg update` when the modules are updated instead of freshly cloned.
+Note that `args` will be ignored during `git pull`, 'svn update', and `hg pull/hg update` when the modules are updated instead of freshly cloned.
 
 #### puppetcheck:beaker
 The spec tests will be executed against everything that matches the pattern `**/acceptance`. Any of these directories inside of a `fixtures` directory will be ignored. This means everything in the current path that appears to be a Puppet module acceptance test for your module (not dependencies) will be regarded as such and executed during this rake task.
@@ -249,15 +260,16 @@ If you are performing your Puppet testing from within a Ruby script or your own 
 # file checks
 require 'puppet-check'
 
-PuppetCheck.future_parser = true # default false
-PuppetCheck.style_check = true # default false
-PuppetCheck.smoke_check = true # default false
-PuppetCheck.regression_check = true # in progress, do not use; default false
-PuppetCheck.output_format = 'yaml' # also 'json'; default 'text'
-PuppetCheck.octoconfig = '$HOME/octocatalog-diff.cfg.rb' # default '.octocatalog-diff.cfg.rb'
-PuppetCheck.octonodes = %w(server.example.com) # default: %w(localhost.localdomain)
-PuppetCheck.puppetlint_args = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
-PuppetCheck.rubocop_args = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
+PuppetCheck.settings[:future_parser] = true # default false
+PuppetCheck.settings[:fail_on_warnings] = true # default false
+PuppetCheck.settings[:style_check] = true # default false
+PuppetCheck.settings[:smoke_check] = true # default false
+PuppetCheck.settings[:regression_check] = true # in progress, do not use; default false
+PuppetCheck.settings[:output_format] = 'yaml' # also 'json'; default 'text'
+PuppetCheck.settings[:octoconfig] = '$HOME/octocatalog-diff.cfg.rb' # default '.octocatalog-diff.cfg.rb'
+PuppetCheck.settings[:octonodes] = %w(server.example.com) # default: %w(localhost.localdomain)
+PuppetCheck.settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
+PuppetCheck.settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
 
 PuppetCheck.new.run([dirs, files])
 
@@ -318,9 +330,9 @@ end
 To overcome the lack of convenient portability, you could try spinning up the Vagrant instance at the top level of your Puppet code and data and then descend into directories to execute tests as necessary. Cleverness or patience will be necessary if you decide to use Vagrant for testing and desire portability.
 
 ### Exit Codes
-- 0: PuppetCheck exited with no internal exceptions or errors in your Puppet code and data.
-- 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes) or failed spec test.
-- 2: PuppetCheck exited with one or more errors in your Puppet code and data.
+- 0: PuppetCheck exited with no internal exceptions or errors in your code and data.
+- 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes) or failed spec test(s).
+- 2: PuppetCheck exited with one or more errors in your code and data. Alternatively, PuppetCheck exited with one or more warnings in your code and data and you specified to fail on warnings.
 
 ### Optional dependencies
 - **rake**: install this if you want to use Puppet Check with `rake` tasks in addition to the CLI.
