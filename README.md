@@ -149,12 +149,12 @@ usage: puppet-check [options] paths
         --smoke                      Enable smoke testing
     -r, --regression                 Enable regression testing (in progress, do not use)
     -o, --output format              Format for results output (default is text): text, json, or yaml
-        --octoconfig config_file     Octocatalog-diff configuration file to use.
+        --octoconfig config_file     Octocatalog-diff configuration file to use
     -n node1.example.com,node2.example.com,
-        --octonodes                  Octocatalog-diff nodes to test catalog on.
+        --octonodes                  Octocatalog-diff nodes to test catalog on
         --puppet-lint arg_one,arg_two
                                      Arguments for PuppetLint ignored checks
-    -c, --config file                Load PuppetLint options from file.
+    -c, --config file                Load PuppetLint options from file
         --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
 ```
 
@@ -193,7 +193,7 @@ PuppetCheck.settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-
 
 Please note that `rspec` does not support yaml output and therefore would still use the default 'progress' formatter even if `yaml` is specified as the format option to Puppet Check.
 
-The style checks from within `rake puppetcheck:file` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. The capability to pass style arguments and options from within the `Rakefile` task block will be considered for future versions.
+The style checks from within `rake puppetcheck:file` are directly interfaced to `puppet-lint`, `rubocop`, and `reek`. This means that all arguments and options should be specified from within your `.puppet-lint.rc`, `.rubocop.yml`, and `*.reek`. However, you can alternatively utilize the hashes listed above.
 
 #### puppetcheck:spec
 The spec tests will be executed against everything that matches the pattern `**/{classes, defines, facter, functions, hosts, puppet, unit, types}/**/*_spec.rb`. Any of these directories inside of a `fixtures` directory will be ignored. This means everything in the current path that appears to be a Puppet module spec test for your module (not dependencies) will be regarded as such and executed during this rake task.
@@ -245,7 +245,7 @@ Example:
 ]
 ```
 
-Note that `args` will be ignored during `git pull`, 'svn update', and `hg pull/hg update` when the modules are updated instead of freshly cloned.
+Note that `args` will be ignored during `git pull`, `svn update`, and `hg pull/hg update` when the modules are updated instead of freshly cloned.
 
 #### puppetcheck:beaker
 The spec tests will be executed against everything that matches the pattern `**/acceptance`. Any of these directories inside of a `fixtures` directory will be ignored. This means everything in the current path that appears to be a Puppet module acceptance test for your module (not dependencies) will be regarded as such and executed during this rake task.

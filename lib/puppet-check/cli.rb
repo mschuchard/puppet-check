@@ -36,14 +36,14 @@ class PuppetCheck::CLI
       opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.settings[:output_format] = arg }
 
       # octocatalog-diff options
-      opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use.') { |arg| PuppetCheck.settings[:octoconfig] = arg }
-      opts.on('-n', '--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on.') { |arg| PuppetCheck.settings[:octonodes] = arg }
+      opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use') { |arg| PuppetCheck.settings[:octoconfig] = arg }
+      opts.on('-n', '--octonodes node1.example.com,node2.example.com', Array, 'Octocatalog-diff nodes to test catalog on') { |arg| PuppetCheck.settings[:octonodes] = arg }
 
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
         PuppetCheck.settings[:puppetlint_args] += puppetlint_args.map { |arg| "--#{arg}" }
       end
-      opts.on('-c', '--config file', String, 'Load PuppetLint options from file.') do |file|
+      opts.on('-c', '--config file', String, 'Load PuppetLint options from file') do |file|
         PuppetCheck.settings[:puppetlint_args] += File.read(file).split("\n")
       end
       opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| PuppetCheck.settings[:rubocop_args] = ['--except', arg] }
