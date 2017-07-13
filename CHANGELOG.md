@@ -1,4 +1,5 @@
 ### 1.5.0 (Roadmap)
+- Maximum Puppet version increased from 5 to 6.
 - optional octocatalog-diff regression testing (minor)
 - optional octocatalog-diff regression testing options (patch)
 - test-kitchen interface (minor)
@@ -10,8 +11,8 @@
 - multiple node testing with octocatalog-diff (minor)
 - split syntax and style checks to separate methods for style (patch)
 - missing puppet binary error changed
-- puppet 5
 - try closing the template to deal with the erb binding issue
+- refactor bin --> run --> cli --> settings hash returned to run
 
 ### 1.4.1
 - Support for using SVN to download external module dependencies for RSpec Puppet.

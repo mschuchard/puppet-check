@@ -52,6 +52,7 @@ class PuppetCheck
       begin
         require_relative 'puppet-check/regression_check'
       rescue LoadError
+        return 0
       end
 
       # perform smoke checks if there were no errors and the user desires
