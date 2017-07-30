@@ -1,17 +1,18 @@
 ### 1.5.0 (Roadmap)
 - Maximum Puppet version increased from 5 to 6.
+- Test Kitchen frontend interface.
+- improve test-kitchen rake interface
+- add test kitchen cli frontend
 - optional octocatalog-diff regression testing (minor)
 - optional octocatalog-diff regression testing options (patch)
-- test-kitchen interface (minor)
 - improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
-- https://blog.fluentz.io/learn-how-to-achieve-parallelism-with-ruby-i-o-bound-threads-a29c92aff58c#.zcqpibirn (parallelism/minor)
 - resolve deps in module fixtures? (minor)
-- rspec puppet stubbing (minor)
 - parallel spec option (minor)
 - multiple node testing with octocatalog-diff (minor)
 - split syntax and style checks to separate methods for style (patch)
+- optional forking? (minor)
 - missing puppet binary error changed
-- try closing the template to deal with the erb binding issue
+- try closing the template to deal with the erb binding issue (same nullify warnings issue as binding)
 - refactor bin --> run --> cli --> settings hash returned to run
 
 ### 1.4.1
