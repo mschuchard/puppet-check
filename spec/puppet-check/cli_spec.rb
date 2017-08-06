@@ -27,6 +27,14 @@ describe PuppetCheck::CLI do
       expect(PuppetCheck.settings[:regression_check]).to eql(true)
     end
 
+    it 'correctly parser EYAML options' do
+      PuppetCheck.settings[:public] = nil
+      PuppetCheck.settings[:private] = nil
+      PuppetCheck::CLI.parse(%w[--public pub.pem --private priv.pem])
+      expect(PuppetCheck.settings[:public]).to eql('pub.pem')
+      expect(PuppetCheck.settings[:private]).to eql('priv.pem')
+    end
+
     it 'correctly parses a formatting option' do
       PuppetCheck.settings[:output_format] = ''
       PuppetCheck::CLI.parse(%w[-o text])

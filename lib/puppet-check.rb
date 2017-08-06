@@ -15,6 +15,10 @@ class PuppetCheck
   @settings[:smoke_check] = false
   @settings[:regression_check] = false
 
+  # initialize ssl keys for eyaml checks
+  @settings[:priv_key] = nil
+  @settings[:pub_key] = nil
+
   # initialize output format option
   @settings[:output_format] = 'text'
 

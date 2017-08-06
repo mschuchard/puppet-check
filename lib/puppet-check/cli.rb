@@ -32,6 +32,10 @@ class PuppetCheck::CLI
       opts.on('--smoke', 'Enable smoke testing') { PuppetCheck.settings[:smoke_check] = true }
       opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { PuppetCheck.settings[:regression_check] = true }
 
+      # ssl key options for eyaml checks
+      opts.on('--public cert.pem', String, 'Public key for EYAML checks') { |arg| PuppetCheck.settings[:public] = arg }
+      opts.on('--private cert.pem', String, 'Private key for EYAML checks') { |arg| PuppetCheck.settings[:private] = arg }
+
       # formatting options
       opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| PuppetCheck.settings[:output_format] = arg }
 

@@ -14,6 +14,10 @@ describe PuppetCheck do
       expect(PuppetCheck.settings[:smoke_check]).to eql(true)
       PuppetCheck.settings[:regression_check] = true
       expect(PuppetCheck.settings[:regression_check]).to eql(true)
+      PuppetCheck.settings[:public] = 'public.pem'
+      expect(PuppetCheck.settings[:public]).to eql('public.pem')
+      PuppetCheck.settings[:private] = 'private.pem'
+      expect(PuppetCheck.settings[:private]).to eql('private.pem')
       PuppetCheck.settings[:output_format] = 'text'
       expect(PuppetCheck.settings[:output_format]).to eql('text')
       PuppetCheck.settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
