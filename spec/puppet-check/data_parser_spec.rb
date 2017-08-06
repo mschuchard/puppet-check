@@ -29,6 +29,15 @@ describe DataParser do
     end
   end
 
+  context '.eyaml' do
+    it 'returns a warning if a public key was not specified' do
+      expect { DataParser.eyaml('foo.eyaml', nil, 'private.pem') }.to output("Public and/or Private PKCS& SSL keys were not specified. EYAML checks will not be executed.\n").to_stderr
+    end
+    it 'returns a warning if a private key was not specified' do
+      expect { DataParser.eyaml('foo.eyaml', 'public.pem', nil) }.to output("Public and/or Private PKCS& SSL keys were not specified. EYAML checks will not be executed.\n").to_stderr
+    end
+  end
+
   context '.json' do
     it 'puts a bad syntax json file in the error files array' do
       DataParser.json([fixtures_dir + 'hieradata/syntax.json'])

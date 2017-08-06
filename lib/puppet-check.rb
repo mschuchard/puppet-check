@@ -16,8 +16,8 @@ class PuppetCheck
   @settings[:regression_check] = false
 
   # initialize ssl keys for eyaml checks
-  @settings[:priv_key] = nil
-  @settings[:pub_key] = nil
+  @settings[:public] = nil
+  @settings[:private] = nil
 
   # initialize output format option
   @settings[:output_format] = 'text'
@@ -47,7 +47,7 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, self.class.settings[:future_parser], self.class.settings[:style_check], self.class.settings[:puppetlint_args], self.class.settings[:rubocop_args])
+    execute_parsers(files, self.class.settings[:future_parser], self.class.settings[:style_check], self.class.settings[:public], self.class.settings[:private], self.class.settings[:puppetlint_args], self.class.settings[:rubocop_args])
 
     # output the diagnostic results
     PuppetCheck.settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
@@ -109,7 +109,7 @@ class PuppetCheck
   end
 
   # categorize and pass the files out to the parsers to determine their status
-  def execute_parsers(files, future, style, pl_args, rc_args)
+  def execute_parsers(files, future, style, public, private, pl_args, rc_args)
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
     PuppetParser.manifest(manifests, future, style, pl_args)
     templates, files = files.partition { |file| File.extname(file) == '.epp' }
@@ -122,6 +122,8 @@ class PuppetCheck
     DataParser.yaml(yamls)
     jsons, files = files.partition { |file| File.extname(file) == '.json' }
     DataParser.json(jsons)
+    eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
+    DataParser.eyaml(eyamls, public, private)
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     RubyParser.librarian(librarians, style, rc_args)
     files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }
