@@ -29,12 +29,14 @@ describe DataParser do
     end
   end
 
-  context '.eyaml' do
-    it 'returns a warning if a public key was not specified' do
-      expect { DataParser.eyaml('foo.eyaml', nil, 'private.pem') }.to output("Public and/or Private PKCS& SSL keys were not specified. EYAML checks will not be executed.\n").to_stderr
-    end
-    it 'returns a warning if a private key was not specified' do
-      expect { DataParser.eyaml('foo.eyaml', 'public.pem', nil) }.to output("Public and/or Private PKCS& SSL keys were not specified. EYAML checks will not be executed.\n").to_stderr
+  if RUBY_VERSION.to_f >= 2.3
+    context '.eyaml' do
+      it 'returns a warning if a public key was not specified' do
+        expect { DataParser.eyaml('foo.eyaml', nil, 'private.pem') }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
+      end
+      it 'returns a warning if a private key was not specified' do
+        expect { DataParser.eyaml('foo.eyaml', 'public.pem', nil) }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
+      end
     end
   end
 

@@ -37,14 +37,18 @@ class DataParser
     end
 
     # keys specified?
-    return warn 'Public and/or Private PKCS& SSL keys were not specified. EYAML checks will not be executed.' if public.nil? || private.nil?
+    return warn 'Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.' if public.nil? || private.nil?
+
+    # setup decryption
+    rsa = OpenSSL::PKey::RSA.new(File.read(private))
+    x509 = OpenSSL::X509::Certficate.new(File.read(public))
 
     files.each do |file|
       # decrypt eyaml
+      decrypted = OpenSSL::PKCS7.new(File.read(file)).decrypt(rsa, x509)
 
-      # check eyaml syntax
-
-      # check for warnings; move double --- check to hiera method
+      # pass to regular yaml parser for further analysis
+      yaml(decrypted)
     end
   end
 
