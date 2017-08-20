@@ -9,13 +9,13 @@
 # sudo docker exec -it puppetcheck bash
 
 # Remove running containers before rebuild.
-# sudo docker ps -qa | xargs sudo docker kill
+# sudo docker ps -qa | xargs sudo docker stop
 
 # Cleanup all instances when you are finished.
 # sudo docker ps -qa | xargs sudo docker rm
 # sudo docker images | grep puppetcheck | awk '{print $3}' | xargs sudo docker rmi
 
-FROM fedora:24
+FROM fedora:25
 RUN dnf install ruby -y
 RUN gem install --no-document puppet rubocop reek puppet-lint spdx-licenses rspec rake octocatalog-diff
 COPY / .
