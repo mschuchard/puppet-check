@@ -6,6 +6,7 @@ AllCops:
     - 'spec/**/*.rb'
   Exclude:
     - 'spec/fixtures/**/*'
+    - 'bin/puppet'
 
 Metrics:
   Enabled: false
