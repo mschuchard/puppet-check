@@ -1,0 +1,16 @@
+---
+i: 'am'
+
+:a:
+  good:
+    - eyaml
+    - file
+
+but: 'i am missing a'
+
+value:
+
+and:
+  also: 'a'
+  subvalue:
+---

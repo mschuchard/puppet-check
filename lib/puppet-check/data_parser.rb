@@ -16,7 +16,7 @@ class DataParser
         warnings = []
 
         # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
+        warnings = hiera(parsed, file) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
 
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
@@ -38,7 +38,7 @@ class DataParser
 
     # setup decryption
     rsa = OpenSSL::PKey::RSA.new(File.read(private))
-    x509 = OpenSSL::X509::Certficate.new(File.read(public))
+    x509 = OpenSSL::X509::Certificate.new(File.read(public))
 
     files.each do |file|
       # decrypt eyaml
@@ -53,7 +53,7 @@ class DataParser
         warnings = []
 
         # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
+        warnings = hiera(parsed, file) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
 
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
@@ -160,7 +160,7 @@ class DataParser
         # assume this is hieradata
         else
           # perform some rudimentary hiera checks if data exists
-          warnings = hiera(parsed) unless parsed.class.to_s == 'NilClass'
+          warnings = hiera(parsed, file) unless parsed.class.to_s == 'NilClass'
         end
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
@@ -169,7 +169,7 @@ class DataParser
   end
 
   # checks hieradata
-  def self.hiera(data)
+  def self.hiera(data, file)
     warnings = []
 
     data.each do |key, value|

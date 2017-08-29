@@ -1,0 +1,8 @@
+---
+i: - am :an:
+  - :eyaml:
+  - file:
+
+with:
+  : bad
+  :syntax: -
