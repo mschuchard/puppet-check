@@ -26,12 +26,7 @@ class DataParser
 
   # checks eyaml (.eyaml/.eyml)
   def self.eyaml(files, public, private)
-    # openssl installed?
-    begin
-      require 'openssl'
-    rescue LoadError
-      return warn 'OpenSSL gem is not installed. EYAML checks will not be executed.'
-    end
+    require 'openssl'
 
     # keys specified?
     return warn 'Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.' if public.nil? || private.nil?
