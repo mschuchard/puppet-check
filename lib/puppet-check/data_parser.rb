@@ -31,13 +31,20 @@ class DataParser
     # keys specified?
     return warn 'Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.' if public.nil? || private.nil?
 
+    # keys exist?
+    return warn 'Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.' unless File.file?(public) && File.file?(private)
+
     # setup decryption
     rsa = OpenSSL::PKey::RSA.new(File.read(private))
     x509 = OpenSSL::X509::Certificate.new(File.read(public))
 
     files.each do |file|
-      # decrypt eyaml
+      # grab all encoded portions of the eyaml
+
+      # decrypt the encoded portions
       decrypted = OpenSSL::PKCS7.new(File.read(file)).decrypt(rsa, x509)
+
+      # insert decrypted portions back into eyaml (pass into loader below)
 
       # check yaml syntax
       begin
