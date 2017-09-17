@@ -12,10 +12,17 @@ describe PuppetParser do
     it 'puts a bad syntax Puppet manifest in the error files array' do
       PuppetParser.manifest([fixtures_dir + 'manifests/syntax.pp'], false, false, [])
       # stupid Puppet deprecation warning
-      if RUBY_VERSION.to_f < 2.1
+      if RUBY_VERSION.to_f < 2.1 && Puppet::PUPPETVERSION.to_i < 5
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nThis Variable has no effect.*\nIllegal variable name})
-      else
-        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nThis Variable has no effect.*\nIllegal variable name})
+      # stupid Puppet deprecation warning and Puppet 5 is no longer able to do multiple errors per line
+      elsif RUBY_VERSION.to_f < 2.1 && Puppet::PUPPETVERSION.to_i == 5
+        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nCould not parse.*This Variable has no effect.*})
+      # ideal error-checking situation
+      elsif RUBY_VERSION.to_f >= 2.1 && Puppet::PUPPETVERSION.to_i < 5
+        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nThis Variable has no effect.*\nIllegal variable name})
+      # Puppet 5 is no longer able to do multiple errors per line
+      else # ruby >= 2.1 and puppet == 5
+        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nCould not parse.*This Variable has no effect})
       end
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql([])
