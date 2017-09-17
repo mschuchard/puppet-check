@@ -47,7 +47,7 @@ class PuppetParser
 
         # collect the warnings
         if puppet_lint.warnings?
-          puppet_lint.problems.each { |values| warnings += "\n#{values[:line]}:#{values[:column]}: #{values[:message]}" }
+          puppet_lint.problems.each { |values| warnings << "\n#{values[:line]}:#{values[:column]}: #{values[:message]}" }
         end
       end
       next PuppetCheck.settings[:warning_files].push(warnings) unless warnings == "#{file}:"

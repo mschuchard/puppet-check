@@ -25,7 +25,7 @@ class RubyParser
           require 'reek'
           require 'reek/cli/application'
           reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
-          warnings += reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
+          warnings << reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
 
           # return warnings
           next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.strip}") unless warnings == ''
