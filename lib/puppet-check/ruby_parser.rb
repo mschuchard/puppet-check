@@ -37,6 +37,8 @@ class RubyParser
 
   # checks ruby template (.erb)
   def self.template(files)
+    return if files.empty?
+
     require 'erb'
 
     files.each do |file|

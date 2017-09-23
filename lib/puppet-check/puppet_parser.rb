@@ -5,6 +5,8 @@ require_relative '../puppet-check'
 class PuppetParser
   # checks puppet (.pp)
   def self.manifest(files, future, style, pl_args)
+    return if files.empty?
+
     require 'puppet/face'
 
     # prepare the Puppet settings for the error checking
@@ -62,6 +64,8 @@ class PuppetParser
 
   # checks puppet template (.epp)
   def self.template(files)
+    return if files.empty?
+
     require 'puppet/pops'
 
     files.each do |file|

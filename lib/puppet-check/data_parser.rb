@@ -4,6 +4,8 @@ require_relative '../puppet-check'
 class DataParser
   # checks yaml (.yaml/.yml)
   def self.yaml(files)
+    return if files.empty?
+
     require 'yaml'
 
     files.each do |file|
@@ -26,6 +28,8 @@ class DataParser
 
   # checks eyaml (.eyaml/.eyml)
   def self.eyaml(files, public, private)
+    return if files.empty?
+
     require 'openssl'
 
     # keys specified?
@@ -65,6 +69,8 @@ class DataParser
 
   # checks json (.json)
   def self.json(files)
+    return if files.empty?
+
     require 'json'
 
     files.each do |file|
