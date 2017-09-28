@@ -9,7 +9,7 @@ require_relative '../puppet-check'
 class PuppetCheck::Tasks < ::Rake::TaskLib
   def initialize
     desc 'Execute all Puppet-Check checks'
-    task puppetcheck: %w[puppetcheck:file puppetcheck:spec puppetcheck:beaker puppetcheck:kitchen:all]
+    task puppetcheck: %w[puppetcheck:file puppetcheck:spec puppetcheck:beaker puppetcheck:kitchen]
 
     namespace :puppetcheck do
       desc 'Execute Puppet-Check file checks'
@@ -17,6 +17,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
         PuppetCheck.new.run(Dir.glob('*'))
       end
 
+      # rspec, rspec-puppet, and beaker tasks
       begin
         require 'rspec/core/rake_task'
         require_relative 'rspec_puppet_support'
@@ -38,15 +39,29 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
           task.rspec_opts = '-f json' if PuppetCheck.settings[:output_format] == 'json'
         end
       rescue LoadError
-        puts 'RSpec is not installed. The RSpec/RSpecPuppet and Beaker tasks will not be available.'
+        desc 'RSpec is not installed.'
+        task :spec do
+          puts 'RSpec is not installed. The RSpec/RSpecPuppet tasks will not be available.'
+        end
+        desc 'RSpec is not installed.'
+        task :beaker do
+          puts 'RSpec is not installed. The Beaker tasks will not be available.'
+        end
       end
 
+      # test kitchen tasks
       begin
         require 'kitchen/rake_tasks'
 
-        Rake::Task['puppetcheck:kitchen:all'].invoke
+        desc 'Execute Test Kitchen acceptance tests'
+        task :kitchen do
+          Rake::Task['kitchen:all'].invoke
+        end
       rescue LoadError
-        puts 'Test Kitchen is not installed. The Kitchen tasks will not be available.'
+        desc 'Test Kitchen is not installed.'
+        task :kitchen do
+          puts 'Test Kitchen is not installed. The Kitchen tasks will not be available.'
+        end
       end
     end
   end
