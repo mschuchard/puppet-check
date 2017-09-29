@@ -52,9 +52,11 @@ class PuppetCheck
     # output the diagnostic results
     PuppetCheck.settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
 
+    # progress to regression checks if no errors in file checks
     if self.class.settings[:error_files].empty? && (!self.class.settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
       begin
         require_relative 'puppet-check/regression_check'
+      # if octocatalog-diff is not installed then return immediately
       rescue LoadError
         return 0
       end

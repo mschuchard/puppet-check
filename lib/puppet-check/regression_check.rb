@@ -1,4 +1,7 @@
+# temporarily supress warning messages for octocatalog-diff redefining puppet constants and then reactivate
+$VERBOSE = nil
 require 'octocatalog-diff'
+$VERBOSE = false
 
 # executes smoke and regression tests on catalogs
 class RegressionCheck

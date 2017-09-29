@@ -1,7 +1,11 @@
 ### 1.5.0 (Roadmap)
 - Maximum Puppet version increased from 5 to 6.
+- Added capability to check EYAML.
 - Test Kitchen frontend interface.
-- improve test-kitchen rake interface
+- Updated Puppet error output for Puppet 5 differences.
+- Slight optimization for smaller test sets.
+- Suppress constant redefinition warnings from Octocatalog-diff's Puppet code reuse.
+- eyaml validation (finish code, fix failing tests) (patch)
 - add test kitchen cli frontend
 - optional octocatalog-diff regression testing (minor)
 - optional octocatalog-diff regression testing options (patch)
