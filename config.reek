@@ -4,3 +4,12 @@ exclude_paths:
 
 TooManyStatements:
   enabled: false
+
+NestedIterators:
+  enabled: false
+
+LongParameterList:
+  enabled: false
+
+UncommunicativeVariableName:
+  enabled: false

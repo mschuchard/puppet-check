@@ -24,11 +24,9 @@ class PuppetParser
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5 can only do one error per line and outputs fake dir env info
-        if Puppet::PUPPETVERSION.to_i == 5
-          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')}")
-        else
-          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
-        end
+        next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')}") if Puppet::PUPPETVERSION.to_i == 5
+        # puppet < 5 parser output style
+        next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
       end
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
