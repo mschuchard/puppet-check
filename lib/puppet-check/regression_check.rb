@@ -7,7 +7,7 @@ $VERBOSE = false
 class RegressionCheck
   # smoke testing
   def self.smoke(interface_nodes, octoconfig)
-    options = RegressionCheck.config(octoconfig)
+    options = config(octoconfig)
     nodes = options.key?(:node) ? [options[:node]] : interface_nodes
     nodes.each do |node|
       options[:node] = node
@@ -23,6 +23,7 @@ class RegressionCheck
 
   # config file loading
   def self.config(octoconfig)
+    private_class_method :method
     OctocatalogDiff::API::V1.config(filename: octoconfig)
   end
 end
