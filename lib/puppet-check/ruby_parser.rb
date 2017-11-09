@@ -61,6 +61,13 @@ class RubyParser
 
   # checks librarian puppet (Puppetfile/Modulefile) and misc ruby (Rakefile/Gemfile)
   def self.librarian(files, style, rc_args)
+    # efficient var assignment prior to iterator
+    if style
+      require 'rubocop'
+      # cop named differently depending upon version
+      filename_cop = RuboCop::Version::STRING.to_f >= 0.5 ? 'Naming/FileName' : 'Style/FileName'
+    end
+
     files.each do |file|
       # check librarian puppet syntax
       begin
@@ -71,11 +78,9 @@ class RubyParser
       # check librarian puppet style
       else
         if style
-          require 'rubocop'
-
           # check Rubocop
-          # RuboCop is grumpy about non-snake_case filenames so disable the Style/FileName check
-          rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Style/FileName" : rc_args.concat(['--except', 'Style/FileName'])
+          # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
+          rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},#{filename_cop}" : rc_args.concat(['--except', filename_cop])
           warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
 
           # collect style warnings

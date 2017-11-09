@@ -76,7 +76,7 @@ describe RubyParser do
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad style librarian Puppet file in the clean files array when rubocop_args ignores its warnings' do
-      RubyParser.librarian([fixtures_dir + 'librarian_style/Puppetfile'], true, ['--except', 'Style/AlignParameters,Style/HashSyntax'])
+      RubyParser.librarian([fixtures_dir + 'librarian_style/Puppetfile'], true, ['--except', 'Layout/AlignParameters,Style/HashSyntax'])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}librarian_style/Puppetfile"])
