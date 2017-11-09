@@ -32,17 +32,15 @@ class RSpecPuppetSupport
   def self.file_setup(module_name)
     private_class_method :method
     # create all the necessary fixture dirs that are missing
-    ['spec/fixtures', 'spec/fixtures/manifests', 'spec/fixtures/modules', "spec/fixtures/modules/#{module_name}"].each do |dir|
+    ['spec/fixtures', 'spec/fixtures/manifests', 'spec/fixtures/modules'].each do |dir|
       Dir.mkdir(dir) unless File.directory?(dir)
     end
 
     # create empty site.pp if missing
     File.write('spec/fixtures/manifests/site.pp', '') unless File.file?('spec/fixtures/manifests/site.pp')
 
-    # symlink over everything the module needs for compilation
-    %w[hiera.yaml data hieradata functions manifests lib files templates].each do |file|
-      File.symlink("../../../../#{file}", "spec/fixtures/modules/#{module_name}/#{file}") if File.exist?(file) && !File.exist?("spec/fixtures/modules/#{module_name}/#{file}")
-    end
+    # symlink the module into spec/fixtures/modules
+    File.symlink("../../../#{module_name}", "spec/fixtures/modules/#{module_name}") unless File.exist?("spec/fixtures/modules/#{module_name}")
 
     # create spec_helper if missing
     return if File.file?('spec/spec_helper.rb')
