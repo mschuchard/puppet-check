@@ -1,23 +1,12 @@
-### 1.5.0 (Roadmap)
+### 1.5.0
 - Maximum Puppet version increased from 5 to 6.
-- Added capability to check EYAML.
+- Added capability to check EYAML (experimental).
 - Test Kitchen frontend interface.
 - Updated Puppet error output for Puppet 5 differences.
 - Slight optimization for smaller test sets.
 - Suppress constant redefinition warnings from Octocatalog-diff's Puppet code reuse.
-- eyaml validation (finish code, fix failing tests) (patch)
-- add test kitchen cli frontend
-- optional octocatalog-diff regression testing (minor)
-- optional octocatalog-diff regression testing options (patch)
-- improved json and yaml output formats support (file arrays become file hashes and output results further handles formatting) (minor; this would be a big refactoring effort)
-- resolve deps in module fixtures? (minor)
-- parallel spec option (minor)
-- multiple node testing with octocatalog-diff (minor)
-- split syntax and style checks to separate methods for style (patch)
-- optional forking? (minor)
-- missing puppet binary error changed
-- try closing the template to deal with the erb binding issue (same nullify warnings issue as binding)
-- refactor bin --> run --> cli --> settings hash returned to run
+- Changed FileName cop to reflect change in RuboCop >= 0.5.
+- Entire module is now symlinked into `spec/fixtures/modules` during rspec-puppet testing (formerly specific components).
 
 ### 1.4.1
 - Support for using SVN to download external module dependencies for RSpec Puppet.
