@@ -124,8 +124,9 @@ class PuppetCheck
     DataParser.yaml(yamls)
     jsons, files = files.partition { |file| File.extname(file) == '.json' }
     DataParser.json(jsons)
-    eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
-    DataParser.eyaml(eyamls, public, private)
+    # block this for now
+    # eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
+    # DataParser.eyaml(eyamls, public, private)
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     RubyParser.librarian(librarians, style, rc_args)
     files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }

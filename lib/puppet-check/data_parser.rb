@@ -178,6 +178,7 @@ class DataParser
 
   # checks hieradata
   def self.hiera(data, file)
+    private_class_method :method
     warnings = []
 
     data.each do |key, value|

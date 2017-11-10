@@ -15,6 +15,9 @@ class PuppetCheck::CLI
 
   # parse the user arguments
   def self.parse(args)
+    # show help message if no args specified
+    args = %w[-h] if args.empty?
+
     opt_parser = OptionParser.new do |opts|
       # usage
       opts.banner = 'usage: puppet-check [options] paths'
