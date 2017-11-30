@@ -1,12 +1,17 @@
+### 1.5.1
+- Slight cleanup and optimization.
+- Fixed check for no spec directories during RSpec Puppet helper.
+- Fixed check for semantic versioning in `metadata.json` for numbering > 9.
+
 ### 1.5.0
-- Maximum Puppet version increased from 5 to 6.
+- Maximum Puppet version increased from 4 to 5.
 - Added capability to check EYAML (experimental).
 - Test Kitchen frontend interface.
 - Updated Puppet error output for Puppet 5 differences.
 - Slight optimization for smaller test sets.
-- Suppress constant redefinition warnings from Octocatalog-diff's Puppet code reuse.
-- Changed FileName cop to reflect change in RuboCop >= 0.5.
-- Entire module is now symlinked into `spec/fixtures/modules` during rspec-puppet testing (formerly specific components).
+- Suppress constant redefinition warnings from Octocatalog-Diff's Puppet code reuse.
+- Changed FileName cop to reflect change in RuboCop >= 0.50.
+- Entire module is now symlinked into `spec/fixtures/modules` during  RSpec Puppet testing (formerly specific components).
 
 ### 1.4.1
 - Support for using SVN to download external module dependencies for RSpec Puppet.

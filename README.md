@@ -355,7 +355,6 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 - **octocatalog-diff** (gem): install this if you want to use Puppet Check to execute smoke or regression tests for your Puppet catalog.
 - **beaker** (gem): install this if you want to use Puppet Check to execute the Beaker acceptance tests during `rake`.
 - **test-kitchen** (gem): install this if you want to use Puppet Check to execute the Test Kitchen acceptance tests during `rake`.
-- **openssl** (gem/pkg): install this if you want to use Puppet Check to execute checks on EYAML (note: requires `Ruby => 2.3`).
 - **git** (pkg): install this if you want to use Puppet Check to download external module dependencies with `git` commands during RSpec Puppet testing.
 - **mercurial** (pkg): install this if you want to use Puppet Check to download external module dependencies with `hg` commands during RSpec Puppet testing.
 
