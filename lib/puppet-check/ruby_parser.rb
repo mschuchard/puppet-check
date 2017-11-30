@@ -37,8 +37,6 @@ class RubyParser
 
   # checks ruby template (.erb)
   def self.template(files)
-    return if files.empty?
-
     require 'erb'
 
     files.each do |file|
@@ -66,6 +64,8 @@ class RubyParser
       require 'rubocop'
       # cop named differently depending upon version
       filename_cop = RuboCop::Version::STRING.to_f >= 0.5 ? 'Naming/FileName' : 'Style/FileName'
+      # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
+      rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},#{filename_cop}" : rc_args.concat(['--except', filename_cop])
     end
 
     files.each do |file|
@@ -79,8 +79,6 @@ class RubyParser
       else
         if style
           # check Rubocop
-          # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
-          rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},#{filename_cop}" : rc_args.concat(['--except', filename_cop])
           warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
 
           # collect style warnings

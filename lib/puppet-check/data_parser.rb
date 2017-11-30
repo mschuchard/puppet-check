@@ -4,8 +4,6 @@ require_relative '../puppet-check'
 class DataParser
   # checks yaml (.yaml/.yml)
   def self.yaml(files)
-    return if files.empty?
-
     require 'yaml'
 
     files.each do |file|
@@ -18,7 +16,7 @@ class DataParser
         warnings = []
 
         # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed, file) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
+        warnings = hiera(parsed, file) unless parsed.nil? || (File.basename(file) == 'hiera.yaml')
 
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
@@ -28,8 +26,6 @@ class DataParser
 
   # checks eyaml (.eyaml/.eyml)
   def self.eyaml(files, public, private)
-    return if files.empty?
-
     require 'openssl'
 
     # keys specified?
@@ -59,7 +55,7 @@ class DataParser
         warnings = []
 
         # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed, file) unless (parsed.class.to_s == 'NilClass') || (File.basename(file) == 'hiera.yaml')
+        warnings = hiera(parsed, file) unless parsed.nil? || (File.basename(file) == 'hiera.yaml')
 
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
@@ -69,8 +65,6 @@ class DataParser
 
   # checks json (.json)
   def self.json(files)
-    return if files.empty?
-
     require 'json'
 
     files.each do |file|
@@ -98,8 +92,7 @@ class DataParser
           # check requirements and dependencies keys
           %w[requirements dependencies].each do |key|
             # skip if key is missing or or value is an empty string, array, or hash
-            next unless parsed.key?(key)
-            next if parsed[key].empty?
+            next if !parsed.key?(key) || parsed[key].empty?
 
             # check that dependencies and requirements are an array of hashes
             next errors.push("Field '#{key}' is not an array of hashes.") unless (parsed[key].is_a? Array) && (parsed[key][0].is_a? Hash)
@@ -113,14 +106,14 @@ class DataParser
               names << name
 
               # warn and skip if key is missing
-              next warnings.push("'#{req_dep['name']}' is missing a 'version_requirement' key.") if req_dep['version_requirement'].class.to_s == 'NilClass'
+              next warnings.push("'#{req_dep['name']}' is missing a 'version_requirement' key.") if req_dep['version_requirement'].nil?
 
               # warn and skip if no upper bound
               next warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
 
               # check for semantic versioning
               if key == 'dependencies'
-                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d\.\d\.\d.*\d\.\d\.\d/
+                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d+\.\d+\.\d+.*\d+\.\d+\.\d+/
               end
             end
           end
@@ -168,7 +161,7 @@ class DataParser
         # assume this is hieradata
         else
           # perform some rudimentary hiera checks if data exists
-          warnings = hiera(parsed, file) unless parsed.class.to_s == 'NilClass'
+          warnings = hiera(parsed, file) unless parsed.nil?
         end
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
@@ -183,7 +176,7 @@ class DataParser
 
     data.each do |key, value|
       # check for nil values in the data (nil keys are fine)
-      if (value.is_a?(Hash) && value.values.any?(&:nil?)) || (value.class.to_s == 'NilClass')
+      if (value.is_a?(Hash) && value.values.any?(&:nil?)) || value.nil?
         warnings.push("Value(s) missing in key '#{key}'.")
       end
     end

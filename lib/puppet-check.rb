@@ -96,7 +96,7 @@ class PuppetCheck
     # traverse the unique paths and return all files
     paths.uniq.each do |path|
       if File.directory?(path)
-        files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file? subpath })
+        files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file?(subpath) })
       elsif File.file?(path)
         files.push(path)
       end
@@ -112,23 +112,31 @@ class PuppetCheck
 
   # categorize and pass the files out to the parsers to determine their status
   def execute_parsers(files, future, style, public, private, pl_args, rc_args)
+    # check manifests
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
-    PuppetParser.manifest(manifests, future, style, pl_args)
+    PuppetParser.manifest(manifests, future, style, pl_args) unless manifests.empty?
+    # check puppet templates
     templates, files = files.partition { |file| File.extname(file) == '.epp' }
-    PuppetParser.template(templates)
+    PuppetParser.template(templates) unless templates.empty?
+    # check ruby files
     rubies, files = files.partition { |file| File.extname(file) == '.rb' }
-    RubyParser.ruby(rubies, style, rc_args)
+    RubyParser.ruby(rubies, style, rc_args) unless rubies.empty?
+    # check ruby templates
     templates, files = files.partition { |file| File.extname(file) == '.erb' }
-    RubyParser.template(templates)
+    RubyParser.template(templates) unless templates.empty?
+    # check yaml data
     yamls, files = files.partition { |file| File.extname(file) =~ /\.ya?ml$/ }
-    DataParser.yaml(yamls)
+    DataParser.yaml(yamls) unless yamls.empty?
+    # check json data
     jsons, files = files.partition { |file| File.extname(file) == '.json' }
-    DataParser.json(jsons)
-    # block this for now
+    DataParser.json(jsons) unless jsons.empty?
+    # check eyaml data; block this for now
     # eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
-    # DataParser.eyaml(eyamls, public, private)
+    # DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
+    # check misc ruby
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    RubyParser.librarian(librarians, style, rc_args)
-    files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }
+    RubyParser.librarian(librarians, style, rc_args) unless librarians.empty?
+    # ignore everything else
+    self.class.settings[:ignored_files].concat(files)
   end
 end
