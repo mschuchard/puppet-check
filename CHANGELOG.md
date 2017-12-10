@@ -2,6 +2,7 @@
 - Slight cleanup and optimization.
 - Fixed check for no spec directories during RSpec Puppet helper.
 - Fixed check for semantic versioning in `metadata.json` for numbering > 9.
+- Accounted for Puppet syntax validation output bugfix in 5.3.
 
 ### 1.5.0
 - Maximum Puppet version increased from 4 to 5.
