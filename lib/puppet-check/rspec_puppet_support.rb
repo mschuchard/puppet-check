@@ -40,7 +40,17 @@ class RSpecPuppetSupport
     File.write('spec/fixtures/manifests/site.pp', '') unless File.file?('spec/fixtures/manifests/site.pp')
 
     # symlink the module into spec/fixtures/modules
-    File.symlink("../../../#{module_name}", "spec/fixtures/modules/#{module_name}") unless File.exist?("spec/fixtures/modules/#{module_name}")
+    if File.exist?("spec/fixtures/modules/#{module_name}")
+      # check if target is a symlink
+      if File.symlink?("spec/fixtures/modules/#{module_name}")
+        # check if target is correct
+        warn "spec/fixtures/modules/#{module_name} is not a symlink to the correct source! Your tests may fail because of this!" unless File.readlink("spec/fixtures/modules/#{module_name}") == File.expand_path("../../../../#{module_name}")
+      else
+        warn "spec/fixtures/modules/#{module_name} is not a symlink! Your tests may fail because of this!"
+      end
+    else
+      File.symlink("../../../../#{module_name}", "spec/fixtures/modules/#{module_name}")
+    end
 
     # create spec_helper if missing
     return if File.file?('spec/spec_helper.rb')
