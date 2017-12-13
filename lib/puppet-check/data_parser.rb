@@ -29,10 +29,16 @@ class DataParser
     require 'openssl'
 
     # keys specified?
-    return warn 'Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.' if public.nil? || private.nil?
+    if public.nil? || private.nil?
+      PuppetCheck.settings[:ignored_files].concat(files)
+      return warn 'Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.'
+    end
 
     # keys exist?
-    return warn 'Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.' unless File.file?(public) && File.file?(private)
+    unless File.file?(public) && File.file?(private)
+      PuppetCheck.settings[:ignored_files].concat(files)
+      return warn 'Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.'
+    end
 
     # setup decryption
     rsa = OpenSSL::PKey::RSA.new(File.read(private))
