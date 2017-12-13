@@ -32,10 +32,31 @@ describe DataParser do
   if RUBY_VERSION.to_f >= 2.3
     context '.eyaml' do
       it 'returns a warning if a public key was not specified' do
-        expect { DataParser.eyaml('foo.eyaml', nil, 'private.pem') }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
+        expect { DataParser.eyaml(['foo.eyaml'], nil, 'private.pem') }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
       end
       it 'returns a warning if a private key was not specified' do
-        expect { DataParser.eyaml('foo.eyaml', 'public.pem', nil) }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
+        expect { DataParser.eyaml(['foo.eyaml'], 'public.pem', nil) }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
+      end
+      it 'returns a warning if the public key or private key are not existing files' do
+        expect { DataParser.eyaml(['foo.eyaml'], 'public.pem', 'private.pem') }.to output("Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.\n").to_stderr
+      end
+      it 'puts a bad syntax eyaml file in the error files array' do
+        # DataParser.eyaml([fixtures_dir + 'hieradata/syntax.eyaml'], fixtures_dir + 'keys/public_key.pkcs7.pem', fixtures_dir + 'keys/private_key.pkcs7.pem')
+        # expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}hieradata/syntax.eyaml:\nblock sequence entries are not allowed})
+        expect(PuppetCheck.settings[:warning_files]).to eql([])
+        expect(PuppetCheck.settings[:clean_files]).to eql([])
+      end
+      it 'puts a good eyaml file with potential hiera issues in the warning files array' do
+        # DataParser.eyaml([fixtures_dir + 'hieradata/style.eyaml'], fixtures_dir + 'keys/public_key.pkcs7.pem', fixtures_dir + 'keys/private_key.pkcs7.pem')
+        expect(PuppetCheck.settings[:error_files]).to eql([])
+        # expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.eyaml:\nValue\(s\) missing in key.*\nValue\(s\) missing in key.*\nThe string --- appears more than once in this data and Hiera will fail to parse it correctly})
+        expect(PuppetCheck.settings[:clean_files]).to eql([])
+      end
+      it 'puts a good eyaml file in the clean files array' do
+        # DataParser.eyaml([fixtures_dir + 'hieradata/good.eyaml'], fixtures_dir + 'keys/public_key.pkcs7.pem', fixtures_dir + 'keys/private_key.pkcs7.pem')
+        expect(PuppetCheck.settings[:error_files]).to eql([])
+        expect(PuppetCheck.settings[:warning_files]).to eql([])
+        # expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}hieradata/good.eyaml"])
       end
     end
   end
