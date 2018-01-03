@@ -9,7 +9,7 @@ class RubyParser
       # check ruby syntax
       begin
         # prevents ruby code from actually executing
-        catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}") }
+        catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}", file) }
       rescue ScriptError, StandardError => err
         PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
       else
@@ -72,7 +72,7 @@ class RubyParser
       # check librarian puppet syntax
       begin
         # prevents ruby code from actually executing
-        catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}") }
+        catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}", file) }
       rescue SyntaxError, LoadError, ArgumentError => err
         PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
       # check librarian puppet style

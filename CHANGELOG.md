@@ -1,4 +1,4 @@
-### 1.5.1
+### 1.5.1 (Next)
 - Slight cleanup and optimization.
 - Fixed check for no spec directories during RSpec Puppet helper.
 - Fixed check for semantic versioning in `metadata.json` for numbering > 9.
