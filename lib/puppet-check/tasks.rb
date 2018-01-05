@@ -17,7 +17,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
         PuppetCheck.new.run(Dir.glob('*'))
       end
 
-      # rspec, rspec-puppet, and beaker tasks
+      # rspec and rspec-puppet tasks
       begin
         require 'rspec/core/rake_task'
         require_relative 'rspec_puppet_support'
@@ -30,22 +30,25 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
           task.pattern = spec_dirs.empty? ? 'skip_rspec' : spec_dirs
           task.rspec_opts = '-f json' if PuppetCheck.settings[:output_format] == 'json'
         end
-
-        desc 'Execute Beaker acceptance tests'
-        RSpec::Core::RakeTask.new(:beaker) do |task|
-          # generate tasks for all recognized directories and ensure acceptance tests inside module dependencies are ignored
-          acceptance_dirs = Dir.glob('**/acceptance').reject { |dir| dir =~ /fixtures/ }
-          task.pattern = acceptance_dirs.empty? ? 'skip_beaker' : acceptance_dirs
-          task.rspec_opts = '-f json' if PuppetCheck.settings[:output_format] == 'json'
-        end
       rescue LoadError
         desc 'RSpec is not installed.'
         task :spec do
-          puts 'RSpec is not installed. The RSpec/RSpecPuppet tasks will not be available.'
+          puts 'RSpec is not installed. The RSpec/RSpec-Puppet tasks will not be available.'
         end
-        desc 'RSpec is not installed.'
+      end
+
+      # beaker tasks
+      begin
+        require 'beaker/tasks/quick_start'
+
+        desc 'Execute Beaker acceptance tests'
+        task :beaker, %i[hypervisor] do |_, args|
+          Rake::Task["beaker_quickstart:run_test[#{args[:hypervisor]}]"].invoke
+        end
+      rescue LoadError
+        desc 'Beaker is not installed.'
         task :beaker do
-          puts 'RSpec is not installed. The Beaker tasks will not be available.'
+          puts 'Beaker is not installed. The Beaker tasks will not be available.'
         end
       end
 

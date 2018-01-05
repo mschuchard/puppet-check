@@ -4,6 +4,7 @@
 - Fixed check for semantic versioning in `metadata.json` for numbering > 9.
 - Accounted for Puppet syntax validation output bugfix in 5.3.
 - Fix bad symlink for module fixture during RSpec Puppet.
+- Updating Beaker Rake task usage.
 
 ### 1.5.0
 - Maximum Puppet version increased from 4 to 5.
