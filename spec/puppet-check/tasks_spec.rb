@@ -23,14 +23,24 @@ describe PuppetCheck::Tasks do
   end
 
   context 'puppetcheck:beaker' do
-    let(:beaker_tasks) { Rake::Task['puppetcheck:beaker'.to_sym].invoke }
+    let(:beaker_task) { Rake::Task['puppetcheck:beaker'.to_sym].invoke }
 
     it 'verifies the Beaker task exists' do
       Dir.chdir(fixtures_dir)
 
       # beaker task executed
-      expect { beaker_tasks }.to output(%r{spec/acceptance}).to_stdout
-      expect { beaker_tasks }.not_to raise_exception
+      expect { beaker_task }.to output('Beaker is not installed. The Beaker tasks will not be available.').to_stdout
+    end
+  end
+
+  context 'puppetcheck:kitchen' do
+    let(:kitchen_task) { Rake::Task['puppetcheck:kitchen'.to_sym].invoke }
+
+    it 'verifies the Kitchen task exists' do
+      Dir.chdir(fixtures_dir)
+
+      # beaker task executed
+      expect { kitchen_task }.to output('Test Kitchen is not installed. The Kitchen tasks will not be available.').to_stdout
     end
   end
 end

@@ -13,3 +13,9 @@ LongParameterList:
 
 UncommunicativeVariableName:
   enabled: false
+
+DuplicateMethodCall:
+  enabled: false
+
+NilCheck:
+  enabled: false
