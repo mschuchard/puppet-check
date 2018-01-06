@@ -29,7 +29,7 @@ describe PuppetCheck::Tasks do
       Dir.chdir(fixtures_dir)
 
       # beaker task executed
-      expect { beaker_task }.to output('Beaker is not installed. The Beaker tasks will not be available.').to_stdout
+      expect { beaker_task }.to output("Beaker is not installed. The Beaker tasks will not be available.\n").to_stdout
     end
   end
 
@@ -40,7 +40,7 @@ describe PuppetCheck::Tasks do
       Dir.chdir(fixtures_dir)
 
       # beaker task executed
-      expect { kitchen_task }.to output('Test Kitchen is not installed. The Kitchen tasks will not be available.').to_stdout
+      expect { kitchen_task }.to output("Test Kitchen is not installed. The Kitchen tasks will not be available.\n").to_stdout
     end
   end
 end

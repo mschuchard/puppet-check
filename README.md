@@ -260,9 +260,10 @@ Example:
 Note that `args` will be ignored during `git pull`, `svn update`, and `hg pull/hg update` when the modules are updated instead of freshly cloned.
 
 #### puppetcheck:beaker
-The spec tests will be executed against everything that matches the pattern `**/acceptance`. Any of these directories inside of a `fixtures` directory will be ignored. This means everything in the current path that appears to be a Puppet module acceptance test for your module (not dependencies) will be regarded as such and executed during this rake task.
+This task serves as a frontend to the `beaker_quickstart:run_test[hypervisor]` rake task that Beaker provides. It merely provides a convenient unified frontend for the task and automated as part of the `puppetcheck` tasks. Note that you should still provide a hypervisor argument to the rake task when executed individually (e.g. `rake puppetcheck:beaker[vagrant]`). The Vagrant hypervisor will be selected by default when executed as part of the `puppetcheck` task. Vagrant will also be selected by default if no hypervisor argument is provided to the individual task.
 
-Please note this is merely a frontend to Beaker and that Beaker itself has a self-contained scope compared to all the other tools Puppet Check interfaces with and utilizes. This means if you want to add Beaker-RSpec, Serverspec, etc., or perform advanced configurations, those would be all be performed within Beaker itself. This task merely provides an interface to integrate Beaker in with your other testing infrastructure.
+#### puppetcheck:kitchen
+This task serves as a frontend to the `kitchen:all` rake task that Test Kitchen provides. It merely provides a convenient unified frontend for the task and automated as part of the `puppetcheck` tasks.
 
 ### API
 

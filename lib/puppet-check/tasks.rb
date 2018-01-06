@@ -43,6 +43,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
 
         desc 'Execute Beaker acceptance tests'
         task :beaker, %i[hypervisor] do |_, args|
+          args[:hypervisor] = 'vagrant' if args[:hypervisor].nil?
           Rake::Task["beaker_quickstart:run_test[#{args[:hypervisor]}]"].invoke
         end
       rescue LoadError
