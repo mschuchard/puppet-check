@@ -13,8 +13,6 @@ git:
 # setup tests
 matrix:
   include:
-    - rvm: 2.0.0
-      env: TEST='unit system'
     - rvm: 2.1.10
       env: TEST='unit system'
     - rvm: 2.2.9

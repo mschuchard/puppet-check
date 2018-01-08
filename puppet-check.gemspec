@@ -12,9 +12,10 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^spec/})
   spec.require_paths = Dir['lib']
 
-  spec.required_ruby_version = '>= 2.0.0'
-  spec.add_dependency 'puppet', '>= 3.4', '< 6'
+  spec.required_ruby_version = '>= 2.1.0'
+  spec.add_dependency 'puppet', '>= 3.7', '< 6'
   spec.add_dependency 'puppet-lint', '>= 1.1.0', '< 3'
+  spec.add_dependency 'reek', '~> 4.0'
   spec.add_dependency 'rubocop', '~> 0'
   spec.add_dependency 'spdx-licenses', '~> 1.0'
   spec.add_development_dependency 'octocatalog-diff', '~> 1.0'
