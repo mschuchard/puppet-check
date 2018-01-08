@@ -18,14 +18,8 @@ describe PuppetCheck do
       expect { cli }.not_to raise_exception
 
       expect(PuppetCheck.settings[:error_files].length).to eql(8)
-      # stupid Puppet deprecation warning
-      if RUBY_VERSION.to_f < 2.1
-        expect(PuppetCheck.settings[:warning_files].length).to eql(10)
-        expect(PuppetCheck.settings[:clean_files].length).to eql(10)
-      else
-        expect(PuppetCheck.settings[:warning_files].length).to eql(9)
-        expect(PuppetCheck.settings[:clean_files].length).to eql(11)
-      end
+      expect(PuppetCheck.settings[:warning_files].length).to eql(9)
+      expect(PuppetCheck.settings[:clean_files].length).to eql(11)
       expect(PuppetCheck.settings[:ignored_files].length).to eql(6)
 
       expect(cli).to eql(2)

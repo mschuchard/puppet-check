@@ -11,19 +11,10 @@ describe PuppetParser do
   context '.manifest' do
     it 'puts a bad syntax Puppet manifest in the error files array' do
       PuppetParser.manifest([fixtures_dir + 'manifests/syntax.pp'], false, false, [])
-      # stupid Puppet deprecation warning in ruby < 2.1
-      if RUBY_VERSION.to_f < 2.1
-        # Puppet 5.0-5.2 cannot do multiple errors per line
-        if Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
-          expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nThis Variable has no effect.*})
-        # puppet < 5 or >= 5.3 can do multiple errors per line
-        else
-          expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nThis Variable has no effect.*\nIllegal variable name})
-        end
-      # no puppet deprecation warning in ruby >= 2.1 and Puppet 5.0-5.2 cannot do multiple errors per line
-      elsif Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
+      # Puppet 5.0-5.2 cannot do multiple errors per line
+      if Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nThis Variable has no effect})
-      # no puppet deprecation warning in ruby >= 2.1 and puppet < 5 or >= 5.3 can do multiple errors per line
+      # puppet < 5 or >= 5.3 can do multiple errors per line
       else
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nThis Variable has no effect.*\nIllegal variable name})
       end
