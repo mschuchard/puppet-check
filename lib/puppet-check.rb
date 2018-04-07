@@ -22,10 +22,10 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, self.class.settings[:future_parser], self.class.settings[:style_check], self.class.settings[:public], self.class.settings[:private], self.class.settings[:puppetlint_args], self.class.settings[:rubocop_args])
+    execute_parsers(files, settings[:future_parser], settings[:style_check], settings[:public], settings[:private], settings[:puppetlint_args], settings[:rubocop_args])
 
     # output the diagnostic results
-    PuppetCheck.settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
+    settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
 
     # progress to regression checks if no errors in file checks
     if self.class.settings[:error_files].empty? && (!self.class.settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
