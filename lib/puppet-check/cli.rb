@@ -6,11 +6,11 @@ class PuppetCheck::CLI
   # run method for the cli
   def self.run(args)
     # gather the user arguments
-    parse(args)
+    settings = parse(args)
     raise 'puppet-check: no paths specified; try using --help' if args.empty?
 
     # run PuppetCheck with specified paths
-    PuppetCheck.new.run(args)
+    PuppetCheck.new.run(settings, args)
   end
 
   # parse the user arguments
@@ -87,7 +87,8 @@ class PuppetCheck::CLI
       opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| settings[:rubocop_args] = ['--except', arg] }
     end
 
-    PuppetCheck.settings = settings
+    # remove atched args and return settings
     opt_parser.parse!(args)
+    settings
   end
 end

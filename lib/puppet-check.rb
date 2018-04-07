@@ -14,7 +14,10 @@ class PuppetCheck
   end
 
   # main runner for PuppetCheck
-  def run(paths)
+  def run(settings, paths)
+    # establish settings
+    self.class.settings = settings
+
     # grab all of the files to be processed
     files = self.class.parse_paths(paths)
 

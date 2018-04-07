@@ -14,69 +14,35 @@ describe PuppetCheck::CLI do
     end
 
     it 'allows future parser, fail on warnings, style, smoke, and regression checks to be enabled' do
-      PuppetCheck.settings[:future_parser] = false
-      PuppetCheck.settings[:fail_on_warnings] = false
-      PuppetCheck.settings[:style_check] = false
-      PuppetCheck.settings[:smoke_check] = false
-      PuppetCheck.settings[:regression_check] = false
-      PuppetCheck::CLI.parse(%w[-f --fail-on-warnings -s -r --smoke foo])
-      expect(PuppetCheck.settings[:future_parser]).to eql(true)
-      expect(PuppetCheck.settings[:fail_on_warnings]).to eql(true)
-      expect(PuppetCheck.settings[:style_check]).to eql(true)
-      expect(PuppetCheck.settings[:smoke_check]).to eql(true)
-      expect(PuppetCheck.settings[:regression_check]).to eql(true)
+      expect(PuppetCheck::CLI.parse(%w[-f --fail-on-warnings -s -r --smoke foo])).to include(future_parser: true, fail_on_warnings: true, style_check: true, smoke_check: true, regression_check: true)
     end
 
     it 'correctly parser EYAML options' do
-      PuppetCheck.settings[:public] = nil
-      PuppetCheck.settings[:private] = nil
-      PuppetCheck::CLI.parse(%w[--public pub.pem --private priv.pem])
-      expect(PuppetCheck.settings[:public]).to eql('pub.pem')
-      expect(PuppetCheck.settings[:private]).to eql('priv.pem')
+      expect(PuppetCheck::CLI.parse(%w[--public pub.pem --private priv.pem])).to include(public: 'pub.pem', private: 'priv.pem')
     end
 
     it 'correctly parses a formatting option' do
-      PuppetCheck.settings[:output_format] = ''
-      PuppetCheck::CLI.parse(%w[-o text])
-      expect(PuppetCheck.settings[:output_format]).to eql('text')
+      expect(PuppetCheck::CLI.parse(%w[-o text])).to include(output_format: 'text')
     end
 
     it 'correctly parses octocatalog-diff options' do
-      PuppetCheck.settings[:octoconfig] = ''
-      PuppetCheck.settings[:octonodes] = []
-      PuppetCheck::CLI.parse(%w[--octoconfig config.cfg.rb --octonodes server1,server2])
-      expect(PuppetCheck.settings[:octoconfig]).to eql('config.cfg.rb')
-      expect(PuppetCheck.settings[:octonodes]).to eql(%w[server1 server2])
+      expect(PuppetCheck::CLI.parse(%w[--octoconfig config.cfg.rb --octonodes server1,server2])).to include(octoconfig: 'config.cfg.rb', octonodes: %w[server1 server2])
     end
 
     it 'correctly parses PuppetLint arguments' do
-      PuppetCheck.settings[:puppetlint_args] = []
-      PuppetCheck::CLI.parse(%w[--puppet-lint puppetlint-arg-one,puppetlint-arg-two foo])
-      expect(PuppetCheck.settings[:puppetlint_args]).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
+      expect(PuppetCheck::CLI.parse(%w[--puppet-lint puppetlint-arg-one,puppetlint-arg-two foo])).to include(puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'])
     end
 
     it 'correctly loads a .puppet-lint.rc' do
-      PuppetCheck.settings[:puppetlint_args] = []
-      PuppetCheck::CLI.parse(%W[-c #{fixtures_dir}/manifests/.puppet-lint.rc])
-      expect(PuppetCheck.settings[:puppetlint_args]).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
+      expect(PuppetCheck::CLI.parse(%W[-c #{fixtures_dir}/manifests/.puppet-lint.rc])).to include(puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'])
     end
 
     it 'correctly parses Rubocop arguments' do
-      PuppetCheck.settings[:rubocop_args] = []
-      PuppetCheck::CLI.parse(%w[--rubocop rubocop-arg-one,rubocop-arg-two foo])
-      expect(PuppetCheck.settings[:rubocop_args]).to eql(['--except', 'rubocop-arg-one,rubocop-arg-two'])
+      expect(PuppetCheck::CLI.parse(%w[--rubocop rubocop-arg-one,rubocop-arg-two foo])).to include(rubocop_args: ['--except', 'rubocop-arg-one,rubocop-arg-two'])
     end
 
     it 'correctly parses multiple sets of arguments' do
-      PuppetCheck.settings[:future_parser] = false
-      PuppetCheck.settings[:style_check] = false
-      PuppetCheck.settings[:puppetlint_args] = []
-      PuppetCheck.settings[:rubocop_args] = []
-      PuppetCheck::CLI.parse(%w[-s -f --puppet-lint puppetlint-arg-one,puppetlint-arg-two --rubocop rubocop-arg-one,rubocop-arg-two foo])
-      expect(PuppetCheck.settings[:future_parser]).to eql(true)
-      expect(PuppetCheck.settings[:style_check]).to eql(true)
-      expect(PuppetCheck.settings[:puppetlint_args]).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
-      expect(PuppetCheck.settings[:rubocop_args]).to eql(['--except', 'rubocop-arg-one,rubocop-arg-two'])
+      expect(PuppetCheck::CLI.parse(%w[-s -f --puppet-lint puppetlint-arg-one,puppetlint-arg-two --rubocop rubocop-arg-one,rubocop-arg-two foo])).to include(future_parser: true, style_check: true, puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'], rubocop_args: ['--except', 'rubocop-arg-one,rubocop-arg-two'])
     end
   end
 end
