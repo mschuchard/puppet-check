@@ -15,16 +15,18 @@ matrix:
   include:
     - rvm: 2.1.10
       env: TEST='unit system'
-    - rvm: 2.2.9
+    - rvm: 2.2.10
       env: TEST=default
-    - rvm: 2.3.6
+    - rvm: 2.3.7
       env: TEST='unit system'
-    - rvm: 2.4.3
+    - rvm: 2.4.4
       env: TEST='unit system'
-    - rvm: 2.5.0
+    - rvm: 2.5.1
+      env: TEST='unit system'
+    - rvm: 2.6.0-preview1
       env: TEST='unit system'
   allow_failures:
-    - rvm: 2.5.0
+    - rvm: 2.6.0-preview1
 
 # execute tests
 before_install: gem update --no-document bundler
