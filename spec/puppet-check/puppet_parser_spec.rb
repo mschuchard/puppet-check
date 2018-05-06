@@ -21,6 +21,12 @@ describe PuppetParser do
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
+    it 'puts a bad syntax at eof Puppet manifest in the error files array' do
+      PuppetParser.manifest([fixtures_dir + 'manifests/eof_syntax.pp'], false, false, [])
+      expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/eof_syntax.pp:\nSyntax error at end of input})
+      expect(PuppetCheck.settings[:warning_files]).to eql([])
+      expect(PuppetCheck.settings[:clean_files]).to eql([])
+    end
     it 'puts a bad parser and lint style Puppet manifest in the warning files array' do
       PuppetParser.manifest([fixtures_dir + 'manifests/style_parser.pp'], false, true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
