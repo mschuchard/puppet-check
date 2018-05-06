@@ -31,6 +31,10 @@ describe DataParser do
 
   if RUBY_VERSION.to_f >= 2.3
     context '.eyaml' do
+      before(:each) do
+        PuppetCheck.settings[:ignored_files] = []
+      end
+
       it 'returns a warning if a public key was not specified' do
         expect { DataParser.eyaml(['foo.eyaml'], nil, 'private.pem') }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
       end
