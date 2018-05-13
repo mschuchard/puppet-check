@@ -22,9 +22,12 @@ class PuppetParser
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-5.x has a new validator output format and eof errors have fake dir env info
-        next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}") if Puppet::PUPPETVERSION.to_f >= 5.4
+        if Puppet::PUPPETVERSION.to_f >= 5.4
+          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
         # puppet 5.0-5.2 can only do one error per line and outputs fake dir env info
-        next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')}") if Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
+        elsif Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
+          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')}")
+        end
         # puppet < 5 and 5.3 parser output style
         next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
       end
