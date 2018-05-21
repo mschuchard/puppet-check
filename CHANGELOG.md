@@ -1,6 +1,7 @@
 ### 1.6.0 (Next)
 - Minimum Ruby version increased to 2.1.
 - Minimum Puppet version increased to 3.7.
+- Minimum Puppet-Lint and Rubocop increased to 2.0 and 0.51.0.
 - Correctly capturing new Puppet >= 5.4 parser validator output format.
 
 ### 1.5.1
