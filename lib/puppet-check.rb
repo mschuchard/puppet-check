@@ -18,6 +18,9 @@ class PuppetCheck
     # establish settings
     self.class.settings = settings
 
+    # settings defaults
+    self.class.defaults
+
     # grab all of the files to be processed
     files = self.class.parse_paths(paths)
 
@@ -62,6 +65,37 @@ class PuppetCheck
       # error files? return 2
       2
     end
+  end
+
+  # establish default settings
+  def self.defaults
+    # initialize future parser, fail on warning,  style check, and regression check bools
+    @settings[:future_parser] ||= false
+    @settings[:fail_on_warning] ||= false
+    @settings[:style_check] ||= false
+    @settings[:smoke_check] ||= false
+    @settings[:regression_check] ||= false
+
+    # initialize ssl keys for eyaml checks
+    @settings[:public] ||= nil
+    @settings[:private] ||= nil
+
+    # initialize output format option
+    @settings[:output_format] ||= 'text'
+
+    # initialize diagnostic output arrays
+    @settings[:error_files] ||= []
+    @settings[:warning_files] ||= []
+    @settings[:clean_files] ||= []
+    @settings[:ignored_files] ||= []
+
+    # initialize octocatalog-diff options
+    @settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'
+    @settings[:octonodes] ||= %w[localhost.localdomain]
+
+    # initialize style arg arrays
+    @settings[:puppetlint_args] ||= []
+    @settings[:rubocop_args] ||= []
   end
 
   # parse the paths and return the array of files

@@ -21,34 +21,6 @@ class PuppetCheck::CLI
     # initialize settings hash
     settings = {}
 
-    # initialize future parser, fail on warning,  style check, and regression check bools
-    settings[:future_parser] = false
-    settings[:fail_on_warning] = false
-    settings[:style_check] = false
-    settings[:smoke_check] = false
-    settings[:regression_check] = false
-
-    # initialize ssl keys for eyaml checks
-    settings[:public] = nil
-    settings[:private] = nil
-
-    # initialize output format option
-    settings[:output_format] = 'text'
-
-    # initialize octocatalog-diff options
-    settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
-    settings[:octonodes] = %w[localhost.localdomain]
-
-    # initialize diagnostic output arrays
-    settings[:error_files] = []
-    settings[:warning_files] = []
-    settings[:clean_files] = []
-    settings[:ignored_files] = []
-
-    # initialize style arg arrays
-    settings[:puppetlint_args] = []
-    settings[:rubocop_args] = []
-
     opt_parser = OptionParser.new do |opts|
       # usage
       opts.banner = 'usage: puppet-check [options] paths'
