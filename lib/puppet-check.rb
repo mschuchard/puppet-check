@@ -84,10 +84,10 @@ class PuppetCheck
     @settings[:output_format] ||= 'text'
 
     # initialize diagnostic output arrays
-    @settings[:error_files] ||= []
-    @settings[:warning_files] ||= []
-    @settings[:clean_files] ||= []
-    @settings[:ignored_files] ||= []
+    @settings[:error_files] = []
+    @settings[:warning_files] = []
+    @settings[:clean_files] = []
+    @settings[:ignored_files] = []
 
     # initialize octocatalog-diff options
     @settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'

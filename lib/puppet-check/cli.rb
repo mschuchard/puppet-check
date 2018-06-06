@@ -51,10 +51,10 @@ class PuppetCheck::CLI
 
       # arguments to style checkers
       opts.on('--puppet-lint arg_one,arg_two', Array, 'Arguments for PuppetLint ignored checks') do |puppetlint_args|
-        settings[:puppetlint_args].concat(puppetlint_args.map { |arg| "--#{arg}" })
+        settings[:puppetlint_args] = puppetlint_args.map { |arg| "--#{arg}" }
       end
       opts.on('-c', '--config file', String, 'Load PuppetLint options from file') do |file|
-        settings[:puppetlint_args].concat(File.read(file).split("\n"))
+        settings[:puppetlint_args] = File.read(file).split("\n")
       end
       opts.on('--rubocop arg_one,arg_two', String, 'Arguments for Rubocop disabled cops') { |arg| settings[:rubocop_args] = ['--except', arg] }
     end
