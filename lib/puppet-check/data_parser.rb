@@ -54,7 +54,7 @@ class DataParser
 
       # check yaml syntax
       begin
-        parsed = YAML.safe_load(decrypted)
+        parsed = YAML.load_file(decrypted)
       rescue StandardError => err
         PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
       else
@@ -165,9 +165,9 @@ class DataParser
             warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
           end
         # assume this is hieradata
-        else
+        elsif parsed
           # perform some rudimentary hiera checks if data exists
-          warnings = hiera(parsed, file) unless parsed.nil?
+          warnings = hiera(parsed, file)
         end
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)
