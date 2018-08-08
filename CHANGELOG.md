@@ -3,6 +3,7 @@
 - Minimum Puppet version increased to 3.7.
 - Minimum Puppet-Lint and Rubocop increased to 2.0 and 0.51.0.
 - Correctly capturing new Puppet >= 5.4 parser validator output format.
+- Refixing style checker error for empty hieradata.
 
 ### 1.5.1
 - Slight cleanup and optimization.
