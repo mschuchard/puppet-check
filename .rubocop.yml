@@ -4,6 +4,7 @@ AllCops:
     - 'lib/**/*.rb'
     - 'bin/*.rb'
     - 'spec/**/*.rb'
+    - 'spec/**/Puppetfile'
   Exclude:
     - 'spec/fixtures/**/*'
     - 'bin/puppet'

@@ -61,7 +61,7 @@ class DataParser
         warnings = []
 
         # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed, file) unless parsed.nil? || (File.basename(file) == 'hiera.yaml')
+        warnings = hiera(parsed, file) if parsed
 
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
         PuppetCheck.settings[:clean_files].push(file.to_s)

@@ -16,7 +16,6 @@
 # sudo docker images | grep puppetcheck | awk '{print $3}' | xargs sudo docker rmi
 
 FROM fedora:25
-RUN dnf install ruby -y
-RUN gem install --no-document puppet rubocop reek puppet-lint spdx-licenses rspec rake octocatalog-diff
+RUN dnf install ruby -y && gem install --no-document puppet rubocop reek puppet-lint spdx-licenses rspec rake octocatalog-diff
 COPY / .
 ENTRYPOINT ["rake"]
