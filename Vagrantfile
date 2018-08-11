@@ -4,12 +4,13 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision 'shell', inline: <<-SHELL
     cd /vagrant
-    zypper install ruby2.1-devel -y
+    zypper install --non-interactive ruby2.1-devel -y
     gem build puppet-check.gemspec
-    gem install --no-rdoc --no-ri rake puppet-check*.gem
+    gem install --no-document rubocop -v 0.57.2
+    gem install --no-document rake puppet-check*.gem
     rm -f puppet-check*.gem
     cd spec/fixtures
-    /usr/local/bin/puppet-check -s .
+    /usr/bin/puppet-check.ruby2.1 -s .
     echo $?
   SHELL
 end

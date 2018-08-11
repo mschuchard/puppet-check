@@ -23,7 +23,7 @@ matrix:
       env: TEST='unit system'
     - rvm: 2.5.1
       env: TEST='unit system'
-    - rvm: 2.6.0-preview1
+    - rvm: 2.6.0-preview2
       env: TEST='unit system'
   allow_failures:
     - rvm: 2.6.0-preview2

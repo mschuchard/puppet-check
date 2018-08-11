@@ -1,10 +1,16 @@
 ---
 AllCops:
+  TargetRubyVersion: 2.2
+
   Include:
     - 'lib/**/*.rb'
     - 'bin/*.rb'
     - 'spec/**/*.rb'
     - 'spec/**/Puppetfile'
+    - puppet-check.gemspec
+    - Gemfile
+    - Rakefile
+    - Vagrantfile
   Exclude:
     - 'spec/fixtures/**/*'
     - 'bin/puppet'
