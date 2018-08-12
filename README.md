@@ -17,8 +17,6 @@ Puppet Check is a gem that provides a comprehensive, streamlined, and efficient 
 
 **IMPORTANT**: The current support for encrypted yaml validation is experimental. The code is blocked in the current release (the files will continue to be treated as unrecognized) and will be unblocked when the feature is finished in a future version.
 
-Also, when most Ruby gems (both third party and standard) dropped support for 1.9.3, it became difficult for users to use Puppet Check with 1.9.3, and support for it was eventually dropped. This is now occurring again for 2.0.0 as few gems are supporting it anymore, and support for 2.0.0 will be discontinued in Puppet Check 1.6.0.
-
 ### Former Method for Code and Data Checks
 ![Old](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_old.png)
 
@@ -138,12 +136,7 @@ The following files have unrecognized formats and therefore were not processed:
 It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lighter and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
 
 ## Usage
-Puppet Check requires `ruby >= 2.0.0`, `puppet >= 3.4`, and `puppet-lint >= 1.1.0`. `Octocatalog-diff >= 1.0.0` if you are performing smoke/regression checks. All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
-
-#### Ruby 2.0 and Reek/Rubocop
-Reek dropped support for Ruby 2.0 when it went to 4.0. Since dependencies by Ruby version are allowed in Gemfiles but not gemspecs, this means that PuppetCheck installed with `bundler` will automatically pick up the correct version of Reek for your Ruby version and install it. If you are installing PuppetCheck via `gem`, then you can install reek normally with `gem` with Ruby >= 2.1, but you will need to specify `gem install reek -v 3.11` if you are using Ruby 2.0.
-
-Similarly, RuboCop has dropped support for Ruby 2.0 at 0.51.0. Since this is a recent change, the expectation will be to automatically manage this dependency outside of Puppet Check. Only new installations on 2.0 will be affected by this.
+Please see the [Gemspec](puppet-check.gemspec) for dependency information.  All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
 
 ### CLI
 ```
@@ -273,20 +266,21 @@ If you are performing your Puppet testing from within a Ruby script or your own 
 # file checks
 require 'puppet-check'
 
-PuppetCheck.settings[:future_parser] = true # default false
-PuppetCheck.settings[:fail_on_warnings] = true # default false
-PuppetCheck.settings[:style_check] = true # default false
-PuppetCheck.settings[:smoke_check] = true # default false
-PuppetCheck.settings[:regression_check] = true # in progress, do not use; default false
-PuppetCheck.settings[:public] = 'public.pem' # default nil
-PuppetCheck.settings[:private] = 'private.pem' # default nil
-PuppetCheck.settings[:output_format] = 'yaml' # also 'json'; default 'text'
-PuppetCheck.settings[:octoconfig] = '$HOME/octocatalog-diff.cfg.rb' # default '.octocatalog-diff.cfg.rb'
-PuppetCheck.settings[:octonodes] = %w(server.example.com) # default: %w(localhost.localdomain)
-PuppetCheck.settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
-PuppetCheck.settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
+settings = {}
+settings[:future_parser] = true # default false
+settings[:fail_on_warnings] = true # default false
+settings[:style_check] = true # default false
+settings[:smoke_check] = true # default false
+settings[:regression_check] = true # in progress, do not use; default false
+settings[:public] = 'public.pem' # default nil
+settings[:private] = 'private.pem' # default nil
+settings[:output_format] = 'yaml' # also 'json'; default 'text'
+settings[:octoconfig] = '$HOME/octocatalog-diff.cfg.rb' # default '.octocatalog-diff.cfg.rb'
+settings[:octonodes] = %w(server.example.com) # default: %w(localhost.localdomain)
+settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
+settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
 
-PuppetCheck.new.run([dirs, files])
+PuppetCheck.new.run(settings, [dirs, files])
 
 # rspec checks (as part of a RSpec::Core::RakeTask.new block with |task|)
 require 'puppet-check/rspec_puppet_support'
@@ -349,19 +343,20 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 - 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes) or failed spec test(s).
 - 2: PuppetCheck exited with one or more errors in your code and data. Alternatively, PuppetCheck exited with one or more warnings in your code and data and you specified to fail on warnings.
 
-### Optional dependencies
+### Optional Dependencies
 - **rake** (gem): install this if you want to use Puppet Check with `rake` tasks in addition to the CLI.
 - **rspec** (gem): install this if you want to use Puppet Check to execute the spec tests for your Ruby files during `rake`.
 - **rspec-puppet** (gem): install this if you want to use Puppet Check to execute the spec tests for your Puppet files during `rake`.
-- **octocatalog-diff** (gem): install this if you want to use Puppet Check to execute smoke or regression tests for your Puppet catalog.
+- **octocatalog-diff** (gem): install a version `>= 1.0` of this if you want to use Puppet Check to execute smoke or regression tests for your Puppet catalog.
 - **beaker** (gem): install this if you want to use Puppet Check to execute the Beaker acceptance tests during `rake`.
 - **test-kitchen** (gem): install this if you want to use Puppet Check to execute the Test Kitchen acceptance tests during `rake`.
 - **git** (pkg): install this if you want to use Puppet Check to download external module dependencies with `git` commands during RSpec Puppet testing.
 - **mercurial** (pkg): install this if you want to use Puppet Check to download external module dependencies with `hg` commands during RSpec Puppet testing.
+- **subversion** (pkg): install this if you want to use Puppet Check to download external module dependencies with `svn` commands during RSpec Puppet testing.
 
 ## Contributing
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
 
 A [Dockerfile](Dockerfile) is provided for easy rake testing. A [Vagrantfile](Vagrantfile) is provided for easy gem building, installation, and post-installation testing.
 
-Please consult the [CHANGELOG](CHANGELOG.md) for the current development roadmap.
+Please consult the GitHub Project for the current development roadmap.
