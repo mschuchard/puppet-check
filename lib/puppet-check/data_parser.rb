@@ -160,9 +160,17 @@ class DataParser
             warnings.push('Recommended field \'operatingsystem_support\' not found.')
           end
 
-          # check for spdx license (rubygems/util/licenses for rubygems >= 2.5 in the far future)
-          if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
-            warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
+          # check for spdx license
+          begin
+            require 'rubygems/util/licenses'
+
+            if parsed.key?('license') && !Gem::Licenses.match?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
+              warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
+            end
+          rescue LoadError
+            if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
+              warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
+            end
           end
         # assume this is hieradata
         elsif parsed
