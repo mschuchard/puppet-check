@@ -1,4 +1,7 @@
-### 1.6.0 (Next)
+### 1.6.1 (Next)
+- Removed check for hieradata nil/undef value for Hiera >= 5.
+
+### 1.6.0
 - Minimum Ruby version increased to 2.1.
 - Minimum Puppet version increased to 3.7.
 - Minimum Puppet-Lint and Rubocop increased to 2.0 and 0.51.0.

@@ -18,7 +18,11 @@ describe DataParser do
     it 'puts a good yaml file with potential hiera issues in the warning files array' do
       DataParser.yaml([fixtures_dir + 'hieradata/style.yaml'])
       expect(PuppetCheck.settings[:error_files]).to eql([])
-      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.yaml:\nValue\(s\) missing in key.*\nValue\(s\) missing in key.*\nThe string --- appears more than once in this data and Hiera will fail to parse it correctly})
+      if Puppet::PUPPETVERSION.to_i < 5
+        expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.yaml:\nValue\(s\) missing in key.*\nValue\(s\) missing in key.*\nThe string --- appears more than once in this data and Hiera will fail to parse it correctly})
+      else
+        expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.yaml:\nThe string --- appears more than once in this data and Hiera will fail to parse it correctly})
+      end
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a good yaml file in the clean files array' do
