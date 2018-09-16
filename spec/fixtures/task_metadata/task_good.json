@@ -1,0 +1,16 @@
+{
+  "description": "Does the things.",
+  "supports_noop": false,
+  "input_method": "stdin",
+  "puppet_task_version": 1,
+  "parameters": {
+    "first": {
+     "description": "First param.",
+     "type": "Optional[String[1]]"
+    },
+    "second": {
+     "description": "Second param.",
+     "type": "Optional[String[1]]"
+    }
+  }
+}

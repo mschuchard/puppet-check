@@ -178,7 +178,11 @@ class DataParser
           warnings.push('description value is not a String!') unless parsed['description'].is_a?(String)
           # check that input_method is one of three possible values
           if parsed.key?('input_method')
-            warnings.push('supports_noop value is not one of environment, stdin, or powershell!') unless ['environment', 'stdin', 'powershell'].include?(parsed['supports_noop'])
+            if parsed['input_method'].is_a?(String)
+              warnings.push('input_method value is not one of environment, stdin, or powershell!') unless ['environment', 'stdin', 'powershell'].include?(parsed['input_method'])
+            else
+              warnings.push('input_method value is not a String!')
+            end
           end
           # check that parameters is a hash
           if parsed.key?('parameters')

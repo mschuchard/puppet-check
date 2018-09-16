@@ -1,0 +1,10 @@
+{
+  "description": 1,
+  "supports_noop": "false",
+  "input_method": "unsupported",
+  "puppet_task_version": "1",
+  "parameters": [
+    "first",
+    "second"
+  ]
+}
