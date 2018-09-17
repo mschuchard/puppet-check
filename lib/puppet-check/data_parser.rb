@@ -175,26 +175,26 @@ class DataParser
         # assume this is task metadata if it has this key
         elsif parsed.key?('description')
           # check that description is a string
-          warnings.push('description value is not a String!') unless parsed['description'].is_a?(String)
+          warnings.push('description value is not a String') unless parsed['description'].is_a?(String)
           # check that input_method is one of three possible values
           if parsed.key?('input_method')
             if parsed['input_method'].is_a?(String)
-              warnings.push('input_method value is not one of environment, stdin, or powershell!') unless ['environment', 'stdin', 'powershell'].include?(parsed['input_method'])
+              warnings.push('input_method value is not one of environment, stdin, or powershell') unless ['environment', 'stdin', 'powershell'].include?(parsed['input_method'])
             else
-              warnings.push('input_method value is not a String!')
+              warnings.push('input_method value is not a String')
             end
           end
           # check that parameters is a hash
           if parsed.key?('parameters')
-            warnings.push('parameters value is not a Hash!') unless parsed['parameters'].is_a?(Hash)
+            warnings.push('parameters value is not a Hash') unless parsed['parameters'].is_a?(Hash)
           end
           # check that puppet_task_version is an integer
           if parsed.key?('puppet_task_version')
-            warnings.push('puppet_task_version value is not an Integer!') unless parsed['puppet_task_version'].is_a?(Integer)
+            warnings.push('puppet_task_version value is not an Integer') unless parsed['puppet_task_version'].is_a?(Integer)
           end
           # check that supports_noop is a boolean
           if parsed.key?('supports_noop')
-            warnings.push('supports_noop value is not a Boolean!') unless parsed['supports_noop'].is_a?(TrueClass) || parsed['supports_noop'].is_a?(FalseClass)
+            warnings.push('supports_noop value is not a Boolean') unless parsed['supports_noop'].is_a?(TrueClass) || parsed['supports_noop'].is_a?(FalseClass)
           end
         # assume this is hieradata and ensure it is non-empty
         elsif parsed
