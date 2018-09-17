@@ -94,6 +94,12 @@ describe DataParser do
       expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}metadata_style_two/metadata.json:\n'puppetlabs/one' has non-semantic versioning.*\n'puppetlabs/two' is missing an upper bound\.\n.*operatingsystem.*\n.*operatingsystemrelease})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
+    it 'puts a bad task metadata json file in the warning files array' do
+      DataParser.json([fixtures_dir + 'task_metadata/task_bad.json'])
+      expect(PuppetCheck.settings[:error_files]).to eql([])
+      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}task_metadata/task_bad.json:\ndescription value is not a String\ninput_method value is not one of environment, stdin, or powershell\nparameters value is not a Hash\npuppet_task_version value is not an Integer\nsupports_noop value is not a Boolean})
+      expect(PuppetCheck.settings[:clean_files]).to eql([])
+    end
     it 'puts a good json file in the clean files array' do
       DataParser.json([fixtures_dir + 'hieradata/good.json'])
       expect(PuppetCheck.settings[:error_files]).to eql([])
@@ -105,6 +111,12 @@ describe DataParser do
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}metadata_good/metadata.json"])
+    end
+    it 'puts a good task metadata json file in the clean files array' do
+      DataParser.json([fixtures_dir + 'task_metadata/task_good.json'])
+      expect(PuppetCheck.settings[:error_files]).to eql([])
+      expect(PuppetCheck.settings[:warning_files]).to eql([])
+      expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}task_metadata/task_good.json"])
     end
   end
 end
