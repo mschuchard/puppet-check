@@ -14,7 +14,6 @@ describe RegressionCheck do
       expect { RegressionCheck.config(octocatalog_diff_dir + 'octocatalog-diff.cfg.rb') }.not_to raise_exception
     end
     it 'loads in the settings from the file correctly' do
-      #
     end
   end
 
@@ -34,6 +33,5 @@ describe RegressionCheck do
   end
 
   context '.regression' do
-    #
   end
 end

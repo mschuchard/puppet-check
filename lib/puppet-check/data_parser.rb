@@ -179,7 +179,7 @@ class DataParser
           # check that input_method is one of three possible values
           if parsed.key?('input_method')
             if parsed['input_method'].is_a?(String)
-              warnings.push('input_method value is not one of environment, stdin, or powershell') unless ['environment', 'stdin', 'powershell'].include?(parsed['input_method'])
+              warnings.push('input_method value is not one of environment, stdin, or powershell') unless %w[environment stdin powershell].include?(parsed['input_method'])
             else
               warnings.push('input_method value is not a String')
             end

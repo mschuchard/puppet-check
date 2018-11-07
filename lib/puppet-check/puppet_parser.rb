@@ -36,12 +36,12 @@ class PuppetParser
       warnings = "#{file}:"
       unless errors.empty?
         # puppet 5.4-5.x has a new validator output format
-        if Puppet::PUPPETVERSION.to_f >= 5.4
-          warnings << "\n#{errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '')}"
-        # puppet <= 5.3 validator output format
-        else
-          warnings << "\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}"
-        end
+        warnings << if Puppet::PUPPETVERSION.to_f >= 5.4
+                      "\n#{errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '')}"
+                    # puppet <= 5.3 validator output format
+                    else
+                      "\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}"
+                    end
       end
       Puppet::Util::Log.close_all
 
