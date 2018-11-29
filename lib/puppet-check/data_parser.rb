@@ -224,7 +224,7 @@ class DataParser
     end
 
     # check that '---' does not show up more than once in the hieradata
-    warnings.push('The string --- appears more than once in this data and Hiera will fail to parse it correctly.') if File.read(file).scan(/---/).count >= 2
+    warnings.push('The string --- appears more than once in this data and Hiera may fail to parse it correctly.') if File.read(file).scan(/---/).count >= 2
 
     warnings
   end
