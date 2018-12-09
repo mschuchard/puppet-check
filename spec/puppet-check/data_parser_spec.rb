@@ -21,7 +21,7 @@ describe DataParser do
       if Puppet::PUPPETVERSION.to_i < 5
         expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.yaml:\nValue\(s\) missing in key.*\nValue\(s\) missing in key.*\nThe string --- appears more than once in this data and Hiera will fail to parse it correctly})
       else
-        expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.yaml:\nThe string --- appears more than once in this data and Hiera will fail to parse it correctly})
+        expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}hieradata/style.yaml:\nThe string --- appears more than once in this data and Hiera may fail to parse it correctly})
       end
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end

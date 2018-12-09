@@ -41,7 +41,7 @@ describe PuppetCheck do
     let(:repeats) { PuppetCheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
 
     it 'raises an error if no files were found' do
-      expect { no_files }.to raise_error(RuntimeError, 'puppet-check: no files found in supplied paths foo, bar, baz.')
+      expect { no_files }.to raise_error(RuntimeError, 'puppet-check: no files found in supplied paths \'foo, bar, baz\'.')
     end
 
     it 'correctly parses one file and returns it' do
