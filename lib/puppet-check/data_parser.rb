@@ -212,9 +212,8 @@ class DataParser
     private_class_method :method
     warnings = []
 
-    # disregard nil/undef value data check if hiera >=5
-    # this constant is coming from puppet from puppet_parser from puppet_check from here
-    if Puppet::PUPPETVERSION.to_i < 5
+    # disregard nil/undef value data check if default values (common)
+    unless file =~ /^common/
       data.each do |key, value|
         # check for nil values in the data (nil keys are fine)
         if (value.is_a?(Hash) && value.values.any?(&:nil?)) || value.nil?

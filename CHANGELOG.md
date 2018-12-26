@@ -1,6 +1,7 @@
 ### 1.6.1 (Next)
 - Removed check for hieradata nil/undef value for Hiera >= 5.
 - Add rudimentary checks for task metadata.
+- Preliminary support for Puppet 6.
 
 ### 1.6.0
 - Minimum Ruby version increased to 2.1.
