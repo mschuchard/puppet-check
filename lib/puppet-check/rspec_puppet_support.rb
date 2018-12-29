@@ -54,7 +54,7 @@ class RSpecPuppetSupport
 
     # create spec_helper if missing
     return if File.file?('spec/spec_helper.rb')
-    File.open('spec/spec_helper.rb', 'w') { |file| file.puts "require 'rspec-puppet'\n\nfixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))\n\nRSpec.configure do |c|\n  c.module_path     = File.join(fixture_path, 'modules')\n  c.manifest_dir    = File.join(fixture_path, 'manifests')\n  c.manifest        = File.join(File.dirname(File.expand_path(__FILE__)), 'fixtures', 'manifests', 'site.pp')\n  c.environmentpath = File.join(Dir.pwd, 'spec')\nend" }
+    File.open('spec/spec_helper.rb', 'w') { |file| file.puts "require 'rspec-puppet/spec_helper'\n" }
   end
 
   # setup the module dependencies for rspec-puppet testing

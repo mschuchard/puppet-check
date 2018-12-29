@@ -2,6 +2,7 @@
 - Removed check for hieradata nil/undef value for Hiera >= 5.
 - Add rudimentary checks for task metadata.
 - Preliminary support for Puppet 6.
+- RSpec Puppet fixed its default `spec_helper`. Revert to loading it instead of generating a working one.
 
 ### 1.6.0
 - Minimum Ruby version increased to 2.1.
