@@ -1,16 +1,15 @@
 # PuppetCheck: testing gem build, install, and execution
 Vagrant.configure(2) do |config|
-  config.vm.box = 'opensuse/openSUSE-42.2-x86_64'
+  config.vm.box = 'debian/stretch64'
 
   config.vm.provision 'shell', inline: <<-SHELL
     cd /vagrant
-    zypper --non-interactive install ruby2.1-devel
+    apt-get install -y ruby-dev make gcc
     gem build puppet-check.gemspec
-    gem install --no-document rubocop -v 0.57.2
-    gem install --no-document rake puppet-check*.gem
+    gem install --no-document puppet-check*.gem
     rm -f puppet-check*.gem
     cd spec/fixtures
-    /usr/bin/puppet-check.ruby2.1 -s .
+    /usr/local/bin/puppet-check -s .
     echo $?
   SHELL
 end

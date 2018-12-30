@@ -121,19 +121,8 @@ The following files have unrecognized formats and therefore were not processed:
 -- foobarbaz
 ```
 
-### Why not Puppetlabs Spec Helper?
-- Puppetlabs Spec Helper is focused more on advanced and robust spec testing.  Puppet Check is focused more on efficient and comprehensive Puppet code and data validation.
-- Puppetlabs Spec Helper performs fewer types of checks.
-- Puppetlabs Spec Helper has extra layers of gems in between it and the gems executing the checks.
-- Puppetlabs Spec Helper does not allow interfacing through it to the gems executing the checks.
-- Puppetlabs Spec Helper has no CLI.
-- Puppetlabs Spec Helper intrinsically only executes spec tests against one module at a time.
-- Puppetlabs Spec Helper requires an additional config file for RSpec Puppet support.
-- Puppetlabs Spec Helper does not update external module dependencies in a stateful/persistent workspace and fails gracefully instead.
-- Puppetlabs Spec Helper requires extra configuration items to setup self-module RSpec testing.
-- Puppetlabs Spec Helper does not frontend to Octocatalog Diff or Test-Kitchen.
-
-It is worth nothing that there is no current development objective for Puppet Check to achieve the same advanced level of robustness for spec testing that Puppetlabs Spec Helper enables. If you are performing standard spec testing on your Puppet code and data, then Puppet Check's spec testing is a fantastic lighter and faster alternative to Puppetlabs Spec Helper. If you require advanced and intricate capabilities in your spec testing (e.g. direct interfacing to the `Puppet::Parser::Scope` API), then you will likely prefer Puppetlabs Spec Helper's spec testing in conjunction with Puppet Check's file validation.
+### What About Puppet Development Kit?
+The fairly recent release of the Puppet Development Kit (PDK) will hopefully eventually bring about the capability to test and validate your Puppet code and data in a streamlined, efficient, comprehensive, and accurate fashion comparable to Puppet Check. Unfortunately, the PDK has not yet achieved feature or efficiency parity with Puppet Check. The goal is for the PDK to one day replace Puppet Check and for Puppet Check to enter maintenance mode, but for now Puppet Check is still needed to lead Puppet testing.
 
 ## Usage
 Please see the [Gemspec](puppet-check.gemspec) for dependency information.  All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
@@ -295,7 +284,7 @@ You can also use Puppet Check inside of Docker for quick, portable, and disposab
 
 ```dockerfile
 # a reliable and small container at the moment
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 # you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
 RUN apt-get update && apt-get install ruby git -y
 # you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.3 and then rspec-puppet and rake for extra testing
@@ -304,7 +293,7 @@ RUN gem install --no-document puppet-check reek rspec-puppet rake
 ENV LANG en_US.UTF-8
 # create the directory for your module, directory environment, etc. and change directory into it
 WORKDIR /module_name_or_directory_environment_name
-# copy the module, directory environment, etc. contents into the corresponding directory inside the container
+# copy the module, directory environment, etc. contents into the corresponding directory inside the container; alternative, bind a volume mount for your module(s) into the container at runtime
 COPY / .
 # execute your tests; in this example we are executing the full suite of tests
 ENTRYPOINT ["rake", "puppetcheck"]
@@ -319,7 +308,7 @@ As an alternative to Docker, you can also use Vagrant for quick and disposable t
 ```ruby
 Vagrant.configure(2) do |config|
   # a reliable and small box at the moment
-  config.vm.box = 'fedora/24-cloud-base'
+  config.vm.box = 'fedora/26-cloud-base'
 
   config.vm.provision 'shell', inline: <<-SHELL
     # cd to '/vagrant'
