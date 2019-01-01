@@ -13,8 +13,8 @@ describe PuppetCheck::CLI do
       expect { PuppetCheck::CLI.parse(%w[-s -f -asdf foo]) }.to raise_error(OptionParser::InvalidOption)
     end
 
-    it 'allows future parser, fail on warnings, style, smoke, and regression checks to be enabled' do
-      expect(PuppetCheck::CLI.parse(%w[-f --fail-on-warnings -s -r --smoke foo])).to include(future_parser: true, fail_on_warnings: true, style_check: true, smoke_check: true, regression_check: true)
+    it 'allows fail on warnings, style, smoke, and regression checks to be enabled' do
+      expect(PuppetCheck::CLI.parse(%w[--fail-on-warnings -s -r --smoke foo])).to include(fail_on_warnings: true, style_check: true, smoke_check: true, regression_check: true)
     end
 
     it 'correctly parser EYAML options' do
@@ -42,7 +42,7 @@ describe PuppetCheck::CLI do
     end
 
     it 'correctly parses multiple sets of arguments' do
-      expect(PuppetCheck::CLI.parse(%w[-s -f --puppet-lint puppetlint-arg-one,puppetlint-arg-two --rubocop rubocop-arg-one,rubocop-arg-two foo])).to include(future_parser: true, style_check: true, puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'], rubocop_args: ['--except', 'rubocop-arg-one,rubocop-arg-two'])
+      expect(PuppetCheck::CLI.parse(%w[-s --puppet-lint puppetlint-arg-one,puppetlint-arg-two --rubocop rubocop-arg-one,rubocop-arg-two foo])).to include(style_check: true, puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'], rubocop_args: ['--except', 'rubocop-arg-one,rubocop-arg-two'])
     end
   end
 end

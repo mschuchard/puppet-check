@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = Dir['lib']
 
   spec.required_ruby_version = '>= 2.1.0'
-  spec.add_dependency 'puppet', '>= 3.7', '< 7'
+  spec.add_dependency 'puppet', '>= 4.0', '< 7'
   spec.add_dependency 'puppet-lint', '~> 2.0'
   spec.add_dependency 'reek', '> 4.0', '< 6'
   spec.add_dependency 'rubocop', '~> 0.51'

@@ -4,12 +4,11 @@ require_relative '../puppet-check'
 # executes diagnostics on puppet files
 class PuppetParser
   # checks puppet (.pp)
-  def self.manifest(files, future, style, pl_args)
+  def self.manifest(files, style, pl_args)
     require 'puppet/face'
 
     # prepare the Puppet settings for the error checking
     Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
-    Puppet[:parser] = 'future' if future && (Puppet::PUPPETVERSION.to_i < 4)
 
     files.each do |file|
       # setup error logging and collection
@@ -77,9 +76,6 @@ class PuppetParser
     require 'puppet/pops'
 
     files.each do |file|
-      # puppet before version 4 cannot check template syntax
-      next PuppetCheck.settings[:ignored_files].push("#{file}: ignored due to Puppet < 4") if Puppet::PUPPETVERSION.to_i < 4
-
       # check puppet template syntax
       begin
         # credits to gds-operations/puppet-syntax for the parser function call

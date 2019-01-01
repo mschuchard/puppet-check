@@ -32,7 +32,6 @@ class PuppetCheck::CLI
       end
 
       # bool options
-      opts.on('-f', '--future', 'Enable future parser') { settings[:future_parser] = true }
       opts.on('--fail-on-warnings', 'Fail on warnings') { settings[:fail_on_warnings] = true }
       opts.on('-s', '--style', 'Enable style checks') { settings[:style_check] = true }
       opts.on('--smoke', 'Enable smoke testing') { settings[:smoke_check] = true }

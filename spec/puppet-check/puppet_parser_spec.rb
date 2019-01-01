@@ -10,7 +10,7 @@ describe PuppetParser do
 
   context '.manifest' do
     it 'puts a bad syntax Puppet manifest in the error files array' do
-      PuppetParser.manifest([fixtures_dir + 'manifests/syntax.pp'], false, false, [])
+      PuppetParser.manifest([fixtures_dir + 'manifests/syntax.pp'], false, [])
       # dealing with annoying warning in puppet 5
       if RUBY_VERSION.to_f < 2.3
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nThis Variable has no effect.*\nIllegal variable name})
@@ -21,37 +21,37 @@ describe PuppetParser do
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad syntax at eof Puppet manifest in the error files array' do
-      PuppetParser.manifest([fixtures_dir + 'manifests/eof_syntax.pp'], false, false, [])
+      PuppetParser.manifest([fixtures_dir + 'manifests/eof_syntax.pp'], false, [])
       expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/eof_syntax.pp:\nSyntax error at end of input})
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad parser and lint style Puppet manifest in the warning files array' do
-      PuppetParser.manifest([fixtures_dir + 'manifests/style_parser.pp'], false, true, [])
+      PuppetParser.manifest([fixtures_dir + 'manifests/style_parser.pp'], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}manifests/style_parser.pp:\nUnrecognized escape sequence.*\nUnrecognized escape sequence.*\n.*double quoted string containing})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad lint style Puppet manifest in the warning files array' do
-      PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], false, true, [])
+      PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}manifests/style_lint.pp:\n.*double quoted string containing.*\n.*indentation of})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad style Puppet manifest in the clean files array when puppetlint_args ignores its warnings' do
-      PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], false, true, ['--no-double_quoted_strings-check', '--no-arrow_alignment-check'])
+      PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], true, ['--no-double_quoted_strings-check', '--no-arrow_alignment-check'])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}manifests/style_lint.pp"])
     end
     it 'puts a good Puppet manifest in the clean files array' do
-      PuppetParser.manifest([fixtures_dir + 'manifests/good.pp'], false, true, [])
+      PuppetParser.manifest([fixtures_dir + 'manifests/good.pp'], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}manifests/good.pp"])
     end
     it 'throws a well specified error for an invalid PuppetLint argument' do
-      expect { PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], false, true, ['--non-existent', '--does-not-exist']) }.to raise_error(RuntimeError, 'puppet-lint: invalid option supplied among --non-existent --does-not-exist')
+      expect { PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], true, ['--non-existent', '--does-not-exist']) }.to raise_error(RuntimeError, 'puppet-lint: invalid option supplied among --non-existent --does-not-exist')
     end
   end
 

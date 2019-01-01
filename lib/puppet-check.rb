@@ -25,7 +25,7 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, settings[:future_parser], settings[:style_check], settings[:public], settings[:private], settings[:puppetlint_args], settings[:rubocop_args])
+    execute_parsers(files, settings[:style_check], settings[:public], settings[:private], settings[:puppetlint_args], settings[:rubocop_args])
 
     # output the diagnostic results
     settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
@@ -69,8 +69,7 @@ class PuppetCheck
 
   # establish default settings
   def self.defaults
-    # initialize future parser, fail on warning,  style check, and regression check bools
-    @settings[:future_parser] ||= false
+    # initialize fail on warning,  style check, and regression check bools
     @settings[:fail_on_warning] ||= false
     @settings[:style_check] ||= false
     @settings[:smoke_check] ||= false
@@ -120,10 +119,10 @@ class PuppetCheck
   end
 
   # categorize and pass the files out to the parsers to determine their status
-  def execute_parsers(files, future, style, public, private, pl_args, rc_args)
+  def execute_parsers(files, style, public, private, pl_args, rc_args)
     # check manifests
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
-    PuppetParser.manifest(manifests, future, style, pl_args) unless manifests.empty?
+    PuppetParser.manifest(manifests, style, pl_args) unless manifests.empty?
     # check puppet templates
     templates, files = files.partition { |file| File.extname(file) == '.epp' }
     PuppetParser.template(templates) unless templates.empty?
