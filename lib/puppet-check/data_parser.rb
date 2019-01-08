@@ -85,7 +85,7 @@ class DataParser
         # check metadata.json
         if File.basename(file) == 'metadata.json'
           # metadata-json-lint has issues and is essentially no longer maintained, so here is an improved and leaner version of it
-          require 'spdx-licenses'
+          require 'rubygems/util/licenses'
 
           # check for errors
           errors = []
@@ -161,16 +161,8 @@ class DataParser
           end
 
           # check for spdx license
-          begin
-            require 'rubygems/util/licenses'
-
-            if parsed.key?('license') && !Gem::Licenses.match?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
-              warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
-            end
-          rescue LoadError
-            if parsed.key?('license') && !SpdxLicenses.exist?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
-              warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
-            end
+          if parsed.key?('license') && !Gem::Licenses.match?(parsed['license']) && parsed['license'] !~ /[pP]roprietary/
+            warnings.push("License identifier '#{parsed['license']}' is not in the SPDX list: http://spdx.org/licenses/")
           end
         # assume this is task metadata if it has this key
         elsif parsed.key?('description')
