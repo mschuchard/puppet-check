@@ -28,7 +28,7 @@ class PuppetCheck
     execute_parsers(files, settings[:style_check], settings[:public], settings[:private], settings[:puppetlint_args], settings[:rubocop_args])
 
     # output the diagnostic results
-    settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
+    settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup(settings)
 
     # progress to regression checks if no errors in file checks
     if self.class.settings[:error_files].empty? && (!settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
