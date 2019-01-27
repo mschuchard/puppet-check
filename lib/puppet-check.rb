@@ -19,7 +19,7 @@ class PuppetCheck
     self.class.settings = settings
 
     # settings defaults
-    self.class.defaults
+    self.class.defaults(settings)
 
     # grab all of the files to be processed
     files = self.class.parse_paths(paths)
@@ -31,7 +31,7 @@ class PuppetCheck
     settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup
 
     # progress to regression checks if no errors in file checks
-    if self.class.settings[:error_files].empty? && (!self.class.settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
+    if self.class.settings[:error_files].empty? && (!settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
       begin
         require_relative 'puppet-check/regression_check'
       # if octocatalog-diff is not installed then return immediately
@@ -68,19 +68,19 @@ class PuppetCheck
   end
 
   # establish default settings
-  def self.defaults
+  def self.defaults(settings)
     # initialize fail on warning,  style check, and regression check bools
-    @settings[:fail_on_warning] ||= false
-    @settings[:style_check] ||= false
-    @settings[:smoke_check] ||= false
-    @settings[:regression_check] ||= false
+    settings[:fail_on_warning] ||= false
+    settings[:style_check] ||= false
+    settings[:smoke_check] ||= false
+    settings[:regression_check] ||= false
 
     # initialize ssl keys for eyaml checks
-    @settings[:public] ||= nil
-    @settings[:private] ||= nil
+    settings[:public] ||= nil
+    settings[:private] ||= nil
 
     # initialize output format option
-    @settings[:output_format] ||= 'text'
+    settings[:output_format] ||= 'text'
 
     # initialize diagnostic output arrays
     @settings[:error_files] = []
@@ -89,12 +89,12 @@ class PuppetCheck
     @settings[:ignored_files] = []
 
     # initialize octocatalog-diff options
-    @settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'
-    @settings[:octonodes] ||= %w[localhost.localdomain]
+    settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'
+    settings[:octonodes] ||= %w[localhost.localdomain]
 
     # initialize style arg arrays
-    @settings[:puppetlint_args] ||= []
-    @settings[:rubocop_args] ||= []
+    settings[:puppetlint_args] ||= []
+    settings[:rubocop_args] ||= []
   end
 
   # parse the paths and return the array of files
