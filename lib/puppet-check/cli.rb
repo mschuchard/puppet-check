@@ -33,9 +33,9 @@ class PuppetCheck::CLI
 
       # bool options
       opts.on('--fail-on-warnings', 'Fail on warnings') { settings[:fail_on_warnings] = true }
-      opts.on('-s', '--style', 'Enable style checks') { settings[:style_check] = true }
-      opts.on('--smoke', 'Enable smoke testing') { settings[:smoke_check] = true }
-      opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { settings[:regression_check] = true }
+      opts.on('-s', '--style', 'Enable style checks') { settings[:style] = true }
+      opts.on('--smoke', 'Enable smoke testing') { settings[:smoke] = true }
+      opts.on('-r', '--regression', 'Enable regression testing (in progress, do not use)') { settings[:regression] = true }
 
       # ssl key options for eyaml checks
       opts.on('--public cert.pem', String, 'Public key for EYAML checks') { |arg| settings[:public] = arg }

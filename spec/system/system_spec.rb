@@ -38,10 +38,10 @@ describe PuppetCheck do
       PuppetCheck.settings[:warning_files] = []
       PuppetCheck.settings[:clean_files] = []
       PuppetCheck.settings[:ignored_files] = []
-      PuppetCheck.settings[:style_check] = true
+      PuppetCheck.settings[:style] = true
       # see regression_check_spec
       unless File.directory?('/home/travis')
-        PuppetCheck.settings[:smoke_check] = true
+        PuppetCheck.settings[:smoke] = true
         PuppetCheck.settings[:octonodes] = %w[good.example.com]
         PuppetCheck.settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
       end

@@ -7,12 +7,12 @@ describe PuppetCheck do
       expect(PuppetCheck.settings[:future_parser]).to eql(nil)
       PuppetCheck.settings[:fail_on_warnings] = true
       expect(PuppetCheck.settings[:fail_on_warnings]).to eql(true)
-      PuppetCheck.settings[:style_check] = true
-      expect(PuppetCheck.settings[:style_check]).to eql(true)
-      PuppetCheck.settings[:smoke_check] = true
-      expect(PuppetCheck.settings[:smoke_check]).to eql(true)
-      PuppetCheck.settings[:regression_check] = true
-      expect(PuppetCheck.settings[:regression_check]).to eql(true)
+      PuppetCheck.settings[:style] = true
+      expect(PuppetCheck.settings[:style]).to eql(true)
+      PuppetCheck.settings[:smoke] = true
+      expect(PuppetCheck.settings[:smoke]).to eql(true)
+      PuppetCheck.settings[:regression] = true
+      expect(PuppetCheck.settings[:regression]).to eql(true)
       PuppetCheck.settings[:public] = 'public.pem'
       expect(PuppetCheck.settings[:public]).to eql('public.pem')
       PuppetCheck.settings[:private] = 'private.pem'

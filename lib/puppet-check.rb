@@ -25,7 +25,7 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, settings[:style_check], settings[:public], settings[:private], settings[:puppetlint_args], settings[:rubocop_args])
+    execute_parsers(files, settings)
 
     # output the diagnostic results
     settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup(settings)
@@ -41,7 +41,7 @@ class PuppetCheck
 
       # perform smoke checks if there were no errors and the user desires
       begin
-        catalog = RegressionCheck.smoke(settings[:octonodes], settings[:octoconfig]) if settings[:smoke_check]
+        catalog = RegressionCheck.smoke(settings[:octonodes], settings[:octoconfig]) if settings[:smoke]
       # smoke check failure? output message and return 2
       rescue OctocatalogDiff::Errors::CatalogError => err
         puts 'There was a smoke check error:'
@@ -51,7 +51,7 @@ class PuppetCheck
       end
       # perform regression checks if there were no errors and the user desires
       # begin
-      #   catalog = RegressionCheck.regression(settings[:octonodes], settings[:octoconfig]) if settings[:regression_check]
+      #   catalog = RegressionCheck.regression(settings[:octonodes], settings[:octoconfig]) if settings[:regression]
       # rescue OctocatalogDiff::Errors::CatalogError => err
       #   puts 'There was a catalog compilation error during the regression check:'
       #   puts err
@@ -71,9 +71,9 @@ class PuppetCheck
   def self.defaults(settings)
     # initialize fail on warning,  style check, and regression check bools
     settings[:fail_on_warning] ||= false
-    settings[:style_check] ||= false
-    settings[:smoke_check] ||= false
-    settings[:regression_check] ||= false
+    settings[:style] ||= false
+    settings[:smoke] ||= false
+    settings[:regression] ||= false
 
     # initialize ssl keys for eyaml checks
     settings[:public] ||= nil
@@ -119,16 +119,16 @@ class PuppetCheck
   end
 
   # categorize and pass the files out to the parsers to determine their status
-  def execute_parsers(files, style, public, private, pl_args, rc_args)
+  def execute_parsers(files, settings)
     # check manifests
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
-    PuppetParser.manifest(manifests, style, pl_args) unless manifests.empty?
+    PuppetParser.manifest(manifests, settings[:style], settings[:puppetlint_args]) unless manifests.empty?
     # check puppet templates
     templates, files = files.partition { |file| File.extname(file) == '.epp' }
     PuppetParser.template(templates) unless templates.empty?
     # check ruby files
     rubies, files = files.partition { |file| File.extname(file) == '.rb' }
-    RubyParser.ruby(rubies, style, rc_args) unless rubies.empty?
+    RubyParser.ruby(rubies, settings[:style], settings[:rubocop_args]) unless rubies.empty?
     # check ruby templates
     templates, files = files.partition { |file| File.extname(file) == '.erb' }
     RubyParser.template(templates) unless templates.empty?
@@ -143,7 +143,7 @@ class PuppetCheck
     # DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
     # check misc ruby
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    RubyParser.librarian(librarians, style, rc_args) unless librarians.empty?
+    RubyParser.librarian(librarians, settings[:style], settings[:rubocop_args]) unless librarians.empty?
     # ignore everything else
     self.class.settings[:ignored_files].concat(files)
   end
