@@ -14,7 +14,7 @@ describe PuppetCheck::CLI do
     end
 
     it 'allows fail on warnings, style, smoke, and regression checks to be enabled' do
-      expect(PuppetCheck::CLI.parse(%w[--fail-on-warnings -s -r --smoke foo])).to include(fail_on_warnings: true, style: true, smoke: true, regression_check: true)
+      expect(PuppetCheck::CLI.parse(%w[--fail-on-warnings -s -r --smoke foo])).to include(fail_on_warnings: true, style: true, smoke: true, regression: true)
     end
 
     it 'correctly parser EYAML options' do
