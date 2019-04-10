@@ -1,6 +1,7 @@
 ### 2.0.0
 - Bump minimum version of Puppet to 4.0.0 and remove < 4 support code.
 - Official support for Puppet 6.
+- Minimum Ruby version bumped to 2.2.0.
 - Bumped Rubocop and Reek minimum versions and fully migrated SPDX to Rubygems.
 
 ### 1.6.1
