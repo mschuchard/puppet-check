@@ -18,7 +18,7 @@ class RubyParser
           require 'rubocop'
 
           # check RuboCop and collect warnings
-          rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
+          rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--require', 'rubocop-performance', '--format', 'emacs', file]) }
           warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
           # check Reek and collect warnings
@@ -79,7 +79,7 @@ class RubyParser
       else
         if style
           # check Rubocop
-          warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--format', 'emacs', file]) }
+          warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--require', 'rubocop-performance', '--format', 'emacs', file]) }
 
           # collect style warnings
           next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?

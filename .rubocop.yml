@@ -1,7 +1,7 @@
 ---
-AllCops:
-  TargetRubyVersion: 2.2
+require: rubocop-performance
 
+AllCops:
   Include:
     - 'lib/**/*.rb'
     - 'bin/*.rb'

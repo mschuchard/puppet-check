@@ -3,6 +3,7 @@
 - Official support for Puppet 6.
 - Minimum Ruby version bumped to 2.2.0.
 - Bumped Rubocop and Reek minimum versions and fully migrated SPDX to Rubygems.
+- Add rubocop-performance extension to Rubocop.
 
 ### 1.6.1
 - Removed check for hieradata nil/undef value for Hiera >= 5.
