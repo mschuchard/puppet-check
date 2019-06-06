@@ -20,3 +20,7 @@ Metrics:
 
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+
+# probably can remove after rails cops removed from core
+Style/FrozenStringLiteralComment:
+  Enabled: false
