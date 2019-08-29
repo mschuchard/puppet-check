@@ -21,6 +21,9 @@ Metrics:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
 # probably can remove after rails cops removed from core
 Style/FrozenStringLiteralComment:
   Enabled: false
