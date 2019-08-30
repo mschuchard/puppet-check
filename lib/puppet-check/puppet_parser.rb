@@ -17,11 +17,15 @@ class PuppetParser
 
       # check puppet syntax
       begin
-        Puppet::Face[:parser, :current].validate(file)
+        new_error = Puppet::Face[:parser, :current].validate(file)
+        # puppet 6.5 output format is now a hash from the face api
+        if Puppet::PUPPETVERSION.to_f >= 6.5 && new_error.is_a?(Hash)
+          next PuppetCheck.settings[:error_files].push("#{file}:\n#{new_error.values.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
+        end
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
-        # puppet 5.4-5.x has a new validator output format and eof errors have fake dir env info
-        if Puppet::PUPPETVERSION.to_f >= 5.4
+        # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
+        if Puppet::PUPPETVERSION.to_f >= 5.4 && Puppet::PUPPETVERSION.to_f < 6.5
           next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
         # puppet 5.0-5.2 can only do one error per line and outputs fake dir env info
         elsif Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
