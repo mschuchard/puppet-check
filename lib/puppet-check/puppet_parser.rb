@@ -11,15 +11,16 @@ class PuppetParser
     Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
 
     files.each do |file|
-      # setup error logging and collection
+      # setup error logging and collection; warnings logged for all versions, but errors for only puppet < 6.5
       errors = []
       Puppet::Util::Log.newdestination(Puppet::Test::LogCollector.new(errors))
 
       # check puppet syntax
       begin
+        # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
-        if Puppet::PUPPETVERSION.to_f >= 6.5
+        if Puppet::PUPPETVERSION.to_f >= 6.5 && new_error != {}
           next PuppetCheck.settings[:error_files].push("#{file}:\n#{new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
         end
       # this is the actual error that we need to rescue Puppet::Face from

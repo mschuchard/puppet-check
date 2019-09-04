@@ -4,6 +4,7 @@
 - Minimum Ruby version bumped to 2.2.0.
 - Bumped Rubocop and Reek minimum versions and fully migrated SPDX to Rubygems.
 - Add rubocop-performance extension to Rubocop.
+- Update manifest validation for breaking change in 6.5 API.
 
 ### 1.6.1
 - Removed check for hieradata nil/undef value for Hiera >= 5.
