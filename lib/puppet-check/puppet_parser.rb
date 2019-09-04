@@ -19,8 +19,8 @@ class PuppetParser
       begin
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
-        if Puppet::PUPPETVERSION.to_f >= 6.5 && new_error.is_a?(Hash)
-          next PuppetCheck.settings[:error_files].push("#{file}:\n#{new_error.values.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
+        if Puppet::PUPPETVERSION.to_f >= 6.5
+          next PuppetCheck.settings[:error_files].push("#{file}:\n#{new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
         end
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
