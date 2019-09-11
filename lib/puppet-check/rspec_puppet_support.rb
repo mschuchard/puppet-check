@@ -81,6 +81,7 @@ class RSpecPuppetSupport
         warn "#{dependency_hash['name']} has an unspecified, or specified but unsupported, download method."
       end
     end
+    Process.wait
   end
 
   # download external module dependency with git
@@ -89,7 +90,7 @@ class RSpecPuppetSupport
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(git_url, '.git')}"
     # is the module present and already cloned with git? do a pull; otherwise, do a clone
-    File.directory?("#{path}/.git") ? system("git -C #{path} pull") : system("git clone #{args} #{git_url} #{path}")
+    File.directory?("#{path}/.git") ? system("git -C #{path} pull") : spawn("git clone #{args} #{git_url} #{path}")
   end
 
   # download external module dependency with forge
@@ -97,7 +98,7 @@ class RSpecPuppetSupport
     private_class_method :method
     # is the module present? do an upgrade; otherwise, do an install
     subcommand = File.directory?("spec/fixtures/modules/#{forge_name}") ? 'upgrade' : 'install'
-    system("puppet module #{subcommand} --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
+    spawn("puppet module #{subcommand} --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
   end
 
   # download external module dependency with svn
@@ -106,7 +107,7 @@ class RSpecPuppetSupport
     # establish path to checkout module to
     path = "spec/fixtures/modules/#{File.basename(svn_url)}"
     # is the module present and already checked out with svn? do an update; otherwise, do a checkout
-    File.directory?("#{path}/.svn") ? system("svn update #{path}") : system("svn co #{args} #{svn_url} #{path}")
+    File.directory?("#{path}/.svn") ? system("svn update #{path}") : spawn("svn co #{args} #{svn_url} #{path}")
   end
 
   # download external module dependency with hg
@@ -115,6 +116,6 @@ class RSpecPuppetSupport
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(hg_url)}"
     # is the module present and already cloned with hg? do a pull and update; otherwise do a clone
-    File.directory?("#{path}/.hg") ? system("hg --cwd #{path} pull; hg --cwd #{path} update") : system("hg clone #{args} #{hg_url} #{path}")
+    File.directory?("#{path}/.hg") ? system("hg --cwd #{path} pull; hg --cwd #{path} update") : spawn("hg clone #{args} #{hg_url} #{path}")
   end
 end

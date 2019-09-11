@@ -6,6 +6,7 @@
 - Add rubocop-performance extension to Rubocop.
 - Update manifest validation for breaking change in 6.5 API.
 - Fix check on specified dependencies in metadata.
+- Enable parallel module dependency retrieval.
 
 ### 1.6.1
 - Removed check for hieradata nil/undef value for Hiera >= 5.
