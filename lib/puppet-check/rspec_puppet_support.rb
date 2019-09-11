@@ -66,7 +66,7 @@ class RSpecPuppetSupport
     parsed = JSON.parse(File.read('metadata.json'))
 
     # grab dependencies if they exist
-    return if parsed['dependencies'].empty?
+    return unless parsed.key?('dependencies')
     parsed['dependencies'].each do |dependency_hash|
       # determine how the user wants to download the module dependency
       if dependency_hash.key?('git')

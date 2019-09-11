@@ -97,7 +97,7 @@ class DataParser
 
           # check requirements and dependencies keys
           %w[requirements dependencies].each do |key|
-            # skip if key is missing or or value is an empty string, array, or hash
+            # skip if key is missing or value is an empty string, array, or hash
             next if !parsed.key?(key) || parsed[key].empty?
 
             # check that dependencies and requirements are an array of hashes
