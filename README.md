@@ -131,7 +131,6 @@ Please see the [Gemspec](puppet-check.gemspec) for dependency information.  All 
 ```
 usage: puppet-check [options] paths
         --version                    Display the current version.
-    -f, --future                     Enable future parser
         --fail-on-warnings           Fail on warnings
     -s, --style                      Enable style checks
         --smoke                      Enable smoke testing
@@ -148,7 +147,7 @@ usage: puppet-check [options] paths
         --rubocop arg_one,arg_two    Arguments for Rubocop disabled cops
 ```
 
-The command line interface enables the ability to select the Puppet future parser, additional style checks besides the syntax checks, and to specify PuppetLint and Rubocop checks to ignore. If you require a more robust interface to PuppetLint, Rubocop, and Reek, then please use `.puppet-lint.rc`, `.rubocop.yml` and `*.reek` config files. The `.puppet-lint.rc` can be specified with the `-c` argument. If it is not specified, then PuppetLint will automatically load one from `.puppet-lint.rc`, `~/.puppet-lint.rc`, or `/etc/puppet-lint.rc`, in that order of preference. The nearest `.rubocop.yml` and `*.reek` will be automatically respected.
+The command line interface enables the ability to select additional style checks besides the syntax checks, and to specify PuppetLint and Rubocop checks to ignore. If you require a more robust interface to PuppetLint, Rubocop, and Reek, then please use `.puppet-lint.rc`, `.rubocop.yml` and `*.reek` config files. The `.puppet-lint.rc` can be specified with the `-c` argument. If it is not specified, then PuppetLint will automatically load one from `.puppet-lint.rc`, `~/.puppet-lint.rc`, or `/etc/puppet-lint.rc`, in that order of preference. The nearest `.rubocop.yml` and `*.reek` will be automatically respected.
 
 Example:
 ```
@@ -167,15 +166,14 @@ rake puppetcheck:kitchen:* # Execute Test Kitchen acceptance tests
 ```
 
 #### puppetcheck:file
-You can add style, smoke, and regression checks to and select the future parser for the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
+You can add style, smoke, and regression checks to the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
 
 ```ruby
 # example of modifying Puppet Check behavior
-PuppetCheck.settings[:style_check] = true
+PuppetCheck.settings[:style] = true
 PuppetCheck.settings[:fail_on_warnings] = true
-PuppetCheck.settings[:future_parser] = true
-PuppetCheck.settings[:smoke_check] = true
-PuppetCheck.settings[:regression_check] = true # in progress, do not use
+PuppetCheck.settings[:smoke] = true
+PuppetCheck.settings[:regression] = true # in progress, do not use
 PuppetCheck.settings[:public] = 'public.pem'
 PuppetCheck.settings[:private] = 'private.pem'
 PuppetCheck.settings[:output_format] = 'yaml'
@@ -256,11 +254,10 @@ If you are performing your Puppet testing from within a Ruby script or your own 
 require 'puppet-check'
 
 settings = {}
-settings[:future_parser] = true # default false
 settings[:fail_on_warnings] = true # default false
-settings[:style_check] = true # default false
-settings[:smoke_check] = true # default false
-settings[:regression_check] = true # in progress, do not use; default false
+settings[:style] = true # default false
+settings[:smoke] = true # default false
+settings[:regression] = true # in progress, do not use; default false
 settings[:public] = 'public.pem' # default nil
 settings[:private] = 'private.pem' # default nil
 settings[:output_format] = 'yaml' # also 'json'; default 'text'
@@ -300,6 +297,8 @@ ENTRYPOINT ["rake", "puppetcheck"]
 ```
 
 You can also build your own general container for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a Dockerfile that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
+
+As an alternative to copying Puppet code and data into the image for testing, it is also recommended to bind volume mount the container to the directory with your Puppet code and data.
 
 ### Vagrant
 
