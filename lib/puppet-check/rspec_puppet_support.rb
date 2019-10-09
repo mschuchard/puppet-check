@@ -90,7 +90,11 @@ class RSpecPuppetSupport
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(git_url, '.git')}"
     # is the module present and already cloned with git? do a pull; otherwise, do a clone
-    File.directory?("#{path}/.git") ? spawn("git -C #{path} pull") : spawn("git clone #{args} #{git_url} #{path}")
+    begin
+      File.directory?("#{path}/.git") ? spawn("git -C #{path} pull") : spawn("git clone #{args} #{git_url} #{path}")
+    rescue Errno::ENOENT
+      warn 'git is not installed and cannot be used to retrieve dependency modules' unless File.executable?('git')
+    end
   end
 
   # download external module dependency with forge
@@ -107,7 +111,11 @@ class RSpecPuppetSupport
     # establish path to checkout module to
     path = "spec/fixtures/modules/#{File.basename(svn_url)}"
     # is the module present and already checked out with svn? do an update; otherwise, do a checkout
-    File.directory?("#{path}/.svn") ? spawn("svn update #{path}") : spawn("svn co #{args} #{svn_url} #{path}")
+    begin
+      File.directory?("#{path}/.svn") ? spawn("svn update #{path}") : spawn("svn co #{args} #{svn_url} #{path}")
+    rescue Errno::ENOENT
+      warn 'subversion is not installed and cannot be used to retrieve dependency modules' unless File.executable?('svn')
+    end
   end
 
   # download external module dependency with hg
@@ -116,6 +124,10 @@ class RSpecPuppetSupport
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(hg_url)}"
     # is the module present and already cloned with hg? do a pull and update; otherwise do a clone
-    File.directory?("#{path}/.hg") ? spawn("hg --cwd #{path} pull; hg --cwd #{path} update") : spawn("hg clone #{args} #{hg_url} #{path}")
+    begin
+      File.directory?("#{path}/.hg") ? spawn("hg --cwd #{path} pull; hg --cwd #{path} update") : spawn("hg clone #{args} #{hg_url} #{path}")
+    rescue Errno::ENOENT
+      warn 'mercurial is not installed and cannot be used to retrieve dependency modules' unless File.executable?('hg')
+    end
   end
 end
