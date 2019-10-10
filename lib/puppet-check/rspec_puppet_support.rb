@@ -3,7 +3,7 @@ class RSpecPuppetSupport
   # code diagram:
   # 'puppetcheck:spec' task invokes 'run'
   # 'run' invokes 'file_setup' always and 'dependency_setup' if metadata.json exists
-  # 'dependency_setup' invokes 'git/forge/hg' if dependencies exist and git/forge/hg is download option
+  # 'dependency_setup' invokes 'git/forge/svn/hg' if dependencies exist and git/forge/svn/hg is download option
   # 'git/forge/svn/hg' downloads module fixture appropriately
 
   # prepare the spec fixtures directory for rspec-puppet testing
@@ -93,7 +93,7 @@ class RSpecPuppetSupport
     begin
       File.directory?("#{path}/.git") ? spawn("git -C #{path} pull") : spawn("git clone #{args} #{git_url} #{path}")
     rescue Errno::ENOENT
-      warn 'git is not installed and cannot be used to retrieve dependency modules' unless File.executable?('git')
+      warn 'git is not installed and cannot be used to retrieve dependency modules'
     end
   end
 
@@ -114,7 +114,7 @@ class RSpecPuppetSupport
     begin
       File.directory?("#{path}/.svn") ? spawn("svn update #{path}") : spawn("svn co #{args} #{svn_url} #{path}")
     rescue Errno::ENOENT
-      warn 'subversion is not installed and cannot be used to retrieve dependency modules' unless File.executable?('svn')
+      warn 'subversion is not installed and cannot be used to retrieve dependency modules'
     end
   end
 
@@ -127,7 +127,7 @@ class RSpecPuppetSupport
     begin
       File.directory?("#{path}/.hg") ? spawn("hg --cwd #{path} pull; hg --cwd #{path} update") : spawn("hg clone #{args} #{hg_url} #{path}")
     rescue Errno::ENOENT
-      warn 'mercurial is not installed and cannot be used to retrieve dependency modules' unless File.executable?('hg')
+      warn 'mercurial is not installed and cannot be used to retrieve dependency modules'
     end
   end
 end
