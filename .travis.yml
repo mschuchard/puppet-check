@@ -1,6 +1,5 @@
 # setup environment
 dist: xenial
-sudo: false
 language: ruby
 cache: bundler
 
