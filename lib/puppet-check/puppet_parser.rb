@@ -20,7 +20,7 @@ class PuppetParser
         # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
-        if Puppet::PUPPETVERSION.to_f >= 6.5 && new_error != {}
+        if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0') && new_error != {}
           next PuppetCheck.settings[:error_files].push("#{file}:\n#{new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
         end
       # this is the actual error that we need to rescue Puppet::Face from

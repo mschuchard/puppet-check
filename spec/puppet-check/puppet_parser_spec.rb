@@ -11,7 +11,7 @@ describe PuppetParser do
   context '.manifest' do
     it 'puts a bad syntax Puppet manifest in the error files array' do
       PuppetParser.manifest([fixtures_dir + 'manifests/syntax.pp'], false, [])
-      if Puppet::PUPPETVERSION.to_f >= 6.5
+      if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0')
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nLanguage validation logged 2 errors})
       # dealing with annoying warning in puppet 5 and 6
       elsif RUBY_VERSION.to_f < 2.3
