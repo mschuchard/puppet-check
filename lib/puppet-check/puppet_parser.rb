@@ -26,10 +26,10 @@ class PuppetParser
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
-        if Puppet::PUPPETVERSION.to_f >= 5.4 && Puppet::PUPPETVERSION.to_f < 6.5
+        if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('6.5')
           next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
         # puppet 5.0-5.2 can only do one error per line and outputs fake dir env info
-        elsif Puppet::PUPPETVERSION.to_f >= 5.0 && Puppet::PUPPETVERSION.to_f < 5.3
+      elsif Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.0') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('5.3')
           next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')}")
         end
         # puppet < 5 and 5.3 parser output style
@@ -40,7 +40,7 @@ class PuppetParser
       warnings = "#{file}:"
       unless errors.empty?
         # puppet 5.4-5.x has a new validator output format
-        warnings << if Puppet::PUPPETVERSION.to_f >= 5.4
+        warnings << if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4')
                       "\n#{errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '')}"
                     # puppet <= 5.3 validator output format
                     else

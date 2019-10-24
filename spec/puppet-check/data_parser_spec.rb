@@ -29,7 +29,7 @@ describe DataParser do
     end
   end
 
-  if RUBY_VERSION.to_f >= 2.3
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.3')
     context '.eyaml' do
       before(:each) do
         PuppetCheck.settings[:ignored_files] = []
