@@ -17,24 +17,28 @@ class PuppetParser
 
       # check puppet syntax
       begin
+        # initialize message
+        message = ''
         # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
         if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0') && new_error != {}
-          next PuppetCheck.settings[:error_files].push("#{file}:\n#{new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
+          message = new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
         end
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
         if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('6.5')
-          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')}")
+          message = errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
         # puppet 5.0-5.2 can only do one error per line and outputs fake dir env info
-      elsif Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.0') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('5.3')
-          next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')}")
+        elsif Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.0') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('5.3')
+          message = errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')
         end
         # puppet < 5 and 5.3 parser output style
-        next PuppetCheck.settings[:error_files].push("#{file}:\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}")
+        message = errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')
       end
+      # output message
+      next PuppetCheck.settings[:error_files].push("#{file}:\n#{message}") unless message.empty?
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = "#{file}:"
