@@ -38,7 +38,11 @@ describe RubyParser do
   context '.template' do
     it 'puts a bad syntax ruby template file in the error files array' do
       RubyParser.template([fixtures_dir + 'templates/syntax.erb'])
-      expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}templates/syntax.erb:\n.*syntax error, unexpected tIDENTIFIER})
+      if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.7')
+        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}templates/syntax.erb:\n.*1: syntax error, unexpected.*\n.*ruby})
+      else
+        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}templates/syntax.erb:\n.*syntax error, unexpected tIDENTIFIER})
+      end
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end

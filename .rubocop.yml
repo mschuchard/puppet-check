@@ -18,6 +18,9 @@ AllCops:
 Metrics:
   Enabled: false
 
+Layout/LineLength:
+  Enabled: false
+
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
