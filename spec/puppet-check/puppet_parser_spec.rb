@@ -37,7 +37,7 @@ describe PuppetParser do
     it 'puts a bad lint style Puppet manifest in the warning files array' do
       PuppetParser.manifest([fixtures_dir + 'manifests/style_lint.pp'], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
-      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}manifests/style_lint.pp:\n.*indentation of.*\n.*double quoted string containing})
+      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}manifests/style_lint.pp:\n.*(?:indentation of|double quoted string containing).*\n.*(?:indentation of|double quoted string containing)})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad style Puppet manifest in the clean files array when puppetlint_args ignores its warnings' do
