@@ -15,10 +15,10 @@ class RSpecPuppetSupport
     # setup fixtures for rspec-puppet testing
     specdirs.each do |specdir|
       # skip to next specdir if it does not seem like a puppet module
-      next unless File.directory?(specdir + '/../manifests')
+      next unless File.directory?("#{specdir}/../manifests")
 
       # change to module directory
-      Dir.chdir(specdir + '/..')
+      Dir.chdir("#{specdir}/..")
 
       # grab the module name from the directory name of the module to pass to file_setup
       file_setup(File.basename(Dir.pwd))
