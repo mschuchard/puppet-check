@@ -31,10 +31,11 @@ class OutputResults
     hash['ignored'] = PuppetCheck.settings[:ignored_files] unless PuppetCheck.settings[:ignored_files].empty?
 
     # convert hash to markup language
-    if settings[:output_format] == 'yaml'
+    case settings[:output_format]
+    when 'yaml'
       require 'yaml'
       puts Psych.dump(hash, indentation: 2)
-    elsif settings[:output_format] == 'json'
+    when 'json'
       require 'json'
       puts JSON.pretty_generate(hash)
     else

@@ -118,8 +118,8 @@ class DataParser
               next warnings.push("'#{req_dep['name']}' is missing an upper bound.") unless req_dep['version_requirement'].include?('<')
 
               # check for semantic versioning
-              if key == 'dependencies'
-                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.") unless req_dep['version_requirement'] =~ /\d+\.\d+\.\d+.*\d+\.\d+\.\d+/
+              if key == 'dependencies' && req_dep['version_requirement'] !~ /\d+\.\d+\.\d+.*\d+\.\d+\.\d+/
+                warnings.push("'#{req_dep['name']}' has non-semantic versioning in its 'version_requirement' key.")
               end
             end
           end
@@ -177,16 +177,16 @@ class DataParser
             end
           end
           # check that parameters is a hash
-          if parsed.key?('parameters')
-            warnings.push('parameters value is not a Hash') unless parsed['parameters'].is_a?(Hash)
+          if parsed.key?('parameters') && !parsed['parameters'].is_a?(Hash)
+            warnings.push('parameters value is not a Hash')
           end
           # check that puppet_task_version is an integer
-          if parsed.key?('puppet_task_version')
-            warnings.push('puppet_task_version value is not an Integer') unless parsed['puppet_task_version'].is_a?(Integer)
+          if parsed.key?('puppet_task_version') && !parsed['puppet_task_version'].is_a?(Integer)
+            warnings.push('puppet_task_version value is not an Integer')
           end
           # check that supports_noop is a boolean
-          if parsed.key?('supports_noop')
-            warnings.push('supports_noop value is not a Boolean') unless parsed['supports_noop'].is_a?(TrueClass) || parsed['supports_noop'].is_a?(FalseClass)
+          if parsed.key?('supports_noop') && !(parsed['supports_noop'].is_a?(TrueClass) || parsed['supports_noop'].is_a?(FalseClass))
+            warnings.push('supports_noop value is not a Boolean')
           end
         # assume this is hieradata and ensure it is non-empty
         elsif parsed
@@ -205,7 +205,7 @@ class DataParser
     warnings = []
 
     # disregard nil/undef value data check if default values (common)
-    unless file =~ /^common/
+    unless /^common/.match?(file)
       data.each do |key, value|
         # check for nil values in the data (nil keys are fine)
         if (value.is_a?(Hash) && value.values.any?(&:nil?)) || value.nil?
