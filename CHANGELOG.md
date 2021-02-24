@@ -1,5 +1,6 @@
-### 2.0.1
+### 2.0.1 (Roadmap)
 - Check for existence of executables for dependency module retrieval.
+- Beta support for Puppet 7, Rubocop 1, and Reek 6.
 
 ### 2.0.0
 - Bump minimum version of Puppet to 4.0.0 and remove < 4 support code.
