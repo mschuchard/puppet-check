@@ -1,0 +1,37 @@
+---
+version: 2.1
+
+jobs:
+  test:
+    working_directory: /tmp/project
+    parameters:
+      ruby-version:
+        type: string
+    docker:
+    - image: cimg/ruby:<< parameters.ruby-version >>
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - puppet-check-ruby-<< parameters.ruby-version >>
+    - run:
+        name: bundler install
+        command: bundle install --retry=3 && bundle binstubs puppet
+    - run:
+        name: display puppet version
+        command: puppet --version
+    - run:
+        name:  execute tests
+        command: bundle exec rake unit system
+    - save_cache:
+        paths:
+        - ~/.bundle
+        key: puppet-check-ruby-<< parameters.ruby-version >>
+
+workflows:
+  execute_tests:
+    jobs:
+    - test:
+        matrix:
+          parameters:
+            ruby-version: ["2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "3.0"]
