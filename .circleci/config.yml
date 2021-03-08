@@ -8,12 +8,15 @@ jobs:
       ruby-version:
         type: string
     docker:
-    - image: cimg/ruby:<< parameters.ruby-version >>
+    - image: ruby:<< parameters.ruby-version >>-slim
     steps:
     - checkout
     - restore_cache:
         keys:
         - puppet-check-ruby-<< parameters.ruby-version >>
+    - run:
+        name: package prereq install
+        command: apt-get install cmake
     - run:
         name: bundler install
         command: bundle install --retry=3 && bundle binstubs puppet
@@ -21,8 +24,8 @@ jobs:
         name: display puppet version
         command: puppet --version
     - run:
-        name:  execute tests
-        command: bundle exec rake unit system
+        name: execute tests
+        command: bundle exec rake unit system # default for 2.5
     - save_cache:
         paths:
         - ~/.bundle
@@ -34,4 +37,11 @@ workflows:
     - test:
         matrix:
           parameters:
-            ruby-version: ["2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "3.0"]
+            ruby-version:
+            - '2.2'
+            - '2.3'
+            - '2.4'
+            - '2.5'
+            - '2.6'
+            - '2.7'
+            - '3.0'
