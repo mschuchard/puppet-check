@@ -1,4 +1,4 @@
-### 2.0.1 (Roadmap)
+### 2.0.1
 - Check for existence of executables for dependency module retrieval.
 - Beta support for Puppet 7, Rubocop 1, and Reek 6.
 
