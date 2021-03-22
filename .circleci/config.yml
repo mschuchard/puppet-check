@@ -15,8 +15,8 @@ jobs:
         keys:
         - puppet-check-ruby-<< parameters.ruby-version >>
     - run:
-        name: package prereq install
-        command: apt-get install cmake
+        name: package prereqs install
+        command: apt-get update && apt-get install cmake
     - run:
         name: bundler install
         command: bundle install --retry=3 && bundle binstubs puppet
@@ -25,7 +25,7 @@ jobs:
         command: puppet --version
     - run:
         name: execute tests
-        command: bundle exec rake unit system # default for 2.5
+        command: bundle exec rake unit system
     - save_cache:
         paths:
         - ~/.bundle
