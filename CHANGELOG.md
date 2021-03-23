@@ -1,3 +1,6 @@
+### 2.1.0
+- Minimum supported version of Puppet bumped to 5.0.0.
+
 ### 2.0.1
 - Check for existence of executables for dependency module retrieval.
 - Beta support for Puppet 7, Rubocop 1, and Reek 6.
