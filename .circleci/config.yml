@@ -23,13 +23,13 @@ jobs:
     - run:
         name: display puppet version
         command: puppet --version
-    - run:
-        name: execute tests
-        command: bundle exec rake unit system
     - save_cache:
         paths:
         - ~/.bundle
         key: puppet-check-ruby-<< parameters.ruby-version >>
+    - run:
+        name: execute tests
+        command: bundle exec rake unit system
 
 workflows:
   execute_tests:
@@ -44,4 +44,4 @@ workflows:
             - '2.5'
             - '2.6'
             - '2.7'
-            - '3.0'
+            #- '3.0'

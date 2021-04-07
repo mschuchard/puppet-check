@@ -1,4 +1,4 @@
-### 2.1.0
+### 2.1.0 (Roadmap)
 - Minimum supported version of Puppet bumped to 5.0.0.
 
 ### 2.0.1
