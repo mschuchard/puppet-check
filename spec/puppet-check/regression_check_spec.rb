@@ -5,10 +5,8 @@ require_relative '../../lib/puppet-check/regression_check'
 describe RegressionCheck do
   context '.config' do
     # json gem got messed up for the EOL Ruby versions
-    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.2')
-      it 'raise an appropriate error if the file is malformed' do
-        expect { RegressionCheck.config(fixtures_dir + 'metadata.json') }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
-      end
+    it 'raise an appropriate error if the file is malformed' do
+      expect { RegressionCheck.config(fixtures_dir + 'metadata.json') }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
     end
     it 'loads in a good octocatalog-diff config file' do
       expect { RegressionCheck.config(octocatalog_diff_dir + 'octocatalog-diff.cfg.rb') }.not_to raise_exception

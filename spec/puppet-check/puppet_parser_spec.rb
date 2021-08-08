@@ -13,9 +13,6 @@ describe PuppetParser do
       PuppetParser.manifest([fixtures_dir + 'manifests/syntax.pp'], false, [])
       if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0')
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nLanguage validation logged 2 errors})
-      # dealing with annoying warning in puppet 5 and 6
-      elsif Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.3')
-        expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nSupport for ruby version.*\n.*\nThis Variable has no effect.*\nIllegal variable name})
       else
         expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}manifests/syntax.pp:\nThis Variable has no effect.*\nIllegal variable name})
       end
