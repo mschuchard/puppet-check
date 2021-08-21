@@ -62,10 +62,9 @@ class RubyParser
     # efficient var assignment prior to iterator
     if style
       require 'rubocop'
-      # cop named differently depending upon version
-      filename_cop = RuboCop::Version::STRING.to_f >= 0.5 ? 'Naming/FileName' : 'Style/FileName'
+
       # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
-      rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},#{filename_cop}" : rc_args.concat(['--except', filename_cop])
+      rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Naming/FileName" : rc_args.concat(['--except', filename_cop])
     end
 
     files.each do |file|
