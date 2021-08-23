@@ -64,7 +64,7 @@ class RubyParser
       require 'rubocop'
 
       # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
-      rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Naming/FileName" : rc_args.concat(['--except', filename_cop])
+      rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Naming/FileName" : rc_args.concat(['--except', 'Naming/FileName'])
     end
 
     files.each do |file|

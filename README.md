@@ -330,7 +330,7 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 ### Exit Codes
 - 0: PuppetCheck exited with no internal exceptions or errors in your code and data.
 - 1: PuppetCheck exited with an internal exception (takes preference over other non-zero exit codes) or failed spec test(s).
-- 2: PuppetCheck exited with one or more errors in your code and data. Alternatively, PuppetCheck exited with one or more warnings in your code and data and you specified to fail on warnings.
+- 2: PuppetCheck exited with one or more errors in your code and data. Alternatively, PuppetCheck exited with one or more warnings in your code and data, and you specified to fail on warnings.
 
 ### Optional Dependencies
 - **rake** (gem): install this if you want to use Puppet Check with `rake` tasks in addition to the CLI.

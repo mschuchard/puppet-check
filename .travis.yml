@@ -28,8 +28,6 @@ matrix:
     env: TEST='unit system'
   - rvm: 3.0
     env: TEST='unit system'
-  allow_failures:
-  - rvm: 3.0
 
 # execute tests
 before_install: gem update --no-document bundler
