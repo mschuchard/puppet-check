@@ -1,5 +1,5 @@
 # Puppet Check
-[![Build Status](https://travis-ci.org/mschuchard/puppet-check.svg?branch=master)](https://travis-ci.org/mschuchard/puppet-check)
+[![Build Status](https://travis-ci.com/mschuchard/puppet-check.svg?branch=master)](https://travis-ci.com/mschuchard/puppet-check)
 [![CircleCI](https://circleci.com/gh/mschuchard/puppet-check.svg?style=svg)](https://circleci.com/gh/mschuchard/puppet-check)
 
 - [Description](#description)

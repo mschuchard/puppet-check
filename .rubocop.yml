@@ -27,6 +27,10 @@ Layout/EmptyLineAfterGuardClause:
 Naming/RescuedExceptionsVariableName:
   Enabled: false
 
+# false triggers for this cop
+Style/EvalWithLocation:
+  Enabled: false
+
 # probably can remove after rails cops removed from core
 Style/FrozenStringLiteralComment:
   Enabled: false

@@ -1,5 +1,5 @@
 require 'optparse'
-require_relative '../puppet-check'
+require_relative '../puppet_check'
 
 # the command line interface for PuppetCheck
 class PuppetCheck::CLI
