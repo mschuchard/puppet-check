@@ -1,5 +1,5 @@
 # setup environment
-dist: bionic
+dist: focal
 language: ruby
 cache: bundler
 
@@ -16,8 +16,6 @@ git:
 # setup tests
 matrix:
   include:
-  - rvm: 2.3
-    env: TEST='unit system'
   - rvm: 2.4
     env: TEST='unit system'
   - rvm: 2.5
