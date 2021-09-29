@@ -9,6 +9,7 @@ jobs:
         type: string
     docker:
     - image: ruby:<< parameters.ruby-version >>-slim
+    resource_class: small
     steps:
     - checkout
     - restore_cache:
@@ -38,7 +39,6 @@ workflows:
         matrix:
           parameters:
             ruby-version:
-            - '2.3'
             - '2.4'
             - '2.5'
             - '2.6'

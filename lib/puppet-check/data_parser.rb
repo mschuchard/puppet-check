@@ -205,8 +205,7 @@ class DataParser
     warnings = []
 
     # disregard nil/undef value data check if default values (common)
-    unless file =~ /^common/
-    # unless /^common/.match?(file) TODO: use when ruby >= 2.4
+    unless /^common/.match?(file)
       data.each do |key, value|
         # check for nil values in the data (nil keys are fine)
         if (value.is_a?(Hash) && value.values.any?(&:nil?)) || value.nil?
