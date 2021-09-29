@@ -1,7 +1,8 @@
 ### 2.1.0 (Roadmap)
 - Minimum supported version of Puppet bumped to 5.0.
-- Minimum Ruby version bumped to 2.3.
+- Minimum Ruby version bumped to 2.4.
 - Official support for Puppet version 7.
+- Fix Puppet message string transform conditionals.
 
 ### 2.0.1
 - Check for existence of executables for dependency module retrieval.
