@@ -1,5 +1,5 @@
 require 'rake/task'
-require_relative '../spec_helper.rb'
+require_relative '../spec_helper'
 require_relative '../../lib/puppet-check/cli'
 require_relative '../../lib/puppet-check/tasks'
 

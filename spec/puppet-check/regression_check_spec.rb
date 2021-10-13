@@ -9,7 +9,7 @@ describe RegressionCheck do
       expect { RegressionCheck.config(fixtures_dir + 'metadata.json') }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
     end
     it 'loads in a good octocatalog-diff config file' do
-      expect { RegressionCheck.config(octocatalog_diff_dir + 'octocatalog-diff.cfg.rb') }.not_to raise_exception
+      expect { RegressionCheck.config(octocatalog_diff_dir + 'octocatalog_diff.cfg.rb') }.not_to raise_exception
     end
     it 'loads in the settings from the file correctly' do
     end
@@ -19,14 +19,14 @@ describe RegressionCheck do
     # octocatalog-diff is returning a blank error for these tests
     unless File.directory?('/home/travis')
       it 'returns a pass for a successful catalog compilation' do
-        expect { RegressionCheck.smoke(['good.example.com'], "#{octocatalog_diff_dir}octocatalog-diff.cfg.rb") }.not_to raise_exception
+        expect { RegressionCheck.smoke(['good.example.com'], "#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.not_to raise_exception
       end
       it 'returns a failure for a catalog with an error' do
-        expect { RegressionCheck.smoke(['does_not_exist.example.com'], "#{octocatalog_diff_dir}octocatalog-diff.cfg.rb") }.to raise_error(OctocatalogDiff::Errors::CatalogError)
+        expect { RegressionCheck.smoke(['does_not_exist.example.com'], "#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.to raise_error(OctocatalogDiff::Errors::CatalogError)
       end
     end
     it 'returns a failure for a good and bad catalog' do
-      # RegressionCheck.smoke(['good.example.com', 'syntax_error.example.com'], "#{fixtures_dir}octocatalog-diff.cfg.rb")
+      # RegressionCheck.smoke(['good.example.com', 'syntax_error.example.com'], "#{fixtures_dir}octocatalog_diff.cfg.rb")
     end
   end
 
