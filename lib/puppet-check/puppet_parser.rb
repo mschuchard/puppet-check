@@ -1,5 +1,5 @@
 require 'puppet'
-require_relative '../puppet-check'
+require_relative '../puppet_check'
 
 # executes diagnostics on puppet files
 class PuppetParser

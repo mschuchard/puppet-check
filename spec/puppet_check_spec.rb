@@ -1,5 +1,5 @@
 require_relative 'spec_helper'
-require_relative '../lib/puppet-check'
+require_relative '../lib/puppet_check'
 
 describe PuppetCheck do
   context 'self' do

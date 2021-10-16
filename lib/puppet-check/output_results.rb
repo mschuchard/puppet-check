@@ -1,4 +1,4 @@
-require_relative '../puppet-check'
+require_relative '../puppet_check'
 
 # class to handle outputting diagnostic results in desired format
 class OutputResults

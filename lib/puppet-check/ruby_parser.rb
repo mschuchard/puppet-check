@@ -1,4 +1,4 @@
-require_relative '../puppet-check'
+require_relative '../puppet_check'
 require_relative 'utils'
 
 # executes diagnostics on ruby files

@@ -3,7 +3,7 @@ begin
 rescue LoadError
   raise 'Rake is not installed and you are attempting to execute Rake tasks with Puppet Check. Please install Rake before continuing.'
 end
-require_relative '../puppet-check'
+require_relative '../puppet_check'
 
 # the rake interface for PuppetCheck
 class PuppetCheck::Tasks < ::Rake::TaskLib
