@@ -17,7 +17,7 @@ describe RegressionCheck do
 
   context '.smoke' do
     # octocatalog-diff is returning a blank error for these tests
-    unless File.directory?('/home/travis')
+    unless ENV['TRAVIS'] == true || ENV['CIRCLECI'] == true
       it 'returns a pass for a successful catalog compilation' do
         expect { RegressionCheck.smoke(['good.example.com'], "#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.not_to raise_exception
       end

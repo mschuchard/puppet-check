@@ -15,11 +15,11 @@ describe RSpecPuppetSupport do
 
     it 'creates missing directories, missing site.pp, missing symlinks, and a missing spec_helper' do
       # travis ci
-      if File.directory?('/home/travis')
+      if ENV['TRAVIS'] == true
         expect { rspec_puppet_setup }.to output("puppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
       # circle ci
-      elsif File.directory?('/tmp/project')
-        expect { rspec_puppet_setup }.to output("git is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
+      elsif ENV['CIRCLECI'] == true
+        expect { rspec_puppet_setup }.to output("git is not installed and cannot be used to retrieve dependency modules\nsubversion is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
       else
         expect { rspec_puppet_setup }.to output("subversion is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
       end
