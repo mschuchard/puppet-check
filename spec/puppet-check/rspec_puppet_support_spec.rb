@@ -32,7 +32,7 @@ describe RSpecPuppetSupport do
       expect(File.file?('spec/spec_helper.rb')).to be true
 
       # .dependency_setup
-      expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true
+      expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true unless ENV['CIRCLECI'] == 'true'
       expect(File.directory?('spec/fixtures/modules/stdlib')).to be true
     end
   end
