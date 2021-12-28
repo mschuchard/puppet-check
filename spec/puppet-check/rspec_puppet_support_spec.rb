@@ -6,7 +6,7 @@ describe RSpecPuppetSupport do
   after(:all) do
     # cleanup rspec_puppet_setup
     File.delete('spec/spec_helper.rb')
-    %w[manifests modules].each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
+    %w[manifests modules].each { |dir| FileUtils.rm_r("#{fixtures_dir}#{dir}") }
   end
 
   context '.run' do

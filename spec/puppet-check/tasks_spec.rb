@@ -5,8 +5,8 @@ require_relative '../../lib/puppet-check/tasks'
 describe PuppetCheck::Tasks do
   after(:all) do
     # cleanup rspec_puppet_setup
-    %w[spec/spec_helper.rb].each { |file| File.delete(file) }
-    %w[manifests modules].each { |dir| FileUtils.rm_r('spec/fixtures/' + dir) }
+    File.delete('spec/spec_helper.rb')
+    %w[manifests modules].each { |dir| FileUtils.rm_r("#{fixtures_dir}#{dir}") }
   end
 
   context 'puppetcheck:spec' do

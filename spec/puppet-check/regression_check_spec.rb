@@ -6,10 +6,10 @@ describe RegressionCheck do
   context '.config' do
     # json gem got messed up for the EOL Ruby versions
     it 'raise an appropriate error if the file is malformed' do
-      expect { RegressionCheck.config(fixtures_dir + 'metadata.json') }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
+      expect { RegressionCheck.config("#{fixtures_dir}metadata.json") }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
     end
     it 'loads in a good octocatalog-diff config file' do
-      expect { RegressionCheck.config(octocatalog_diff_dir + 'octocatalog_diff.cfg.rb') }.not_to raise_exception
+      expect { RegressionCheck.config("#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.not_to raise_exception
     end
     it 'loads in the settings from the file correctly' do
     end
