@@ -41,7 +41,7 @@ describe PuppetParser do
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad style Puppet manifest in the clean files array when puppetlint_args ignores its warnings' do
-      PuppetParser.manifest(["#{fixtures_dir}manifests/style_lint.pp'], true, ['--no-double_quoted_strings-check', '--no-arrow_alignment-check"])
+      PuppetParser.manifest(["#{fixtures_dir}manifests/style_lint.pp"], true, ['--no-double_quoted_strings-check', '--no-arrow_alignment-check'])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}manifests/style_lint.pp"])

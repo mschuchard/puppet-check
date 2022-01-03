@@ -26,6 +26,8 @@ matrix:
     env: TEST=default
   - rvm: 3.0
     env: TEST='unit system'
+  - rvm: 3.1
+    env: TEST='unit system'
   allow_failures:
   - rvm: 3.1
     env: TEST='unit system'
