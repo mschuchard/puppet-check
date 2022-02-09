@@ -22,7 +22,7 @@ class OutputResults
   end
 
   # output the results as yaml or json
-  def self.markup(settings)
+  def self.markup(format)
     # generate output hash
     hash = {}
     hash['errors'] = PuppetCheck.settings[:error_files] unless PuppetCheck.settings[:error_files].empty?
@@ -31,7 +31,7 @@ class OutputResults
     hash['ignored'] = PuppetCheck.settings[:ignored_files] unless PuppetCheck.settings[:ignored_files].empty?
 
     # convert hash to markup language
-    case settings[:output_format]
+    case format
     when 'yaml'
       require 'yaml'
       puts Psych.dump(hash, indentation: 2)
@@ -39,7 +39,7 @@ class OutputResults
       require 'json'
       puts JSON.pretty_generate(hash)
     else
-      raise "puppet-check: Unsupported output format '#{settings[:output_format]}' was specified."
+      raise "puppet-check: Unsupported output format '#{format}' was specified."
     end
   end
 end

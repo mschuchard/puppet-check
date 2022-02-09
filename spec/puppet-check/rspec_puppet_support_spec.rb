@@ -5,7 +5,7 @@ require 'fileutils'
 describe RSpecPuppetSupport do
   after(:all) do
     # cleanup rspec_puppet_setup
-    File.delete("#{fixtures_dir}/spec/fixtures/spec/spec_helper.rb")
+    File.delete("#{fixtures_dir}/spec/spec_helper.rb")
     %w[manifests modules].each { |dir| FileUtils.rm_r("#{fixtures_dir}/spec/fixtures/#{dir}") }
   end
 
