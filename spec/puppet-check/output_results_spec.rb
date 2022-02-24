@@ -38,38 +38,38 @@ describe OutputResults do
 
     it 'outputs files with errors as yaml' do
       PuppetCheck.settings[:error_files] = ['foo: i had an error']
-      expect { OutputResults.markup(output_format: 'yaml') }.to output("---\nerrors:\n- 'foo: i had an error'\n").to_stdout
+      expect { OutputResults.markup('yaml') }.to output("---\nerrors:\n- 'foo: i had an error'\n").to_stdout
     end
     it 'outputs files with warnings as yaml' do
       PuppetCheck.settings[:warning_files] = ['foo: i had a warning']
-      expect { OutputResults.markup(output_format: 'yaml') }.to output("---\nwarnings:\n- 'foo: i had a warning'\n").to_stdout
+      expect { OutputResults.markup('yaml') }.to output("---\nwarnings:\n- 'foo: i had a warning'\n").to_stdout
     end
     it 'outputs files with no errors or warnings as yaml' do
       PuppetCheck.settings[:clean_files] = ['foo: i was totally good to go']
-      expect { OutputResults.markup(output_format: 'yaml') }.to output("---\nclean:\n- 'foo: i was totally good to go'\n").to_stdout
+      expect { OutputResults.markup('yaml') }.to output("---\nclean:\n- 'foo: i was totally good to go'\n").to_stdout
     end
     it 'outputs files that were not processed as yaml' do
       PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
-      expect { OutputResults.markup(output_format: 'yaml') }.to output("---\nignored:\n- 'foo: who knows what i am'\n").to_stdout
+      expect { OutputResults.markup('yaml') }.to output("---\nignored:\n- 'foo: who knows what i am'\n").to_stdout
     end
     it 'outputs files with errors as json' do
       PuppetCheck.settings[:error_files] = ['foo: i had an error']
-      expect { OutputResults.markup(output_format: 'json') }.to output("{\n  \"errors\": [\n    \"foo: i had an error\"\n  ]\n}\n").to_stdout
+      expect { OutputResults.markup('json') }.to output("{\n  \"errors\": [\n    \"foo: i had an error\"\n  ]\n}\n").to_stdout
     end
     it 'outputs files with warnings as json' do
       PuppetCheck.settings[:warning_files] = ['foo: i had a warning']
-      expect { OutputResults.markup(output_format: 'json') }.to output("{\n  \"warnings\": [\n    \"foo: i had a warning\"\n  ]\n}\n").to_stdout
+      expect { OutputResults.markup('json') }.to output("{\n  \"warnings\": [\n    \"foo: i had a warning\"\n  ]\n}\n").to_stdout
     end
     it 'outputs files with no errors or warnings as json' do
       PuppetCheck.settings[:clean_files] = ['foo: i was totally good to go']
-      expect { OutputResults.markup(output_format: 'json') }.to output("{\n  \"clean\": [\n    \"foo: i was totally good to go\"\n  ]\n}\n").to_stdout
+      expect { OutputResults.markup('json') }.to output("{\n  \"clean\": [\n    \"foo: i was totally good to go\"\n  ]\n}\n").to_stdout
     end
     it 'outputs files that were not processed as json' do
       PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
-      expect { OutputResults.markup(output_format: 'json') }.to output("{\n  \"ignored\": [\n    \"foo: who knows what i am\"\n  ]\n}\n").to_stdout
+      expect { OutputResults.markup('json') }.to output("{\n  \"ignored\": [\n    \"foo: who knows what i am\"\n  ]\n}\n").to_stdout
     end
     it 'raises an error for an unsupported output format' do
-      expect { OutputResults.markup(output_format: 'awesomesauce') }.to raise_error(RuntimeError, 'puppet-check: Unsupported output format \'awesomesauce\' was specified.')
+      expect { OutputResults.markup('awesomesauce') }.to raise_error(RuntimeError, 'puppet-check: Unsupported output format \'awesomesauce\' was specified.')
     end
   end
 end
