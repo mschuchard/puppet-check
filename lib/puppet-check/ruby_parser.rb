@@ -43,8 +43,8 @@ class RubyParser
       # check ruby template syntax
       begin
         # need to eventually have this associated with a different binding during each iteration
-        warnings = Utils.capture_stderr { ERB.new(File.read(file), nil, '-').result }
-        # ERB.new(File.read(file), nil, '-').result(RubyParser.new.bind)
+        warnings = Utils.capture_stderr { ERB.new(File.read(file), trim_mode: '-').result }
+        # ERB.new(File.read(file), trim_mode: '-').result(RubyParser.new.bind)
       rescue NameError, TypeError
         # empty out warnings since it would contain an error if this pass triggers
         warnings = ''
