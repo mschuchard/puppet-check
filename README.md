@@ -125,8 +125,11 @@ The following files have unrecognized formats and therefore were not processed:
 ### What About Puppet Development Kit?
 The fairly recent release of the Puppet Development Kit (PDK) will hopefully eventually bring about the capability to test and validate your Puppet code and data in a streamlined, efficient, comprehensive, and accurate fashion comparable to Puppet Check. Unfortunately, the PDK has not yet achieved feature or efficiency parity with Puppet Check. The goal is for the PDK to one day replace Puppet Check and for Puppet Check to enter maintenance mode, but for now Puppet Check is still needed to lead Puppet testing.
 
+### What About PDK now?
+As of version 2.4.0 of the PDK, the PDK has essentially more or less achieved feature parity with Puppet Check. Although the PDK is not as efficient (including especially that Puppet Check executes significantly faster), it is still supported by Puppetlabs. Therefore, if you need an efficient and comprehensive Puppet validation solution, then you can still utilize Puppet Check, but the PDK is a recommended alternative for the future.
+
 ## Usage
-Please see the [Gemspec](puppet-check.gemspec) for dependency information.  All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures` or specified paths with that directory during file checks and spec tests.
+Please see the [Gemspec](puppet-check.gemspec) for dependency information.  All other dependencies should be fine with various versions. Puppet Check can be used with a CLI, Rake tasks, or API, from your system, rbenv, rvm, Docker, or Vagrant. Please note all interfaces (API by default, but can be modified) will ignore any directories named `fixtures`, or specified paths with that directory during file checks and spec tests.
 
 ### CLI
 ```
@@ -278,15 +281,15 @@ task.pattern = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,
 
 ### Docker
 
-You can also use Puppet Check inside of Docker for quick, portable, and disposable testing. Below is an example Dockerfile for this purpose:
+You can also use Puppet Check inside of Docker for quick, portable, and disposable testing. Below is an example `Dockerfile` for this purpose:
 
 ```dockerfile
-# a reliable and small container at the moment
-FROM ubuntu:18.04
+# a reliable and small container; today should maybe use ruby:slim instead
+FROM ubuntu:20.04
 # you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
 RUN apt-get update && apt-get install ruby git -y
-# you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.3 and then rspec-puppet and rake for extra testing
-RUN gem install --no-document puppet-check reek rspec-puppet rake
+# you need puppet-check and any other extra dependencies that come from gems; in this example we install rspec-puppet and rake for extra testing
+RUN gem install --no-document puppet-check rspec-puppet rake
 # this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
 ENV LANG en_US.UTF-8
 # create the directory for your module, directory environment, etc. and change directory into it
@@ -297,26 +300,26 @@ COPY / .
 ENTRYPOINT ["rake", "puppetcheck"]
 ```
 
-You can also build your own general container for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a Dockerfile that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
+You can also build your own general container image for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a `Dockerfile` that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
 
 As an alternative to copying Puppet code and data into the image for testing, it is also recommended to bind volume mount the container to the directory with your Puppet code and data.
 
 ### Vagrant
 
-As an alternative to Docker, you can also use Vagrant for quick and disposable testing, but it is not as portable as Docker for these testing purposes. Below is an example Vagrantfile for this purpose.
+As an alternative to Docker, you can also use Vagrant for quick and disposable testing, but it is not as portable as Docker for these testing purposes. Below is an example `Vagrantfile` for this purpose.
 
 ```ruby
 Vagrant.configure(2) do |config|
   # a reliable and small box at the moment
-  config.vm.box = 'fedora/26-cloud-base'
+  config.vm.box = 'fedora/35-cloud-base'
 
   config.vm.provision 'shell', inline: <<-SHELL
     # cd to '/vagrant'
     cd /vagrant
     # you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
     sudo dnf install ruby rubygems git -y
-    # you need puppet-check and any other extra dependencies that come from gems; in this example we install reek because the ruby ABI is 2.2 and then rspec-puppet and rake for extra testing
-    sudo gem install --no-document puppet-check reek rspec-puppet rake
+    # you need puppet-check and any other extra dependencies that come from gems; in this example we install rspec-puppet and rake for extra testing
+    sudo gem install --no-document puppet-check rspec-puppet rake
     # this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
     export LANG='en_US.UTF-8'
     # execute your tests; in this example we are executing the full suite of tests
