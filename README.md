@@ -281,28 +281,7 @@ task.pattern = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,
 
 ### Docker
 
-You can also use Puppet Check inside of Docker for quick, portable, and disposable testing. Below is an example `Dockerfile` for this purpose:
-
-```dockerfile
-# a reliable and small container; today should maybe use ruby:slim instead
-FROM ubuntu:20.04
-# you need ruby and any other extra dependencies that come from packages; in this example we install git to use it for downloading external module dependencies
-RUN apt-get update && apt-get install ruby git -y
-# you need puppet-check and any other extra dependencies that come from gems; in this example we install rspec-puppet and rake for extra testing
-RUN gem install --no-document puppet-check rspec-puppet rake
-# this is needed for the ruby json parser to not flip out on fresh os installs for some reason (change encoding value as necessary)
-ENV LANG en_US.UTF-8
-# create the directory for your module, directory environment, etc. and change directory into it
-WORKDIR /module_name_or_directory_environment_name
-# copy the module, directory environment, etc. contents into the corresponding directory inside the container; alternative, bind a volume mount for your module(s) into the container at runtime
-COPY / .
-# execute your tests; in this example we are executing the full suite of tests
-ENTRYPOINT ["rake", "puppetcheck"]
-```
-
-You can also build your own general container image for testing various Puppet situations by removing the last three lines. You can then test each module, directory environment, etc. on top of that container by merely adding and modifying the final three lines to a `Dockerfile` that uses the container you built from the first four lines. This is recommended usage due to being very efficient and stable.
-
-As an alternative to copying Puppet code and data into the image for testing, it is also recommended to bind volume mount the container to the directory with your Puppet code and data.
+A supported [Docker image](https://hub.docker.com/r/matthewschuchard/puppet-check) of Puppet-Check is now available from the public Docker Hub registry. Please consult the repository documentation for further usage information.
 
 ### Vagrant
 
