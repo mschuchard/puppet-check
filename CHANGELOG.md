@@ -1,4 +1,4 @@
-### 2.1.0 (Roadmap)
+### 2.1.0
 - Minimum supported version of Puppet bumped to 5.0.
 - Minimum Ruby version bumped to 2.4.
 - Official support for Puppet 7, Rubocop 1, and Reek 6.
