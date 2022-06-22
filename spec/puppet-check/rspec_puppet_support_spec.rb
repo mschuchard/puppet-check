@@ -15,7 +15,7 @@ describe RSpecPuppetSupport do
 
     it 'creates missing directories, missing site.pp, missing symlinks, and a missing spec_helper' do
       # travis ci
-      if ENV['TRAVIS'] == 'true'
+      if ENV['TRAVIS'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
         expect { rspec_puppet_setup }.to output("puppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
       # circle ci
       elsif ENV['CIRCLECI'] == 'true'
