@@ -87,14 +87,12 @@ class PuppetParser
 
     files.each do |file|
       # check puppet template syntax
-      begin
-        # credits to gds-operations/puppet-syntax for the parser function call
-        Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
-      rescue StandardError => err
-        PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("#{file}:", '')}")
-      else
-        PuppetCheck.settings[:clean_files].push(file.to_s)
-      end
+      # credits to gds-operations/puppet-syntax for the parser function call
+      Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
+    rescue StandardError => err
+      PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("#{file}:", '')}")
+    else
+      PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end
 end

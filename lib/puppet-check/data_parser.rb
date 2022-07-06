@@ -8,19 +8,17 @@ class DataParser
 
     files.each do |file|
       # check yaml syntax
-      begin
-        parsed = YAML.load_file(file)
-      rescue StandardError => err
-        PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
-      else
-        warnings = []
+      parsed = YAML.load_file(file)
+    rescue StandardError => err
+      PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("(#{file}): ", '')}")
+    else
+      warnings = []
 
-        # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed, file) if parsed && (File.basename(file) != 'hiera.yaml')
+      # perform some rudimentary hiera checks if data exists and is hieradata
+      warnings = hiera(parsed, file) if parsed && (File.basename(file) != 'hiera.yaml')
 
-        next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.settings[:clean_files].push(file.to_s)
-      end
+      next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
+      PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end
 
