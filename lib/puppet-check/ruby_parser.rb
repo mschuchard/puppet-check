@@ -17,14 +17,14 @@ class RubyParser
         require 'rubocop'
 
         # check RuboCop and collect warnings
-        rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--require', 'rubocop-performance', '--format', 'emacs', file]) }
+        rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'emacs', file]) }
         warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
 
         # check Reek and collect warnings
         require 'reek'
         require 'reek/cli/application'
         reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
-        warnings << reek_warnings.split("\n")[1..-1].map(&:strip).join("\n") unless reek_warnings == ''
+        warnings << reek_warnings.split("\n")[1..].map(&:strip).join("\n") unless reek_warnings == ''
 
         # return warnings
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.strip}") unless warnings == ''
@@ -81,7 +81,7 @@ class RubyParser
     else
       if style
         # check Rubocop
-        warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--require', 'rubocop-performance', '--format', 'emacs', file]) }
+        warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'emacs', file]) }
 
         # collect style warnings
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
