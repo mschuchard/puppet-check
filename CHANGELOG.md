@@ -1,3 +1,6 @@
+### 2.1.1 (Next)
+- Add Enable Pending Cops to base RuboCop configuration.
+
 ### 2.1.0
 - Minimum supported version of Puppet bumped to 5.0.
 - Minimum Ruby version bumped to 2.4.
