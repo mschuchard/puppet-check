@@ -17,9 +17,9 @@ describe PuppetCheck do
 
       expect { cli }.not_to raise_exception
 
-      expect(PuppetCheck.settings[:error_files].length).to eql(9)
-      expect(PuppetCheck.settings[:warning_files].length).to eql(10)
-      expect(PuppetCheck.settings[:clean_files].length).to eql(12)
+      expect(PuppetCheck.settings[:error_files].length).to eql(10)
+      expect(PuppetCheck.settings[:warning_files].length).to eql(11)
+      expect(PuppetCheck.settings[:clean_files].length).to eql(13)
       expect(PuppetCheck.settings[:ignored_files].length).to eql(6)
 
       expect(cli).to eql(2)
@@ -48,9 +48,9 @@ describe PuppetCheck do
 
       expect { tasks }.not_to raise_exception
 
-      expect(PuppetCheck.settings[:error_files].length).to eql(9)
-      expect(PuppetCheck.settings[:warning_files].length).to eql(10)
-      expect(PuppetCheck.settings[:clean_files].length).to eql(12)
+      expect(PuppetCheck.settings[:error_files].length).to eql(10)
+      expect(PuppetCheck.settings[:warning_files].length).to eql(11)
+      expect(PuppetCheck.settings[:clean_files].length).to eql(13)
       expect(PuppetCheck.settings[:ignored_files].length).to eql(6)
     end
   end

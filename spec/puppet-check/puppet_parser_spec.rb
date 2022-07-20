@@ -28,6 +28,12 @@ describe PuppetParser do
         expect(PuppetCheck.settings[:clean_files]).to eql([])
       end
     end
+    it 'puts a bad syntax Puppet plan in the error files array' do
+      PuppetParser.manifest(["#{fixtures_dir}plans/syntax.pp"], false, [])
+      # expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}plans/syntax.pp:\nSyntax error at '\)'})
+      expect(PuppetCheck.settings[:warning_files]).to eql([])
+      expect(PuppetCheck.settings[:clean_files]).to eql([])
+    end
     it 'puts a bad parser and lint style Puppet manifest in the warning files array' do
       PuppetParser.manifest(["#{fixtures_dir}manifests/style_parser.pp"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
@@ -46,11 +52,23 @@ describe PuppetParser do
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}manifests/style_lint.pp"])
     end
+    it 'puts a bad style Puppet plan in the warning files array' do
+      PuppetParser.manifest(["#{fixtures_dir}plans/style.pp"], true, [])
+      expect(PuppetCheck.settings[:error_files]).to eql([])
+      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}plans/style.pp:\n.*line has more than 140 characters})
+      expect(PuppetCheck.settings[:clean_files]).to eql([])
+    end
     it 'puts a good Puppet manifest in the clean files array' do
       PuppetParser.manifest(["#{fixtures_dir}manifests/good.pp"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}manifests/good.pp"])
+    end
+    it 'puts a good Puppet plan in the clean files array' do
+      PuppetParser.manifest(["#{fixtures_dir}plans/good.pp"], true, [])
+      expect(PuppetCheck.settings[:error_files]).to eql([])
+      expect(PuppetCheck.settings[:warning_files]).to eql([])
+      expect(PuppetCheck.settings[:clean_files]).to eql(["#{fixtures_dir}plans/good.pp"])
     end
     it 'throws a well specified error for an invalid PuppetLint argument' do
       expect { PuppetParser.manifest(["#{fixtures_dir}manifests/style_lint.pp"], true, ['--non-existent', '--does-not-exist']) }.to raise_error(RuntimeError, 'puppet-lint: invalid option supplied among --non-existent --does-not-exist')
