@@ -19,6 +19,8 @@ class PuppetParser
       begin
         # initialize message
         message = ''
+        # specify tasks attribute for parser validation if this looks like a plan or not
+        Puppet[:tasks] = Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4.0') && file.match(%r{plans/\w+\.pp$}) ? true : false
         # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
