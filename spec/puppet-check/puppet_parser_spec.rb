@@ -55,7 +55,7 @@ describe PuppetParser do
     it 'puts a bad style Puppet plan in the warning files array' do
       PuppetParser.manifest(["#{fixtures_dir}plans/style.pp"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql([])
-      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}plans/style.pp:\n.*line has more than 140 characters})
+      expect(PuppetCheck.settings[:warning_files][0]).to match(%r{^#{fixtures_dir}plans/style.pp:\n.*variable not enclosed in {}})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a good Puppet manifest in the clean files array' do
