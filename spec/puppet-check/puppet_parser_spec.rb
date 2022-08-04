@@ -30,7 +30,7 @@ describe PuppetParser do
     end
     it 'puts a bad syntax Puppet plan in the error files array' do
       PuppetParser.manifest(["#{fixtures_dir}plans/syntax.pp"], false, [])
-      # expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}plans/syntax.pp:\nSyntax error at '\)'})
+      expect(PuppetCheck.settings[:error_files][0]).to match(%r{^#{fixtures_dir}plans/syntax.pp:\nSyntax error at '\)'})
       expect(PuppetCheck.settings[:warning_files]).to eql([])
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end

@@ -25,7 +25,7 @@ class PuppetParser
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
         if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0') && new_error != {}
-          message = new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
+          message = new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub('Could not parse for environment *root*: ', '')
         end
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
