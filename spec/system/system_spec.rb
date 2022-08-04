@@ -6,7 +6,7 @@ require_relative '../../lib/puppet-check/tasks'
 describe PuppetCheck do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
     # see regression_check_spec
-    if ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true'
+    if ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
       let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding .]) }
     else
       let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .]) }
@@ -46,7 +46,8 @@ describe PuppetCheck do
         PuppetCheck.settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
       end
 
-      expect { tasks }.not_to raise_exception
+      # cannot re-use plan fixture between system tests
+      expect { tasks }.to raise_error(ArgumentError, /Attempt to redefine entity/)
 
       expect(PuppetCheck.settings[:error_files].length).to eql(10)
       expect(PuppetCheck.settings[:warning_files].length).to eql(11)
