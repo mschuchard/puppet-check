@@ -42,13 +42,8 @@ class RubyParser
       begin
         # need to eventually have this associated with a different binding during each iteration
         # older usage throws extra warning and mixes with valid warnings confusingly
-        warnings = if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.6')
-                     Utils.capture_stderr { ERB.new(File.read(file), trim_mode: '-').result }
-                     # ERB.new(File.read(file), trim_mode: '-').result(RubyParser.new.bind)
-                   # and for extra fun it is incompatible with non-new ruby
-                   else
-                     Utils.capture_stderr { ERB.new(File.read(file), nil, '-').result }
-                   end
+        warnings = Utils.capture_stderr { ERB.new(File.read(file), trim_mode: '-').result }
+                   # ERB.new(File.read(file), trim_mode: '-').result(RubyParser.new.bind)
       rescue NameError, TypeError
         # empty out warnings since it would contain an error if this pass triggers
         warnings = ''

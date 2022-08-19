@@ -1,7 +1,8 @@
-### 2.1.1 (Next)
+### 2.2.0 (Next)
 - Add Enable Pending Cops to base RuboCop configuration.
 - Support checking plans.
 - Fix Puppet >= 6.5 error message capture when line/col info.
+- Minimum Ruby version increased to 2.6.
 
 ### 2.1.0
 - Minimum supported version of Puppet bumped to 5.0.
