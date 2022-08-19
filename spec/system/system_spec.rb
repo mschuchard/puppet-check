@@ -7,9 +7,9 @@ describe PuppetCheck do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
     # see regression_check_spec
     if ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
-      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding .]) }
+      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding .]) }
     else
-      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Metrics/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .]) }
+      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .]) }
     end
 
     it 'outputs diagnostic results correctly after processing all of the files' do
@@ -40,7 +40,7 @@ describe PuppetCheck do
       PuppetCheck.settings[:ignored_files] = []
       PuppetCheck.settings[:style] = true
       # see regression_check_spec
-      unless File.directory?('/home/travis')
+      unless ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
         PuppetCheck.settings[:smoke] = true
         PuppetCheck.settings[:octonodes] = %w[good.example.com]
         PuppetCheck.settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
