@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rubocop', '~> 1.0'
   spec.add_dependency 'rubocop-performance', '~> 1.0'
   spec.add_development_dependency 'octocatalog-diff', '~> 1.0'
-  spec.add_development_dependency 'rake', '~> 12.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
 end
