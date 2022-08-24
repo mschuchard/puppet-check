@@ -20,7 +20,7 @@ class PuppetParser
         # initialize message
         message = ''
         # specify tasks attribute for parser validation if this looks like a plan or not
-        Puppet[:tasks] = Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4.0') && file.match(%r{plans/\w+\.pp$}) ? true : false
+        Puppet[:tasks] = file.match?(%r{plans/\w+\.pp$}) ? true : false
         # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
@@ -30,15 +30,7 @@ class PuppetParser
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
-        message = if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('6.5')
-                    errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
-                  # puppet 5.0-5.2 can only do one error per line and outputs fake dir env info
-                  elsif Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.0') && Gem::Version.new(Puppet::PUPPETVERSION) < Gem::Version.new('5.3')
-                    errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '').gsub(/Could not parse.*: /, '')
-                  # puppet < 5 and 5.3 parser output style
-                  else
-                    errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')
-                  end
+        message = errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
       end
       # output message
       next PuppetCheck.settings[:error_files].push("#{file}:\n#{message}") unless message.empty?
@@ -46,13 +38,8 @@ class PuppetParser
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = "#{file}:"
       unless errors.empty?
-        # puppet 5.4-5.x has a new validator output format
-        warnings << if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('5.4')
-                      "\n#{errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '')}"
-                    # puppet <= 5.3 validator output format
-                    else
-                      "\n#{errors.map(&:to_s).join("\n").gsub("#{File.absolute_path(file)}:", '')}"
-                    end
+        # puppet >= 5.4 has a new validator output format
+        warnings << "\n#{errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '')}"
       end
       Puppet::Util::Log.close_all
 
