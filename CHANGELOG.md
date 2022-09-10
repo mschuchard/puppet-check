@@ -1,4 +1,4 @@
-### 2.2.0 (Next)
+### 2.2.0
 - Add Enable Pending Cops to base RuboCop configuration.
 - Support checking plans.
 - Fix Puppet >= 6.5 error message capture when line/col info.
