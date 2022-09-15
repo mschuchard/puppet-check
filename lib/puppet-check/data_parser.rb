@@ -18,7 +18,7 @@ class DataParser
       warnings = hiera(parsed, file) if parsed && (File.basename(file) != 'hiera.yaml')
 
       next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      PuppetCheck.settings[:clean_files][file] = nil
     end
   end
 
@@ -62,7 +62,7 @@ class DataParser
         warnings = hiera(parsed, file) if parsed
 
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.settings[:clean_files].push(file.to_s)
+        PuppetCheck.settings[:clean_files][file] = nil
       end
     end
   end
@@ -192,7 +192,7 @@ class DataParser
           warnings = hiera(parsed, file)
         end
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.join("\n")}") unless warnings.empty?
-        PuppetCheck.settings[:clean_files].push(file.to_s)
+        PuppetCheck.settings[:clean_files][file] = nil
       end
     end
   end

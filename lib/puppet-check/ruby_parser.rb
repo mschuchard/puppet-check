@@ -29,7 +29,7 @@ class RubyParser
         # return warnings
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.strip}") unless warnings == ''
       end
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      PuppetCheck.settings[:clean_files][file] = nil
     end
   end
 
@@ -52,7 +52,7 @@ class RubyParser
       end
       # return warnings from the check if there were any
       next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join('').strip}") unless warnings == ''
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      PuppetCheck.settings[:clean_files][file] = nil
     end
   end
 
@@ -81,7 +81,7 @@ class RubyParser
         # collect style warnings
         next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
       end
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      PuppetCheck.settings[:clean_files][file] = nil
     end
   end
 

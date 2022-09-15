@@ -82,10 +82,10 @@ class PuppetCheck
     # initialize output format option
     settings[:output_format] ||= 'text'
 
-    # initialize diagnostic output arrays
+    # initialize diagnostic output hashes/arrays
     @settings[:error_files] = []
     @settings[:warning_files] = []
-    @settings[:clean_files] = []
+    @settings[:clean_files] = {}
     @settings[:ignored_files] = []
 
     # initialize octocatalog-diff options
