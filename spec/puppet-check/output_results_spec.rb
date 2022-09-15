@@ -19,8 +19,8 @@ describe OutputResults do
       expect { OutputResults.text }.to output("\n\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning\n").to_stdout
     end
     it 'outputs files with no errors or warnings' do
-      PuppetCheck.settings[:clean_files] = ['foo: i was totally good to go']
-      expect { OutputResults.text }.to output("\n\033[32mThe following files have no errors or warnings:\033[0m\n-- foo: i was totally good to go\n").to_stdout
+      PuppetCheck.settings[:clean_files] = { 'foo' => 'i was totally good to go' }
+      expect { OutputResults.text }.to output("\n\033[32mThe following files have no errors or warnings:\033[0m\n-- foo\n").to_stdout
     end
     it 'outputs files that were not processed' do
       PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
@@ -45,8 +45,8 @@ describe OutputResults do
       expect { OutputResults.markup('yaml') }.to output("---\nwarnings:\n- 'foo: i had a warning'\n").to_stdout
     end
     it 'outputs files with no errors or warnings as yaml' do
-      PuppetCheck.settings[:clean_files] = ['foo: i was totally good to go']
-      expect { OutputResults.markup('yaml') }.to output("---\nclean:\n- 'foo: i was totally good to go'\n").to_stdout
+      PuppetCheck.settings[:clean_files] = { 'foo' => 'i was totally good to go' }
+      expect { OutputResults.markup('yaml') }.to output("---\nclean:\n- foo\n").to_stdout
     end
     it 'outputs files that were not processed as yaml' do
       PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
@@ -61,8 +61,8 @@ describe OutputResults do
       expect { OutputResults.markup('json') }.to output("{\n  \"warnings\": [\n    \"foo: i had a warning\"\n  ]\n}\n").to_stdout
     end
     it 'outputs files with no errors or warnings as json' do
-      PuppetCheck.settings[:clean_files] = ['foo: i was totally good to go']
-      expect { OutputResults.markup('json') }.to output("{\n  \"clean\": [\n    \"foo: i was totally good to go\"\n  ]\n}\n").to_stdout
+      PuppetCheck.settings[:clean_files] = { 'foo' => 'i was totally good to go' }
+      expect { OutputResults.markup('json') }.to output("{\n  \"clean\": [\n    \"foo\"\n  ]\n}\n").to_stdout
     end
     it 'outputs files that were not processed as json' do
       PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
