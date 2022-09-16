@@ -6,8 +6,8 @@ describe OutputResults do
     before(:each) do
       PuppetCheck.settings[:error_files] = []
       PuppetCheck.settings[:warning_files] = []
-      PuppetCheck.settings[:clean_files] = []
-      PuppetCheck.settings[:ignored_files] = []
+      PuppetCheck.settings[:clean_files] = {}
+      PuppetCheck.settings[:ignored_files] = {}
     end
 
     it 'outputs files with errors' do
@@ -23,8 +23,8 @@ describe OutputResults do
       expect { OutputResults.text }.to output("\n\033[32mThe following files have no errors or warnings:\033[0m\n-- foo\n").to_stdout
     end
     it 'outputs files that were not processed' do
-      PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
-      expect { OutputResults.text }.to output("\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo: who knows what i am\n").to_stdout
+      PuppetCheck.settings[:ignored_files] = { 'foo' => 'who knows what i am' }
+      expect { OutputResults.text }.to output("\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo\n").to_stdout
     end
   end
 
@@ -32,8 +32,8 @@ describe OutputResults do
     before(:each) do
       PuppetCheck.settings[:error_files] = []
       PuppetCheck.settings[:warning_files] = []
-      PuppetCheck.settings[:clean_files] = []
-      PuppetCheck.settings[:ignored_files] = []
+      PuppetCheck.settings[:clean_files] = {}
+      PuppetCheck.settings[:ignored_files] = {}
     end
 
     it 'outputs files with errors as yaml' do
@@ -49,8 +49,8 @@ describe OutputResults do
       expect { OutputResults.markup('yaml') }.to output("---\nclean:\n- foo\n").to_stdout
     end
     it 'outputs files that were not processed as yaml' do
-      PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
-      expect { OutputResults.markup('yaml') }.to output("---\nignored:\n- 'foo: who knows what i am'\n").to_stdout
+      PuppetCheck.settings[:ignored_files] = { 'foo' => 'who knows what i am' }
+      expect { OutputResults.markup('yaml') }.to output("---\nignored:\n- foo\n").to_stdout
     end
     it 'outputs files with errors as json' do
       PuppetCheck.settings[:error_files] = ['foo: i had an error']
@@ -65,8 +65,8 @@ describe OutputResults do
       expect { OutputResults.markup('json') }.to output("{\n  \"clean\": [\n    \"foo\"\n  ]\n}\n").to_stdout
     end
     it 'outputs files that were not processed as json' do
-      PuppetCheck.settings[:ignored_files] = ['foo: who knows what i am']
-      expect { OutputResults.markup('json') }.to output("{\n  \"ignored\": [\n    \"foo: who knows what i am\"\n  ]\n}\n").to_stdout
+      PuppetCheck.settings[:ignored_files] = { 'foo' => 'who knows what i am' }
+      expect { OutputResults.markup('json') }.to output("{\n  \"ignored\": [\n    \"foo\"\n  ]\n}\n").to_stdout
     end
     it 'raises an error for an unsupported output format' do
       expect { OutputResults.markup('awesomesauce') }.to raise_error(RuntimeError, 'puppet-check: Unsupported output format \'awesomesauce\' was specified.')

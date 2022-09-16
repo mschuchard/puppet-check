@@ -1,3 +1,6 @@
+### 2.3.0 (Next)
+- Clean and ignored files improved output in markup formats as arrays of filenames.
+
 ### 2.2.0
 - Add Enable Pending Cops to base RuboCop configuration.
 - Support checking plans.

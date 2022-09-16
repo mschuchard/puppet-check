@@ -37,7 +37,7 @@ describe PuppetCheck do
       PuppetCheck.settings[:error_files] = []
       PuppetCheck.settings[:warning_files] = []
       PuppetCheck.settings[:clean_files] = {}
-      PuppetCheck.settings[:ignored_files] = []
+      PuppetCheck.settings[:ignored_files] = {}
       PuppetCheck.settings[:style] = true
       # see regression_check_spec
       unless ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
