@@ -43,7 +43,7 @@ class RubyParser
         # need to eventually have this associated with a different binding during each iteration
         # older usage throws extra warning and mixes with valid warnings confusingly
         warnings = Utils.capture_stderr { ERB.new(File.read(file), trim_mode: '-').result }
-                   # ERB.new(File.read(file), trim_mode: '-').result(RubyParser.new.bind)
+        # warnings = ERB.new(File.read(file), trim_mode: '-').result(RubyParser.new.bind)
       rescue NameError, TypeError
         # empty out warnings since it would contain an error if this pass triggers
         warnings = ''

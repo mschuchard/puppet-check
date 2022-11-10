@@ -2,6 +2,7 @@
 require: rubocop-performance
 
 AllCops:
+  NewCops: enable
   Include:
     - 'lib/**/*.rb'
     - 'bin/*.rb'
@@ -33,4 +34,7 @@ Style/EvalWithLocation:
 
 # probably can remove after rails cops removed from core
 Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
   Enabled: false
