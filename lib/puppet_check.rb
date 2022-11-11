@@ -111,7 +111,7 @@ class PuppetCheck
     end
 
     # do not process fixtures, check that at least one file was found, and remove double slashes
-    files.reject! { |file| file =~ /fixtures/ }
+    files.reject! { |file| file.include?('fixtures') }
     raise "puppet-check: no files found in supplied paths '#{paths.join(', ')}'." if files.empty?
     files.map! { |file| file.gsub('//', '/') }
 

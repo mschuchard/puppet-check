@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
 
   spec.files         = Dir['bin/**/*', 'lib/**/*', 'spec/**/*', 'CHANGELOG.md', 'LICENSE.md', 'README.md']
   spec.executables   = spec.files.grep(%r{^bin/}) { |file| File.basename(file) }
-  spec.test_files    = spec.files.grep(%r{^spec/})
   spec.require_paths = Dir['lib']
 
   spec.required_ruby_version = '>= 2.6.0'

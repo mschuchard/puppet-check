@@ -27,7 +27,7 @@ describe PuppetCheck do
   end
 
   context 'executed as a system from the Rakefile with arguments and various files to be processed' do
-    let(:tasks) { Rake::Task['puppetcheck:file'.to_sym].invoke }
+    let(:tasks) { Rake::Task[:'puppetcheck:file'].invoke }
 
     it 'outputs diagnostic results correctly after processing all of the files' do
       # ensure rake only checks the files inside fixtures

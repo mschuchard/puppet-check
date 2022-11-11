@@ -20,7 +20,7 @@ class PuppetParser
         # initialize message
         message = ''
         # specify tasks attribute for parser validation if this looks like a plan or not
-        Puppet[:tasks] = file.match?(%r{plans/\w+\.pp$}) ? true : false
+        Puppet[:tasks] = file.match?(%r{plans/\w+\.pp$})
         # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api

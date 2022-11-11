@@ -18,7 +18,7 @@ class RubyParser
 
         # check RuboCop and collect warnings
         rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'emacs', file]) }
-        warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join('')
+        warnings = rubocop_warnings == '' ? '' : rubocop_warnings.split("#{File.absolute_path(file)}:").join
 
         # check Reek and collect warnings
         require 'reek'
@@ -51,7 +51,7 @@ class RubyParser
         next PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
       end
       # return warnings from the check if there were any
-      next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join('').strip}") unless warnings == ''
+      next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join.strip}") unless warnings == ''
       PuppetCheck.settings[:clean_files][file] = nil
     end
   end
@@ -79,7 +79,7 @@ class RubyParser
         warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'emacs', file]) }
 
         # collect style warnings
-        next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join('')}") unless warnings.empty?
+        next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.split("#{File.absolute_path(file)}:").join}") unless warnings.empty?
       end
       PuppetCheck.settings[:clean_files][file] = nil
     end

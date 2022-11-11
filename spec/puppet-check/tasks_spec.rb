@@ -10,7 +10,7 @@ describe PuppetCheck::Tasks do
   end
 
   context 'puppetcheck:spec' do
-    let(:spec_tasks) { Rake::Task['puppetcheck:spec'.to_sym].invoke }
+    let(:spec_tasks) { Rake::Task[:'puppetcheck:spec'].invoke }
 
     it 'executes RSpec and RSpec-Puppet checks in the expected manner' do
       Dir.chdir(fixtures_dir)
@@ -23,7 +23,7 @@ describe PuppetCheck::Tasks do
   end
 
   context 'puppetcheck:beaker' do
-    let(:beaker_task) { Rake::Task['puppetcheck:beaker'.to_sym].invoke }
+    let(:beaker_task) { Rake::Task[:'puppetcheck:beaker'].invoke }
 
     it 'verifies the Beaker task exists' do
       Dir.chdir(fixtures_dir)
@@ -34,7 +34,7 @@ describe PuppetCheck::Tasks do
   end
 
   context 'puppetcheck:kitchen' do
-    let(:kitchen_task) { Rake::Task['puppetcheck:kitchen'.to_sym].invoke }
+    let(:kitchen_task) { Rake::Task[:'puppetcheck:kitchen'].invoke }
 
     it 'verifies the Kitchen task exists' do
       Dir.chdir(fixtures_dir)

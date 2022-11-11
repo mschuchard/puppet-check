@@ -9,7 +9,7 @@ class RSpecPuppetSupport
   # prepare the spec fixtures directory for rspec-puppet testing
   def self.run
     # ensure this method does not do anything inside module dependencies
-    specdirs = Dir.glob('**/spec').reject { |dir| dir =~ /fixtures/ }
+    specdirs = Dir.glob('**/spec').reject { |dir| dir.include?('fixtures') }
     return if specdirs.empty?
 
     # setup fixtures for rspec-puppet testing
