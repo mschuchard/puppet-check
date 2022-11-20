@@ -4,8 +4,14 @@ name: ci
 on:
   push:
     branches: [master]
+    paths:
+    - 'lib/**'
+    - 'spec/**/*_spec.rb'
   pull_request:
     branches: [master]
+    paths:
+    - 'lib/**'
+    - 'spec/**/*_spec.rb'
 
 jobs:
   test:
@@ -16,7 +22,7 @@ jobs:
         - '2.7'
         - '3.0'
         - '3.1'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout
       uses: actions/checkout@v3
