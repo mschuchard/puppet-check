@@ -33,7 +33,7 @@ class PuppetParser
         message = errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
       end
       # output message
-      next PuppetCheck.settings[:error_files].push("#{file}:\n#{message}") unless message.empty?
+      next PuppetCheck.settings[:error_files][file] = message unless message.empty?
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = "#{file}:"
@@ -79,7 +79,7 @@ class PuppetParser
       # credits to gds-operations/puppet-syntax for the parser function call
       Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
     rescue StandardError => err
-      PuppetCheck.settings[:error_files].push("#{file}:\n#{err.to_s.gsub("#{file}:", '')}")
+      PuppetCheck.settings[:error_files][file] = err.to_s.gsub("#{file}:", '')
     else
       PuppetCheck.settings[:clean_files][file] = nil
     end

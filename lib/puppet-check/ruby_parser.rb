@@ -10,7 +10,7 @@ class RubyParser
       # prevents ruby code from actually executing
       catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}", file) }
     rescue ScriptError, StandardError => err
-      PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
+      PuppetCheck.settings[:error_files][file] = err
     else
       # check ruby style
       if style
@@ -48,7 +48,7 @@ class RubyParser
         # empty out warnings since it would contain an error if this pass triggers
         warnings = ''
       rescue ScriptError => err
-        next PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
+        next PuppetCheck.settings[:error_files][file] = err
       end
       # return warnings from the check if there were any
       next PuppetCheck.settings[:warning_files].push("#{file}:\n#{warnings.gsub('warning: ', '').split('(erb):').join.strip}") unless warnings == ''
@@ -71,7 +71,7 @@ class RubyParser
       # prevents ruby code from actually executing
       catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)}", file) }
     rescue SyntaxError, LoadError, ArgumentError => err
-      PuppetCheck.settings[:error_files].push("#{file}:\n#{err}")
+      PuppetCheck.settings[:error_files][file] = err
     # check librarian puppet style
     else
       if style

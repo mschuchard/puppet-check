@@ -6,8 +6,8 @@ class OutputResults
   def self.text
     # errors
     unless PuppetCheck.settings[:error_files].empty?
-      print "\033[31mThe following files have errors:\033[0m\n-- "
-      puts PuppetCheck.settings[:error_files].join("\n\n-- ")
+      puts "\033[31mThe following files have errors:\033[0m"
+      PuppetCheck.settings[:error_files].each { |file, error| puts "-- #{file}: #{error}"}
     end
     # warnings
     unless PuppetCheck.settings[:warning_files].empty?

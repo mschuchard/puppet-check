@@ -83,7 +83,7 @@ class PuppetCheck
     settings[:output_format] ||= 'text'
 
     # initialize diagnostic output hashes/arrays
-    @settings[:error_files] = []
+    @settings[:error_files] = {}
     @settings[:warning_files] = []
     @settings[:clean_files] = {}
     @settings[:ignored_files] = {}
