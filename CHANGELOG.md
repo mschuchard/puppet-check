@@ -1,5 +1,5 @@
-### 2.3.0 (Next)
-- Clean and ignored files improved output in markup formats as arrays of filenames.
+### 2.2.1 (Next)
+- Error, clean, and ignored files improved output formatting for all formats.
 
 ### 2.2.0
 - Add Enable Pending Cops to base RuboCop configuration.
