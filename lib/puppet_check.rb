@@ -85,8 +85,8 @@ class PuppetCheck
     # initialize diagnostic output hashes/arrays
     @settings[:error_files] = {}
     @settings[:warning_files] = []
-    @settings[:clean_files] = {}
-    @settings[:ignored_files] = {}
+    @settings[:clean_files] = []
+    @settings[:ignored_files] = []
 
     # initialize octocatalog-diff options
     settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'
@@ -145,6 +145,6 @@ class PuppetCheck
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     RubyParser.librarian(librarians, settings[:style], settings[:rubocop_args]) unless librarians.empty?
     # ignore everything else
-    files.each { |file| self.class.settings[:ignored_files][file] = nil }
+    files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }
   end
 end

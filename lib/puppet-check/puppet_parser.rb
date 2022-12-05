@@ -66,7 +66,7 @@ class PuppetParser
         end
       end
       next PuppetCheck.settings[:warning_files].push(warnings) unless warnings == "#{file}:"
-      PuppetCheck.settings[:clean_files][file] = nil
+      PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end
 
@@ -81,7 +81,7 @@ class PuppetParser
     rescue StandardError => err
       PuppetCheck.settings[:error_files][file] = err.to_s.gsub("#{file}:", '')
     else
-      PuppetCheck.settings[:clean_files][file] = nil
+      PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end
 end

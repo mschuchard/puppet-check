@@ -16,13 +16,13 @@ class OutputResults
     end
     # cleans
     unless PuppetCheck.settings[:clean_files].empty?
-      puts "\n\033[32mThe following files have no errors or warnings:\033[0m"
-      PuppetCheck.settings[:clean_files].each { |file, _| puts "-- #{file}" }
+      print "\n\033[32mThe following files have no errors or warnings:\033[0m\n-- "
+      puts PuppetCheck.settings[:clean_files].join("\n-- ")
     end
     # ignores
     return if PuppetCheck.settings[:ignored_files].empty?
-    puts "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m"
-    PuppetCheck.settings[:ignored_files].each { |file, _| puts "-- #{file}" }
+    print "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- "
+    puts PuppetCheck.settings[:ignored_files].join("\n-- ")
   end
 
   # output the results as yaml or json
@@ -31,8 +31,8 @@ class OutputResults
     hash = {}
     hash['errors'] = PuppetCheck.settings[:error_files] unless PuppetCheck.settings[:error_files].empty?
     hash['warnings'] = PuppetCheck.settings[:warning_files] unless PuppetCheck.settings[:warning_files].empty?
-    hash['clean'] = PuppetCheck.settings[:clean_files].keys unless PuppetCheck.settings[:clean_files].empty?
-    hash['ignored'] = PuppetCheck.settings[:ignored_files].keys unless PuppetCheck.settings[:ignored_files].empty?
+    hash['clean'] = PuppetCheck.settings[:clean_files] unless PuppetCheck.settings[:clean_files].empty?
+    hash['ignored'] = PuppetCheck.settings[:ignored_files] unless PuppetCheck.settings[:ignored_files].empty?
 
     # convert hash to markup language
     case format
