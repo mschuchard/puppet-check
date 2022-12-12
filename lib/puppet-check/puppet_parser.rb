@@ -65,7 +65,7 @@ class PuppetParser
           puppet_lint.problems.each { |values| warnings << "\n#{values[:line]}:#{values[:column]}: #{values[:message]}" }
         end
       end
-      next PuppetCheck.settings[:warning_files].push(warnings) unless warnings == "#{file}:"
+      next PuppetCheck.settings[:warning_files][file] = warnings.to_s.gsub("#{file}:", '') unless warnings == "#{file}:"
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end

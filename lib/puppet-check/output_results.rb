@@ -7,12 +7,12 @@ class OutputResults
     # errors
     unless PuppetCheck.settings[:error_files].empty?
       puts "\033[31mThe following files have errors:\033[0m"
-      PuppetCheck.settings[:error_files].each { |file, error| puts "-- #{file}: #{error}"}
+      PuppetCheck.settings[:error_files].each { |file, error| puts "-- #{file}: #{error}" }
     end
     # warnings
     unless PuppetCheck.settings[:warning_files].empty?
-      print "\n\033[33mThe following files have warnings:\033[0m\n-- "
-      puts PuppetCheck.settings[:warning_files].join("\n\n-- ")
+      puts "\n\033[33mThe following files have warnings:\033[0m"
+      PuppetCheck.settings[:warning_files].each { |file, warning| puts "-- #{file}: #{warning}" }
     end
     # cleans
     unless PuppetCheck.settings[:clean_files].empty?

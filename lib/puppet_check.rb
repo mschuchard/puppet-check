@@ -84,7 +84,7 @@ class PuppetCheck
 
     # initialize diagnostic output hashes/arrays
     @settings[:error_files] = {}
-    @settings[:warning_files] = []
+    @settings[:warning_files] = {}
     @settings[:clean_files] = []
     @settings[:ignored_files] = []
 
