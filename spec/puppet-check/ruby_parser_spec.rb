@@ -20,7 +20,7 @@ describe RubyParser do
       RubyParser.ruby(["#{fixtures_dir}lib/style.rb"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql({})
       expect(PuppetCheck.settings[:warning_files].keys).to eql(["#{fixtures_dir}lib/style.rb"])
-      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}lib/style.rb"]).to match(%r{Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty.*\n.*is a writable attribute.*\n.*Issue has no descriptive comment})
+      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}lib/style.rb"].join("\n")).to match(%r{Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty.*\n.*is a writable attribute.*\n.*Issue has no descriptive comment})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad style ruby file in the clean files array when rubocop_args ignores its warnings' do

@@ -19,10 +19,10 @@ class RubyParser
 
         # check RuboCop and parse warnings JSON output
         rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
-        warnings = JSON.parse(rubocop_warnings)
+        offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses']
 
         # collect offenses for file
-        PuppetCheck.settings[:warning_files][file] = warnings['files'][0]['offenses'].map { |offense| offense['message'] }
+        warnings = offenses.map { |offense| offense['message'] }
 
         # check Reek
         require 'reek'
@@ -30,10 +30,10 @@ class RubyParser
         reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
 
         # collect offenses for file
-        PuppetCheck.settings[:warning_files][file].concat(reek_warnings.split("\n")[1..].map(&:strip)) unless reek_warnings == ''
+        warnings.concat(reek_warnings.split("\n")[1..].map(&:strip)) unless reek_warnings == ''
 
         # return warnings
-        next PuppetCheck.settings[:warning_files][file] unless PuppetCheck.settings[:warning_files][file].empty?
+        next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
       end
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end
