@@ -82,10 +82,11 @@ class RubyParser
     else
       if style
         # check Rubocop
-        warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'emacs', file]) }
+        warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
+        offenses = JSON.parse(warnings)['files'][0]['offenses']
 
         # collect style warnings
-        next PuppetCheck.settings[:warning_files][file] = warnings.split("#{File.absolute_path(file)}:").join unless warnings.empty?
+        next PuppetCheck.settings[:warning_files][file] = offenses.map { |offense| offense['message'] } unless offenses.empty?
       end
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end

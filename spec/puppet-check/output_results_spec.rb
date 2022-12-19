@@ -15,7 +15,7 @@ describe OutputResults do
       expect { OutputResults.text }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error\n").to_stdout
     end
     it 'outputs files with warnings' do
-      PuppetCheck.settings[:warning_files] = { 'foo' => 'i had a warning' }
+      PuppetCheck.settings[:warning_files] = { 'foo' => ['i had a warning'] }
       expect { OutputResults.text }.to output("\n\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning\n").to_stdout
     end
     it 'outputs files with no errors or warnings' do
@@ -41,8 +41,8 @@ describe OutputResults do
       expect { OutputResults.markup('yaml') }.to output("---\nerrors:\n  foo: i had an error\n").to_stdout
     end
     it 'outputs files with warnings as yaml' do
-      PuppetCheck.settings[:warning_files] = { 'foo' => 'i had a warning' }
-      expect { OutputResults.markup('yaml') }.to output("---\nwarnings:\n  foo: i had a warning\n").to_stdout
+      PuppetCheck.settings[:warning_files] = { 'foo' => ['i had a warning'] }
+      expect { OutputResults.markup('yaml') }.to output("---\nwarnings:\n  foo:\n  - i had a warning\n").to_stdout
     end
     it 'outputs files with no errors or warnings as yaml' do
       PuppetCheck.settings[:clean_files] = ['foo']
@@ -57,8 +57,8 @@ describe OutputResults do
       expect { OutputResults.markup('json') }.to output("{\n  \"errors\": {\n    \"foo\": \"i had an error\"\n  }\n}\n").to_stdout
     end
     it 'outputs files with warnings as json' do
-      PuppetCheck.settings[:warning_files] = { 'foo' => 'i had a warning' }
-      expect { OutputResults.markup('json') }.to output("{\n  \"warnings\": {\n    \"foo\": \"i had a warning\"\n  }\n}\n").to_stdout
+      PuppetCheck.settings[:warning_files] = { 'foo' => ['i had a warning'] }
+      expect { OutputResults.markup('json') }.to output("{\n  \"warnings\": {\n    \"foo\": [\n      \"i had a warning\"\n    ]\n  }\n}\n").to_stdout
     end
     it 'outputs files with no errors or warnings as json' do
       PuppetCheck.settings[:clean_files] = ['foo']
