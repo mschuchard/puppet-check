@@ -36,10 +36,10 @@ class PuppetParser
       next PuppetCheck.settings[:error_files][file] = message unless message.empty?
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
-      warnings = "#{file}:"
+      warnings = []
       unless errors.empty?
         # puppet >= 5.4 has a new validator output format
-        warnings << "\n#{errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '')}"
+        warnings.concat(errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '').split("\n"))
       end
       Puppet::Util::Log.close_all
 
@@ -58,14 +58,14 @@ class PuppetParser
         # prepare the PuppetLint object for style checks
         puppet_lint = PuppetLint.new
         puppet_lint.file = file
+        puppet_lint.configuration.json = true
         puppet_lint.run
 
         # collect the warnings
-        if puppet_lint.warnings?
-          puppet_lint.problems.each { |values| warnings << "\n#{values[:line]}:#{values[:column]}: #{values[:message]}" }
-        end
+        offenses = puppet_lint.problems.map { |problem| problem[:message] }
+        warnings.concat(offenses)
       end
-      next PuppetCheck.settings[:warning_files][file] = warnings.to_s.gsub("#{file}:", '') unless warnings == "#{file}:"
+      next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end

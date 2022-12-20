@@ -41,14 +41,14 @@ describe PuppetParser do
       PuppetParser.manifest(["#{fixtures_dir}manifests/style_parser.pp"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql({})
       expect(PuppetCheck.settings[:warning_files].keys).to eql(["#{fixtures_dir}manifests/style_parser.pp"])
-      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}manifests/style_parser.pp"]).to match(%r{^Unrecognized escape sequence.*\nUnrecognized escape sequence.*\n.*double quoted string containing})
+      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}manifests/style_parser.pp"].join("\n")).to match(%r{^Unrecognized escape sequence.*\nUnrecognized escape sequence.*\n.*double quoted string containing})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad lint style Puppet manifest in the warning files array' do
       PuppetParser.manifest(["#{fixtures_dir}manifests/style_lint.pp"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql({})
       expect(PuppetCheck.settings[:warning_files].keys).to eql(["#{fixtures_dir}manifests/style_lint.pp"])
-      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}manifests/style_lint.pp"]).to match(%r{(?:indentation of|double quoted string containing).*\n.*(?:indentation of|double quoted string containing)})
+      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}manifests/style_lint.pp"].join("\n")).to match(%r{(?:indentation of|double quoted string containing).*\n.*(?:indentation of|double quoted string containing)})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad style Puppet manifest in the clean files array when puppetlint_args ignores its warnings' do
@@ -61,7 +61,7 @@ describe PuppetParser do
       PuppetParser.manifest(["#{fixtures_dir}plans/style.pp"], true, [])
       expect(PuppetCheck.settings[:error_files]).to eql({})
       expect(PuppetCheck.settings[:warning_files].keys).to eql(["#{fixtures_dir}plans/style.pp"])
-      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}plans/style.pp"]).to match(%r{variable not enclosed in {}})
+      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}plans/style.pp"].join("\n")).to match(%r{variable not enclosed in {}})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a good Puppet manifest in the clean files array' do
