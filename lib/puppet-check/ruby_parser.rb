@@ -15,9 +15,8 @@ class RubyParser
     else
       # check ruby style
       if style
-        require 'rubocop'
-
         # check RuboCop and parse warnings JSON output
+        require 'rubocop'
         rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
         offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses']
 
@@ -27,10 +26,11 @@ class RubyParser
         # check Reek
         require 'reek'
         require 'reek/cli/application'
-        reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new([file]).execute }
+        reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new(['-f', 'json', file]).execute }
 
         # collect offenses for file
-        warnings.concat(reek_warnings.split("\n")[1..].map(&:strip)) unless reek_warnings == ''
+        offenses = JSON.parse(reek_warnings).map { |warning| "#{warning['context']} #{warning['message']}" }
+        warnings.concat(offenses)
 
         # return warnings
         next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
@@ -57,7 +57,7 @@ class RubyParser
         next PuppetCheck.settings[:error_files][file] = err.to_s.gsub('(erb):', '')
       end
       # return warnings from the check if there were any
-      next PuppetCheck.settings[:warning_files][file] = warnings.to_s.gsub('warning: ', '').split('(erb):').join.strip unless warnings == ''
+      next PuppetCheck.settings[:warning_files][file] = warnings.to_s.gsub('warning: ', '').delete("\n").split('(erb):').compact unless warnings == ''
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end
   end

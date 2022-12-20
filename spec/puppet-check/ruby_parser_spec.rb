@@ -53,7 +53,7 @@ describe RubyParser do
       RubyParser.template(["#{fixtures_dir}templates/style.erb"])
       expect(PuppetCheck.settings[:error_files]).to eql({})
       expect(PuppetCheck.settings[:warning_files].keys).to eql(["#{fixtures_dir}templates/style.erb"])
-      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}templates/style.erb"]).to match(%r{already initialized constant.*\n.*previous definition of})
+      expect(PuppetCheck.settings[:warning_files]["#{fixtures_dir}templates/style.erb"].join("\n")).to match(%r{already initialized constant.*\n.*previous definition of})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a ruby template file with ignored errors in the clean files array' do
