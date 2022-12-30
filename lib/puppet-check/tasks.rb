@@ -6,8 +6,10 @@ end
 require_relative '../puppet_check'
 
 # the rake interface for PuppetCheck
-class PuppetCheck::Tasks < ::Rake::TaskLib
+class PuppetCheck::Tasks < Rake::TaskLib
   def initialize
+    super
+
     desc 'Execute all Puppet-Check checks'
     task puppetcheck: %w[puppetcheck:file puppetcheck:spec puppetcheck:beaker puppetcheck:kitchen]
 
@@ -26,7 +28,7 @@ class PuppetCheck::Tasks < ::Rake::TaskLib
         RSpec::Core::RakeTask.new(:spec) do |task|
           RSpecPuppetSupport.run
           # generate tasks for all recognized directories and ensure spec tests inside module dependencies are ignored
-          spec_dirs = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').reject { |dir| dir =~ /fixtures/ }
+          spec_dirs = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').grep_v { |dir| dir.include?('fixtures') }
           task.pattern = spec_dirs.empty? ? 'skip_rspec' : spec_dirs
           task.rspec_opts = '-f json' if PuppetCheck.settings[:output_format] == 'json'
         end
