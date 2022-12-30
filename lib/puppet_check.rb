@@ -69,6 +69,7 @@ class PuppetCheck
 
   # establish default settings
   def self.defaults(settings)
+    private_class_method :method
     # initialize fail on warning,  style check, and regression check bools
     settings[:fail_on_warning] ||= false
     settings[:style] ||= false
@@ -99,6 +100,7 @@ class PuppetCheck
 
   # parse the paths and return the array of files
   def self.parse_paths(paths)
+    private_class_method :method
     files = []
 
     # traverse the unique paths and return all files
@@ -117,6 +119,8 @@ class PuppetCheck
 
     files.uniq
   end
+
+  private
 
   # categorize and pass the files out to the parsers to determine their status
   def execute_parsers(files, settings)

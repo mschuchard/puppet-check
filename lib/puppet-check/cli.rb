@@ -15,6 +15,7 @@ class PuppetCheck::CLI
 
   # parse the user arguments
   def self.parse(args)
+    private_class_method :method
     # show help message if no args specified
     args = %w[-h] if args.empty?
 

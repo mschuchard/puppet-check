@@ -16,7 +16,7 @@ describe OutputResults do
     end
     it 'outputs files with warnings' do
       PuppetCheck.settings[:warning_files] = { 'foo' => ['i had a warning'] }
-      expect { OutputResults.text }.to output("\n\033[33mThe following files have warnings:\033[0m\n-- foo: i had a warning\n").to_stdout
+      expect { OutputResults.text }.to output("\n\033[33mThe following files have warnings:\033[0m\n-- foo:\ni had a warning\n").to_stdout
     end
     it 'outputs files with no errors or warnings' do
       PuppetCheck.settings[:clean_files] = ['foo']
