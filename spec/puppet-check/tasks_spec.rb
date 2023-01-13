@@ -26,8 +26,6 @@ describe PuppetCheck::Tasks do
     let(:beaker_task) { Rake::Task[:'puppetcheck:beaker'].invoke }
 
     it 'verifies the Beaker task exists' do
-      Dir.chdir(fixtures_dir)
-
       # beaker task executed
       expect { beaker_task }.to output("Beaker is not installed. The Beaker tasks will not be available.\n").to_stdout
     end
@@ -37,9 +35,7 @@ describe PuppetCheck::Tasks do
     let(:kitchen_task) { Rake::Task[:'puppetcheck:kitchen'].invoke }
 
     it 'verifies the Kitchen task exists' do
-      Dir.chdir(fixtures_dir)
-
-      # beaker task executed
+      # kitchen task executed
       expect { kitchen_task }.to output("Test Kitchen is not installed. The Kitchen tasks will not be available.\n").to_stdout
     end
   end

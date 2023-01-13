@@ -32,16 +32,19 @@ class PuppetParser
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
         message = errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
       end
-      # output message
+
+      Puppet::Util::Log.close_all
+
+      # store info and continue validating files
       next PuppetCheck.settings[:error_files][file] = message unless message.empty?
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = []
+      # weirdly puppet >= 6.5 still does not return warnings and logs them instead unlike errors
       unless errors.empty?
         # puppet >= 5.4 has a new validator output format
         warnings.concat(errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '').split("\n"))
       end
-      Puppet::Util::Log.close_all
 
       # check puppet style
       if style
