@@ -61,7 +61,6 @@ class PuppetParser
         # prepare the PuppetLint object for style checks
         puppet_lint = PuppetLint.new
         puppet_lint.file = file
-        puppet_lint.configuration.json = true
         puppet_lint.run
 
         # collect the warnings

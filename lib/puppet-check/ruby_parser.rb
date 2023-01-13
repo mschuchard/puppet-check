@@ -1,4 +1,3 @@
-require 'json'
 require_relative '../puppet_check'
 require_relative 'utils'
 
@@ -16,21 +15,21 @@ class RubyParser
       # check ruby style
       if style
         # check RuboCop and parse warnings JSON output
+        require 'json'
         require 'rubocop'
-        rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
-        offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses']
 
-        # collect offenses for file
-        warnings = offenses.map { |offense| offense['message'] }
+        rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
+        rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses']
 
         # check Reek
         require 'reek'
         require 'reek/cli/application'
-        reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new(['-f', 'json', file]).execute }
 
-        # collect offenses for file
-        offenses = JSON.parse(reek_warnings).map { |warning| "#{warning['context']} #{warning['message']}" }
-        warnings.concat(offenses)
+        reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new(['-f', 'json', file]).execute }
+        reek_offenses = JSON.parse(reek_warnings).map { |warning| "#{warning['context']} #{warning['message']}" }
+
+        # assign warnings from combined offenses
+        warnings = rubocop_offenses.map { |offense| offense['message'] } + reek_offenses
 
         # return warnings
         next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
@@ -66,8 +65,6 @@ class RubyParser
   def self.librarian(files, style, rc_args)
     # efficient var assignment prior to iterator
     if style
-      require 'rubocop'
-
       # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
       rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Naming/FileName" : rc_args.push('--except', 'Naming/FileName')
     end
@@ -82,6 +79,9 @@ class RubyParser
     else
       if style
         # check Rubocop
+        require 'json'
+        require 'rubocop'
+
         warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
         offenses = JSON.parse(warnings)['files'][0]['offenses']
 
