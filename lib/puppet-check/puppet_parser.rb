@@ -64,7 +64,7 @@ class PuppetParser
         puppet_lint.run
 
         # collect the warnings
-        offenses = puppet_lint.problems.map { |problem| problem[:message] }
+        offenses = puppet_lint.problems.map { |problem| "#{problem[:line]}:#{problem[:column]} #{problem[:message]}" }
         warnings.concat(offenses)
       end
       next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?

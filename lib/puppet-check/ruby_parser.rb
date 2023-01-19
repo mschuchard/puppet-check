@@ -83,10 +83,10 @@ class RubyParser
         require 'rubocop'
 
         warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
-        offenses = JSON.parse(warnings)['files'][0]['offenses']
+        offenses = JSON.parse(warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # collect style warnings
-        next PuppetCheck.settings[:warning_files][file] = offenses.map { |offense| offense['message'] } unless offenses.empty?
+        next PuppetCheck.settings[:warning_files][file] = offenses unless offenses.empty?
       end
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end
