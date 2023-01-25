@@ -12,7 +12,7 @@ describe DataParser do
     it 'puts a bad syntax yaml file in the error files hash' do
       DataParser.yaml(["#{fixtures_dir}hieradata/syntax.yaml"])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}hieradata/syntax.yaml"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}hieradata/syntax.yaml"]).to match(%r{^block sequence entries are not allowed})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}hieradata/syntax.yaml"].join("\n")).to match(%r{^block sequence entries are not allowed})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
@@ -70,14 +70,14 @@ describe DataParser do
     it 'puts a bad syntax json file in the error files hash' do
       DataParser.json(["#{fixtures_dir}hieradata/syntax.json"])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}hieradata/syntax.json"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}hieradata/syntax.json"]).to match(%r{^.*unexpected token})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}hieradata/syntax.json"].join("\n")).to match(%r{^.*unexpected token})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
     it 'puts a bad metadata json file in the error files hash' do
       DataParser.json(["#{fixtures_dir}metadata_syntax/metadata.json"])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}metadata_syntax/metadata.json"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}metadata_syntax/metadata.json"]).to match(%r{^Required field.*\nField 'requirements'.*\nDuplicate dependencies.*\nDeprecated field.*\nSummary exceeds})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}metadata_syntax/metadata.json"].join("\n")).to match(%r{^Required field.*\nField 'requirements'.*\nDuplicate dependencies.*\nDeprecated field.*\nSummary exceeds})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end

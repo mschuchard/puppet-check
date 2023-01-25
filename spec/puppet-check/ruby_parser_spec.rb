@@ -12,7 +12,7 @@ describe RubyParser do
     it 'puts a bad syntax ruby file in the error files hash' do
       RubyParser.ruby(["#{fixtures_dir}lib/syntax.rb"], false, [])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}lib/syntax.rb"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}lib/syntax.rb"]).to match(%r{^.*syntax error})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}lib/syntax.rb"].join("\n")).to match(%r{^.*syntax error})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
@@ -42,9 +42,9 @@ describe RubyParser do
       RubyParser.template(["#{fixtures_dir}templates/syntax.erb"])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}templates/syntax.erb"])
       if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.7')
-        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}templates/syntax.erb"]).to match(%r{1: syntax error, unexpected.*\n.*ruby})
+        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}templates/syntax.erb"].join("\n")).to match(%r{1: syntax error, unexpected.*\n.*ruby})
       else
-        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}templates/syntax.erb"]).to match(%r{syntax error, unexpected tIDENTIFIER})
+        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}templates/syntax.erb"].join("\n")).to match(%r{syntax error, unexpected tIDENTIFIER})
       end
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
@@ -74,7 +74,7 @@ describe RubyParser do
     it 'puts a bad syntax librarian Puppet file in the error files hash' do
       RubyParser.librarian(["#{fixtures_dir}librarian_syntax/Puppetfile"], false, [])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}librarian_syntax/Puppetfile"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}librarian_syntax/Puppetfile"]).to match(%r{^.*syntax error})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}librarian_syntax/Puppetfile"].join("\n")).to match(%r{^.*syntax error})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
