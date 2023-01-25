@@ -18,25 +18,25 @@ class PuppetParser
       # check puppet syntax
       begin
         # initialize message
-        message = ''
+        messages = []
         # specify tasks attribute for parser validation if this looks like a plan or not
         Puppet[:tasks] = file.match?(%r{plans/\w+\.pp$})
         # in puppet >= 6.5 the return of this method is a hash with the error
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
         if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0') && new_error != {}
-          message = new_error.values.map(&:to_s).join("\n").gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '').gsub('Could not parse for environment *root*: ', '')
+          messages.concat(new_error.values.map(&:to_s).map { |error| error.gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '') }.map { |error| error.gsub('Could not parse for environment *root*: ', '') })
         end
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
-        message = errors.map(&:to_s).join("\n").gsub(/file: #{File.absolute_path(file)}(, |\))/, '').gsub(/Could not parse.*: /, '')
+        messages.concat(errors.map(&:to_s).join("\n").map { |error| error.gsub(/file: #{File.absolute_path(file)}(, |\))/, '') }.map { |error| error.gsub(/Could not parse.*: /, '') })
       end
 
       Puppet::Util::Log.close_all
 
       # store info and continue validating files
-      next PuppetCheck.settings[:error_files][file] = message unless message.empty?
+      next PuppetCheck.settings[:error_files][file] = messages unless messages.empty?
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = []
@@ -81,7 +81,7 @@ class PuppetParser
       # credits to gds-operations/puppet-syntax for the parser function call
       Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
     rescue StandardError => err
-      PuppetCheck.settings[:error_files][file] = err.to_s.gsub("#{file}:", '')
+      PuppetCheck.settings[:error_files][file] = [err.to_s.gsub("file: #{file}, ", '')]
     else
       PuppetCheck.settings[:clean_files].push(file.to_s)
     end

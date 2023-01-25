@@ -13,9 +13,9 @@ describe PuppetParser do
       PuppetParser.manifest(["#{fixtures_dir}manifests/syntax.pp"], false, [])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}manifests/syntax.pp"])
       if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0')
-        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}manifests/syntax.pp"]).to match(%r{^Language validation logged 2 errors})
+        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}manifests/syntax.pp"].join("\n")).to match(%r{^Language validation logged 2 errors})
       else
-        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}hieradata/syntax.yaml"]).to match(%r{^This Variable has no effect.*\nIllegal variable name})
+        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}hieradata/syntax.yaml"].join("\n")).to match(%r{^This Variable has no effect.*\nIllegal variable name})
       end
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
@@ -25,7 +25,7 @@ describe PuppetParser do
       it 'puts a bad syntax at eof Puppet manifest in the error files hash' do
         PuppetParser.manifest(["#{fixtures_dir}manifests/eof_syntax.pp"], false, [])
         expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}manifests/eof_syntax.pp"])
-        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}manifests/eof_syntax.pp"]).to match(%r{^Syntax error at end of input})
+        expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}manifests/eof_syntax.pp"].join("\n")).to match(%r{^Syntax error at end of input})
         expect(PuppetCheck.settings[:warning_files]).to eql({})
         expect(PuppetCheck.settings[:clean_files]).to eql([])
       end
@@ -33,7 +33,7 @@ describe PuppetParser do
     it 'puts a bad syntax Puppet plan in the error files hash' do
       PuppetParser.manifest(["#{fixtures_dir}plans/syntax.pp"], false, [])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}plans/syntax.pp"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}plans/syntax.pp"]).to match(%r{^Syntax error at '\)'})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}plans/syntax.pp"].join("\n")).to match(%r{^Syntax error at '\)'})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
@@ -85,7 +85,7 @@ describe PuppetParser do
     it 'puts a bad syntax Puppet template in the error files hash' do
       PuppetParser.template(["#{fixtures_dir}templates/syntax.epp"])
       expect(PuppetCheck.settings[:error_files].keys).to eql(["#{fixtures_dir}templates/syntax.epp"])
-      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}templates/syntax.epp"]).to match(%r{^This Name has no effect})
+      expect(PuppetCheck.settings[:error_files]["#{fixtures_dir}templates/syntax.epp"].join("\n")).to match(%r{^This Name has no effect})
       expect(PuppetCheck.settings[:warning_files]).to eql({})
       expect(PuppetCheck.settings[:clean_files]).to eql([])
     end
