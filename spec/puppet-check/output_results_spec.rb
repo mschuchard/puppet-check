@@ -11,7 +11,7 @@ describe OutputResults do
     end
 
     it 'outputs files with errors' do
-      PuppetCheck.settings[:error_files] = { 'foo' => 'i had an error' }
+      PuppetCheck.settings[:error_files] = { 'foo' => ['i had an error'] }
       expect { OutputResults.text }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error\n").to_stdout
     end
     it 'outputs files with warnings' do
@@ -37,7 +37,7 @@ describe OutputResults do
     end
 
     it 'outputs files with errors as yaml' do
-      PuppetCheck.settings[:error_files] = { 'foo' => 'i had an error' }
+      PuppetCheck.settings[:error_files] = { 'foo' => ['i had an error'] }
       expect { OutputResults.markup('yaml') }.to output("---\nerrors:\n  foo: i had an error\n").to_stdout
     end
     it 'outputs files with warnings as yaml' do
@@ -53,7 +53,7 @@ describe OutputResults do
       expect { OutputResults.markup('yaml') }.to output("---\nignored:\n- foo\n").to_stdout
     end
     it 'outputs files with errors as json' do
-      PuppetCheck.settings[:error_files] = { 'foo' => 'i had an error' }
+      PuppetCheck.settings[:error_files] = { 'foo' => ['i had an error'] }
       expect { OutputResults.markup('json') }.to output("{\n  \"errors\": {\n    \"foo\": \"i had an error\"\n  }\n}\n").to_stdout
     end
     it 'outputs files with warnings as json' do

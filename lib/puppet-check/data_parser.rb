@@ -10,7 +10,7 @@ class DataParser
       # check yaml syntax
       parsed = YAML.load_file(file)
     rescue StandardError => err
-      PuppetCheck.settings[:error_files][file] = err.to_s.gsub("(#{file}): ", '')
+      PuppetCheck.settings[:error_files][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
     else
       warnings = []
 
@@ -54,7 +54,7 @@ class DataParser
       begin
         parsed = YAML.load_file(decrypted)
       rescue StandardError => err
-        PuppetCheck.settings[:error_files][file] = err.to_s.gsub("(#{file}): ", '')
+        PuppetCheck.settings[:error_files][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
       else
         warnings = []
 
@@ -76,7 +76,7 @@ class DataParser
       begin
         parsed = JSON.parse(File.read(file))
       rescue JSON::ParserError => err
-        PuppetCheck.settings[:error_files][file] = err.to_s.lines.first.strip
+        PuppetCheck.settings[:error_files][file] = err.to_s.lines.first.strip.split("\n")
       else
         warnings = []
 
@@ -130,7 +130,7 @@ class DataParser
           # check for summary under 144 character
           errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
 
-          next PuppetCheck.settings[:error_files][file] = errors.join("\n") unless errors.empty?
+          next PuppetCheck.settings[:error_files][file] = errors unless errors.empty?
 
           # check for warnings
           # check for operatingsystem_support hash array
