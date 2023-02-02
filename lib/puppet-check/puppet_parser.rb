@@ -36,7 +36,7 @@ class PuppetParser
       Puppet::Util::Log.close_all
 
       # store info and continue validating files
-      next PuppetCheck.settings[:error_files][file] = messages unless messages.empty?
+      next PuppetCheck.files[:errors][file] = messages unless messages.empty?
 
       # initialize warnings with output from the parser if it exists, since the output is warnings if Puppet::Face did not trigger a SystemExit
       warnings = []
@@ -67,8 +67,8 @@ class PuppetParser
         offenses = puppet_lint.problems.map { |problem| "#{problem[:line]}:#{problem[:column]} #{problem[:message]}" }
         warnings.concat(offenses)
       end
-      next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
+      PuppetCheck.files[:clean].push(file.to_s)
     end
   end
 
@@ -81,9 +81,9 @@ class PuppetParser
       # credits to gds-operations/puppet-syntax for the parser function call
       Puppet::Pops::Parser::EvaluatingParser::EvaluatingEppParser.new.parse_file(file)
     rescue StandardError => err
-      PuppetCheck.settings[:error_files][file] = [err.to_s.gsub("file: #{file}, ", '')]
+      PuppetCheck.files[:errors][file] = [err.to_s.gsub("file: #{file}, ", '')]
     else
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      PuppetCheck.files[:clean].push(file.to_s)
     end
   end
 end

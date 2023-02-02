@@ -5,34 +5,34 @@ class OutputResults
   # output the results as text
   def self.text
     # errors
-    unless PuppetCheck.settings[:error_files].empty?
+    unless PuppetCheck.files[:errors].empty?
       puts "\033[31mThe following files have errors:\033[0m"
-      PuppetCheck.settings[:error_files].each { |file, errors| puts "-- #{file}:\n#{errors.join("\n")}" }
+      PuppetCheck.files[:errors].each { |file, errors| puts "-- #{file}:\n#{errors.join("\n")}" }
     end
     # warnings
-    unless PuppetCheck.settings[:warning_files].empty?
+    unless PuppetCheck.files[:warnings].empty?
       puts "\n\033[33mThe following files have warnings:\033[0m"
-      PuppetCheck.settings[:warning_files].each { |file, warnings| puts "-- #{file}:\n#{warnings.join("\n")}" }
+      PuppetCheck.files[:warnings].each { |file, warnings| puts "-- #{file}:\n#{warnings.join("\n")}" }
     end
     # cleans
-    unless PuppetCheck.settings[:clean_files].empty?
+    unless PuppetCheck.files[:clean].empty?
       print "\n\033[32mThe following files have no errors or warnings:\033[0m\n-- "
-      puts PuppetCheck.settings[:clean_files].join("\n-- ")
+      puts PuppetCheck.files[:clean].join("\n-- ")
     end
     # ignores
-    return if PuppetCheck.settings[:ignored_files].empty?
+    return if PuppetCheck.files[:ignored].empty?
     print "\n\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- "
-    puts PuppetCheck.settings[:ignored_files].join("\n-- ")
+    puts PuppetCheck.files[:ignored].join("\n-- ")
   end
 
   # output the results as yaml or json
   def self.markup(format)
     # generate output hash
     hash = {}
-    hash['errors'] = PuppetCheck.settings[:error_files] unless PuppetCheck.settings[:error_files].empty?
-    hash['warnings'] = PuppetCheck.settings[:warning_files] unless PuppetCheck.settings[:warning_files].empty?
-    hash['clean'] = PuppetCheck.settings[:clean_files] unless PuppetCheck.settings[:clean_files].empty?
-    hash['ignored'] = PuppetCheck.settings[:ignored_files] unless PuppetCheck.settings[:ignored_files].empty?
+    hash['errors'] = PuppetCheck.files[:errors] unless PuppetCheck.files[:errors].empty?
+    hash['warnings'] = PuppetCheck.files[:warnings] unless PuppetCheck.files[:warnings].empty?
+    hash['clean'] = PuppetCheck.files[:clean] unless PuppetCheck.files[:clean].empty?
+    hash['ignored'] = PuppetCheck.files[:ignored] unless PuppetCheck.files[:ignored].empty?
 
     # convert hash to markup language
     case format

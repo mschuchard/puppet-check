@@ -73,7 +73,7 @@ describe PuppetCheck do
       # expect(parser_output).to receive(:yaml).with(%w[yaml.yaml yaml.yml])
       # expect(parser_output).to receive(:json).with(%w[json.json])
       # expect(parser_output).to receive(:librarian).with(%w[Puppetfile Modulefile])
-      # expect(PuppetCheck.settings[:ignored_files]).to eql(%w[foobarbaz])
+      # expect(PuppetCheck.files[:ignored]).to eql(%w[foobarbaz])
     end
   end
 end

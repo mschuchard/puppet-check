@@ -17,10 +17,10 @@ describe PuppetCheck do
 
       expect { cli }.not_to raise_exception
 
-      expect(PuppetCheck.settings[:error_files].length).to eql(10)
-      expect(PuppetCheck.settings[:warning_files].length).to eql(11)
-      expect(PuppetCheck.settings[:clean_files].length).to eql(13)
-      expect(PuppetCheck.settings[:ignored_files].length).to eql(6)
+      expect(PuppetCheck.files[:errors].length).to eql(10)
+      expect(PuppetCheck.files[:warnings].length).to eql(11)
+      expect(PuppetCheck.files[:clean].length).to eql(13)
+      expect(PuppetCheck.files[:ignored].length).to eql(6)
 
       expect(cli).to eql(2)
     end
@@ -34,10 +34,10 @@ describe PuppetCheck do
       Dir.chdir(fixtures_dir)
 
       # clear out arrays from previous system test
-      PuppetCheck.settings[:error_files] = {}
-      PuppetCheck.settings[:warning_files] = {}
-      PuppetCheck.settings[:clean_files] = []
-      PuppetCheck.settings[:ignored_files] = []
+      PuppetCheck.files[:errors] = {}
+      PuppetCheck.files[:warnings] = {}
+      PuppetCheck.files[:clean] = []
+      PuppetCheck.files[:ignored] = []
       PuppetCheck.settings[:style] = true
       # see regression_check_spec
       unless ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
@@ -50,10 +50,10 @@ describe PuppetCheck do
       expect { tasks }.to raise_error(ArgumentError, /Attempt to redefine entity/)
 
       # current puppet pops limitations no longer allow testing this
-      # expect(PuppetCheck.settings[:error_files].length).to eql(10)
-      # expect(PuppetCheck.settings[:warning_files].length).to eql(11)
-      # expect(PuppetCheck.settings[:clean_files].length).to eql(13)
-      # expect(PuppetCheck.settings[:ignored_files].length).to eql(6)
+      # expect(PuppetCheck.files[:errors].length).to eql(10)
+      # expect(PuppetCheck.files[:warnings].length).to eql(11)
+      # expect(PuppetCheck.files[:clean].length).to eql(13)
+      # expect(PuppetCheck.files[:ignored].length).to eql(6)
     end
   end
 end

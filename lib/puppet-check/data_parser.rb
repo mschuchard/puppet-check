@@ -10,15 +10,15 @@ class DataParser
       # check yaml syntax
       parsed = YAML.load_file(file)
     rescue StandardError => err
-      PuppetCheck.settings[:error_files][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
+      PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
     else
       warnings = []
 
       # perform some rudimentary hiera checks if data exists and is hieradata
       warnings = hiera(parsed, file) if parsed && (File.basename(file) != 'hiera.yaml')
 
-      next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
-      PuppetCheck.settings[:clean_files].push(file.to_s)
+      next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
+      PuppetCheck.files[:clean].push(file.to_s)
     end
   end
 
@@ -28,13 +28,13 @@ class DataParser
 
     # keys specified?
     if public.nil? || private.nil?
-      PuppetCheck.settings[:ignored_files].concat(files)
+      PuppetCheck.files[:ignored].concat(files)
       return warn 'Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.'
     end
 
     # keys exist?
     unless File.file?(public) && File.file?(private)
-      PuppetCheck.settings[:ignored_files].concat(files)
+      PuppetCheck.files[:ignored].concat(files)
       return warn 'Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.'
     end
 
@@ -54,15 +54,15 @@ class DataParser
       begin
         parsed = YAML.load_file(decrypted)
       rescue StandardError => err
-        PuppetCheck.settings[:error_files][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
+        PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
       else
         warnings = []
 
         # perform some rudimentary hiera checks if data exists and is hieradata
         warnings = hiera(parsed, file) if parsed
 
-        next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
-        PuppetCheck.settings[:clean_files].push(file.to_s)
+        next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
+        PuppetCheck.files[:clean].push(file.to_s)
       end
     end
   end
@@ -76,7 +76,7 @@ class DataParser
       begin
         parsed = JSON.parse(File.read(file))
       rescue JSON::ParserError => err
-        PuppetCheck.settings[:error_files][file] = err.to_s.lines.first.strip.split("\n")
+        PuppetCheck.files[:errors][file] = err.to_s.lines.first.strip.split("\n")
       else
         warnings = []
 
@@ -130,7 +130,7 @@ class DataParser
           # check for summary under 144 character
           errors.push('Summary exceeds 144 characters.') if parsed.key?('summary') && parsed['summary'].size > 144
 
-          next PuppetCheck.settings[:error_files][file] = errors unless errors.empty?
+          next PuppetCheck.files[:errors][file] = errors unless errors.empty?
 
           # check for warnings
           # check for operatingsystem_support hash array
@@ -191,8 +191,8 @@ class DataParser
           # perform some rudimentary hiera checks if data exists
           warnings = hiera(parsed, file)
         end
-        next PuppetCheck.settings[:warning_files][file] = warnings unless warnings.empty?
-        PuppetCheck.settings[:clean_files].push(file.to_s)
+        next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
+        PuppetCheck.files[:clean].push(file.to_s)
       end
     end
   end

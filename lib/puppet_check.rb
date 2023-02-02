@@ -5,21 +5,23 @@ require_relative 'puppet-check/output_results'
 
 # interfaces from CLI/tasks and to individual parsers
 class PuppetCheck
-  # initialize settings hash
-  @settings = {}
+  # initialize files hash
+  @files = {
+    errors: {},
+    warnings: {},
+    clean: [],
+    ignored: []
+  }
 
-  # allow the parser methods read user options and append to the file arrays; allow CLI and tasks write to user options
+  # allow the parser methods write to the files
   class << self
-    attr_accessor :settings
+    attr_accessor :files
   end
 
   # main runner for PuppetCheck
   def run(settings, paths)
-    # establish settings
-    self.class.settings = settings
-
     # settings defaults
-    self.class.defaults(settings)
+    settings = self.class.defaults(settings)
 
     # grab all of the files to be processed
     files = self.class.parse_paths(paths)
@@ -31,7 +33,7 @@ class PuppetCheck
     settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup(settings[:output_format])
 
     # progress to regression checks if no errors in file checks
-    if self.class.settings[:error_files].empty? && (!settings[:fail_on_warning] || self.class.settings[:warning_files].empty?)
+    if self.class.files[:errors].empty? && (!settings[:fail_on_warning] || self.class.files[:warnings].empty?)
       begin
         require_relative 'puppet-check/regression_check'
       # if octocatalog-diff is not installed then return immediately
@@ -83,12 +85,6 @@ class PuppetCheck
     # initialize output format option
     settings[:output_format] ||= 'text'
 
-    # initialize diagnostic output hashes/arrays
-    @settings[:error_files] = {}
-    @settings[:warning_files] = {}
-    @settings[:clean_files] = []
-    @settings[:ignored_files] = []
-
     # initialize octocatalog-diff options
     settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'
     settings[:octonodes] ||= %w[localhost.localdomain]
@@ -96,6 +92,9 @@ class PuppetCheck
     # initialize style arg arrays
     settings[:puppetlint_args] ||= []
     settings[:rubocop_args] ||= []
+
+    # return update settings
+    settings
   end
 
   # parse the paths and return the array of files
@@ -149,6 +148,6 @@ class PuppetCheck
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     RubyParser.librarian(librarians, settings[:style], settings[:rubocop_args]) unless librarians.empty?
     # ignore everything else
-    files.each { |file| self.class.settings[:ignored_files].push(file.to_s) }
+    files.each { |file| self.class.files[:ignored].push(file.to_s) }
   end
 end
