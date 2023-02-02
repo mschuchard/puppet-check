@@ -12,7 +12,7 @@ describe OutputResults do
 
     it 'outputs files with errors' do
       PuppetCheck.settings[:error_files] = { 'foo' => ['i had an error'] }
-      expect { OutputResults.text }.to output("\033[31mThe following files have errors:\033[0m\n-- foo: i had an error\n").to_stdout
+      expect { OutputResults.text }.to output("\033[31mThe following files have errors:\033[0m\n-- foo:\ni had an error\n").to_stdout
     end
     it 'outputs files with warnings' do
       PuppetCheck.settings[:warning_files] = { 'foo' => ['i had a warning'] }

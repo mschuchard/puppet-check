@@ -21,9 +21,6 @@ jobs:
     - run:
         name: bundler install
         command: bundle install --retry=3 && bundle binstubs puppet
-    - run:
-        name: display puppet version
-        command: puppet --version
     - save_cache:
         paths:
         - ~/.bundle
@@ -43,3 +40,4 @@ workflows:
             - '2.7'
             - '3.0'
             - '3.1'
+            - '3.2'
