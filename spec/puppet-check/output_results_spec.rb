@@ -30,10 +30,12 @@ describe OutputResults do
 
   context '.markup' do
     before(:each) do
-      PuppetCheck.files[:errors] = {}
-      PuppetCheck.files[:warnings] = {}
-      PuppetCheck.files[:clean] = []
-      PuppetCheck.files[:ignored] = []
+      PuppetCheck.files = {
+        errors: {},
+        warnings: {},
+        clean: [],
+        ignored: []
+      }
     end
 
     it 'outputs files with errors as yaml' do

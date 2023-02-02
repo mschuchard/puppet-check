@@ -27,21 +27,18 @@ class OutputResults
 
   # output the results as yaml or json
   def self.markup(format)
-    # generate output hash
-    hash = {}
-    hash['errors'] = PuppetCheck.files[:errors] unless PuppetCheck.files[:errors].empty?
-    hash['warnings'] = PuppetCheck.files[:warnings] unless PuppetCheck.files[:warnings].empty?
-    hash['clean'] = PuppetCheck.files[:clean] unless PuppetCheck.files[:clean].empty?
-    hash['ignored'] = PuppetCheck.files[:ignored] unless PuppetCheck.files[:ignored].empty?
+    # remove empty entries
+    PuppetCheck.files.delete_if { |_, files| files.empty? }
+    PuppetCheck.files.transform_keys!(&:to_s)
 
     # convert hash to markup language
     case format
     when 'yaml'
       require 'yaml'
-      puts Psych.dump(hash, indentation: 2)
+      puts Psych.dump(PuppetCheck.files, indentation: 2)
     when 'json'
       require 'json'
-      puts JSON.pretty_generate(hash)
+      puts JSON.pretty_generate(PuppetCheck.files)
     else
       raise "puppet-check: Unsupported output format '#{format}' was specified."
     end
