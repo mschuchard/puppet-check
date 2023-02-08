@@ -15,8 +15,8 @@ class PuppetCheck::Tasks < Rake::TaskLib
 
     namespace :puppetcheck do
       desc 'Execute Puppet-Check file checks'
-      task :file do
-        PuppetCheck.new.run(PuppetCheck.settings, Dir.glob('*'))
+      task :file, [:settings] do |_, wrapped_settings|
+        PuppetCheck.new.run(wrapped_settings[:settings], Dir.glob('*'))
       end
 
       # rspec and rspec-puppet tasks

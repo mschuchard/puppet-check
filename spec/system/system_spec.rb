@@ -27,8 +27,6 @@ describe PuppetCheck do
   end
 
   context 'executed as a system from the Rakefile with arguments and various files to be processed' do
-    let(:tasks) { Rake::Task[:'puppetcheck:file'].invoke }
-
     it 'outputs diagnostic results correctly after processing all of the files' do
       # ensure rake only checks the files inside fixtures
       Dir.chdir(fixtures_dir)
@@ -38,16 +36,17 @@ describe PuppetCheck do
       PuppetCheck.files[:warnings] = {}
       PuppetCheck.files[:clean] = []
       PuppetCheck.files[:ignored] = []
-      PuppetCheck.settings[:style] = true
+      settings = {}
+      settings[:style] = true
       # see regression_check_spec
       unless ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
-        PuppetCheck.settings[:smoke] = true
-        PuppetCheck.settings[:octonodes] = %w[good.example.com]
-        PuppetCheck.settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
+        settings[:smoke] = true
+        settings[:octonodes] = %w[good.example.com]
+        settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
       end
 
       # cannot re-use plan fixture between system tests
-      expect { tasks }.to raise_error(ArgumentError, /Attempt to redefine entity/)
+      expect { Rake::Task[:'puppetcheck:file'].invoke(settings) }.to raise_error(ArgumentError, /Attempt to redefine entity/)
 
       # current puppet pops limitations no longer allow testing this
       # expect(PuppetCheck.files[:errors].length).to eql(10)
