@@ -3,30 +3,44 @@ require_relative '../lib/puppet_check'
 
 describe PuppetCheck do
   context 'self' do
-    it 'settings can be altered' do
-      expect(PuppetCheck.settings[:future_parser]).to eql(nil)
-      PuppetCheck.settings[:fail_on_warnings] = true
-      expect(PuppetCheck.settings[:fail_on_warnings]).to eql(true)
-      PuppetCheck.settings[:style] = true
-      expect(PuppetCheck.settings[:style]).to eql(true)
-      PuppetCheck.settings[:smoke] = true
-      expect(PuppetCheck.settings[:smoke]).to eql(true)
-      PuppetCheck.settings[:regression] = true
-      expect(PuppetCheck.settings[:regression]).to eql(true)
-      PuppetCheck.settings[:public] = 'public.pem'
-      expect(PuppetCheck.settings[:public]).to eql('public.pem')
-      PuppetCheck.settings[:private] = 'private.pem'
-      expect(PuppetCheck.settings[:private]).to eql('private.pem')
-      PuppetCheck.settings[:output_format] = 'text'
-      expect(PuppetCheck.settings[:output_format]).to eql('text')
-      PuppetCheck.settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
-      expect(PuppetCheck.settings[:octoconfig]).to eql('.octocatalog-diff.cfg.rb')
-      PuppetCheck.settings[:octonodes] = %w[localhost.localdomain]
-      expect(PuppetCheck.settings[:octonodes]).to eql(%w[localhost.localdomain])
-      PuppetCheck.settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two']
-      expect(PuppetCheck.settings[:puppetlint_args]).to eql(['--puppetlint-arg-one', '--puppetlint-arg-two'])
-      PuppetCheck.settings[:rubocop_args] = ['--rubocop-arg-one', '--rubocop-arg-two']
-      expect(PuppetCheck.settings[:rubocop_args]).to eql(['--rubocop-arg-one', '--rubocop-arg-two'])
+    it 'files can be altered' do
+    end
+  end
+
+  context 'defaults' do
+    it 'returns defaults correctly' do
+      expect(PuppetCheck.defaults).to eql(
+        {
+          fail_on_warning: false,
+          style: false,
+          smoke: false,
+          regression: false,
+          public: nil,
+          private: nil,
+          output_format: 'text',
+          octoconfig: '.octocatalog-diff.cfg.rb',
+          octonodes: %w[localhost.localdomain],
+          puppetlint_args: [],
+          rubocop_args: []
+        }
+      )
+    end
+
+    it 'modifies settings correctly' do
+      settings = {
+        fail_on_warning: true,
+        style: true,
+        smoke: true,
+        regression: true,
+        public: 'public.pem',
+        private: 'private.pem',
+        output_format: 'yaml',
+        octoconfig: '.octocatalog-diff.cfg.erb',
+        octonodes: %w[host.domain],
+        puppetlint_args: %w[--puppetlint-arg-one --puppetlint-arg-two],
+        rubocop_args: %w[--rubocop-arg-one --rubocop-arg-two]
+      }
+      expect(PuppetCheck.defaults(settings)).to eql(settings)
     end
   end
 
