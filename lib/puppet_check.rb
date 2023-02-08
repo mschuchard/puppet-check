@@ -19,7 +19,7 @@ class PuppetCheck
   end
 
   # main runner for PuppetCheck
-  def run(settings, paths)
+  def run(settings = {}, paths = [])
     # settings defaults
     settings = self.class.defaults(settings)
 
@@ -70,7 +70,7 @@ class PuppetCheck
   end
 
   # establish default settings
-  def self.defaults(settings)
+  def self.defaults(settings = {})
     private_class_method :method
     # initialize fail on warning,  style check, and regression check bools
     settings[:fail_on_warning] ||= false
@@ -98,7 +98,7 @@ class PuppetCheck
   end
 
   # parse the paths and return the array of files
-  def self.parse_paths(paths)
+  def self.parse_paths(paths = [])
     private_class_method :method
     files = []
 

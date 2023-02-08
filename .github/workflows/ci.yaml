@@ -29,7 +29,7 @@ jobs:
     - name: checkout
       uses: actions/checkout@v3
     - name: install some pre-requisite packages
-      run: sudo apt-get update && sudo apt-get install -y cmake pkg-config
+      run: apt-get update && apt-get install -y cmake pkg-config
     - name: bundler install
       run: bundle install --retry=3
     - name: run tests
