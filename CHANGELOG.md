@@ -1,5 +1,6 @@
 ### 2.2.1 (Next)
 - Improved output formatting for all formats.
+- Update and improve Rake task interfacing.
 
 ### 2.2.0
 - Add Enable Pending Cops to base RuboCop configuration.

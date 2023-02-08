@@ -3,7 +3,31 @@ require_relative '../lib/puppet_check'
 
 describe PuppetCheck do
   context 'self' do
+    it 'files are initialized correctly' do
+      expect(PuppetCheck.files).to eql(
+        {
+          errors: {},
+          warnings: {},
+          clean: [],
+          ignored: []
+        }
+      )
+    end
     it 'files can be altered' do
+      PuppetCheck.files = {
+        errors: { 'foo' => ['i had an error'] },
+        warnings: { 'foo' => ['i had a warning'] },
+        clean: ['foo'],
+        ignored: ['foo']
+      }
+      expect(PuppetCheck.files).to eql(
+        {
+          errors: { 'foo' => ['i had an error'] },
+          warnings: { 'foo' => ['i had a warning'] },
+          clean: ['foo'],
+          ignored: ['foo']
+        }
+      )
     end
   end
 
