@@ -30,7 +30,7 @@ class PuppetCheck
     execute_parsers(files, settings)
 
     # output the diagnostic results
-    settings[:output_format] == 'text' ? OutputResults.text : OutputResults.markup(settings[:output_format])
+    OutputResults.run(PuppetCheck.files.clone, settings[:output_format])
 
     # progress to regression checks if no errors in file checks
     if self.class.files[:errors].empty? && (!settings[:fail_on_warning] || self.class.files[:warnings].empty?)
