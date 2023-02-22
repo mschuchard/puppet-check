@@ -31,11 +31,13 @@ describe PuppetCheck do
       # ensure rake only checks the files inside fixtures
       Dir.chdir(fixtures_dir)
 
-      # clear out arrays from previous system test
-      PuppetCheck.files[:errors] = {}
-      PuppetCheck.files[:warnings] = {}
-      PuppetCheck.files[:clean] = []
-      PuppetCheck.files[:ignored] = []
+      # clear out files member from previous system test
+      PuppetCheck.files = {
+        errors: {},
+        warnings: {},
+        clean: [],
+        ignored: []
+      }
       settings = { style: true }
       # see regression_check_spec
       unless ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
