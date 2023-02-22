@@ -3,9 +3,12 @@ require_relative '../../lib/puppet-check/ruby_parser'
 
 describe RubyParser do
   before(:each) do
-    PuppetCheck.files[:errors] = {}
-    PuppetCheck.files[:warnings] = {}
-    PuppetCheck.files[:clean] = []
+    PuppetCheck.files = {
+      errors: {},
+      warnings: {},
+      clean: [],
+      ignored: []
+    }
   end
 
   context '.ruby' do

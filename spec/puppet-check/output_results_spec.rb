@@ -2,14 +2,16 @@ require_relative '../spec_helper'
 require_relative '../../lib/puppet-check/output_results'
 
 describe OutputResults do
-  context '.text' do
-    before(:each) do
-      PuppetCheck.files[:errors] = {}
-      PuppetCheck.files[:warnings] = {}
-      PuppetCheck.files[:clean] = []
-      PuppetCheck.files[:ignored] = []
-    end
+  before(:each) do
+    PuppetCheck.files = {
+      errors: {},
+      warnings: {},
+      clean: [],
+      ignored: []
+    }
+  end
 
+  context '.text' do
     it 'outputs files with errors' do
       PuppetCheck.files[:errors] = { 'foo' => ['i had an error'] }
       expect { OutputResults.text }.to output("\033[31mThe following files have errors:\033[0m\n-- foo:\ni had an error\n").to_stdout
@@ -29,15 +31,6 @@ describe OutputResults do
   end
 
   context '.markup' do
-    before(:each) do
-      PuppetCheck.files = {
-        errors: {},
-        warnings: {},
-        clean: [],
-        ignored: []
-      }
-    end
-
     it 'outputs files with errors as yaml' do
       PuppetCheck.files[:errors] = { 'foo' => ['i had an error'] }
       expect { OutputResults.markup('yaml') }.to output("---\nerrors:\n  foo:\n  - i had an error\n").to_stdout

@@ -4,7 +4,7 @@ require_relative '../../lib/puppet-check/cli'
 describe PuppetCheck::CLI do
   context '.run' do
     it 'raises an error if no paths were specified' do
-      expect { PuppetCheck::CLI.run(%w[-s -f]) }.to raise_error(RuntimeError, 'puppet-check: no paths specified; try using --help')
+      expect { PuppetCheck::CLI.run(%w[-s -f]) }.to raise_error(RuntimeError, 'puppet-check: no file paths specified; try using --help')
     end
   end
 

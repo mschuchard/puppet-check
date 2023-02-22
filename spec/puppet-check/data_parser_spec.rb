@@ -3,9 +3,12 @@ require_relative '../../lib/puppet-check/data_parser'
 
 describe DataParser do
   before(:each) do
-    PuppetCheck.files[:errors] = {}
-    PuppetCheck.files[:warnings] = {}
-    PuppetCheck.files[:clean] = []
+    PuppetCheck.files = {
+      errors: {},
+      warnings: {},
+      clean: [],
+      ignored: []
+    }
   end
 
   context '.yaml' do
@@ -32,10 +35,6 @@ describe DataParser do
   end
 
   context '.eyaml' do
-    before(:each) do
-      PuppetCheck.files[:ignored] = []
-    end
-
     it 'returns a warning if a public key was not specified' do
       expect { DataParser.eyaml(['foo.eyaml'], nil, 'private.pem') }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
     end
