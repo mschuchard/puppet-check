@@ -67,6 +67,12 @@ class DataParser
     end
   end
 
+  # metadata consts
+  REQUIRED_KEYS = %w[name version author license summary source dependencies].freeze
+  REQ_DEP_KEYS = %w[requirements dependencies].freeze
+  DEPRECATED_KEYS = %w[types checksum].freeze
+  TASK_INPUTS = %w[environment stdin powershell].freeze
+
   # checks json (.json)
   def self.json(files)
     require 'json'
@@ -89,12 +95,12 @@ class DataParser
           errors = []
 
           # check for required keys
-          %w[name version author license summary source dependencies].each do |key|
+          REQUIRED_KEYS.each do |key|
             errors.push("Required field '#{key}' not found.") unless parsed.key?(key)
           end
 
           # check requirements and dependencies keys
-          %w[requirements dependencies].each do |key|
+          REQ_DEP_KEYS.each do |key|
             # skip if key is missing or value is an empty string, array, or hash
             next if !parsed.key?(key) || parsed[key].empty?
 
@@ -123,7 +129,7 @@ class DataParser
           end
 
           # check for deprecated fields
-          %w[types checksum].each do |key|
+          DEPRECATED_KEYS.each do |key|
             errors.push("Deprecated field '#{key}' found.") if parsed.key?(key)
           end
 
@@ -169,7 +175,7 @@ class DataParser
           # check that input_method is one of three possible values
           if parsed.key?('input_method')
             if parsed['input_method'].is_a?(String)
-              warnings.push('input_method value is not one of environment, stdin, or powershell') unless %w[environment stdin powershell].include?(parsed['input_method'])
+              warnings.push('input_method value is not one of environment, stdin, or powershell') unless TASK_INPUTS.include?(parsed['input_method'])
             else
               warnings.push('input_method value is not a String')
             end
