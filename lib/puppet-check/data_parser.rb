@@ -2,10 +2,10 @@ require_relative '../puppet_check'
 
 # executes diagnostics on data files
 class DataParser
+  require 'yaml'
+
   # checks yaml (.yaml/.yml)
   def self.yaml(files)
-    require 'yaml'
-
     files.each do |file|
       # check yaml syntax
       parsed = YAML.load_file(file)

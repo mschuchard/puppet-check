@@ -1,4 +1,3 @@
-require 'optparse'
 require_relative '../puppet_check'
 
 # the command line interface for PuppetCheck
@@ -16,6 +15,8 @@ class PuppetCheck::CLI
   # parse the user arguments
   def self.parse(args)
     private_class_method :method
+    require 'optparse'
+
     # show help message if no args specified
     args = %w[-h] if args.empty?
 
