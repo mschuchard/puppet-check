@@ -6,7 +6,6 @@ class OutputResults
   def self.run(files, format)
     # remove empty entries
     files.delete_if { |_, sorted_files| sorted_files.empty? }
-    files.transform_keys!(&:to_s)
 
     # output hash according to specified format
     case format
@@ -14,6 +13,7 @@ class OutputResults
       text(files)
     when 'yaml'
       require 'yaml'
+      files.transform_keys!(&:to_s)
       puts Psych.dump(files, indentation: 2)
     when 'json'
       require 'json'
