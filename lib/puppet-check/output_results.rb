@@ -13,6 +13,7 @@ class OutputResults
       text(files)
     when 'yaml'
       require 'yaml'
+      # maintain filename format consistency among output formats
       files.transform_keys!(&:to_s)
       puts Psych.dump(files, indentation: 2)
     when 'json'

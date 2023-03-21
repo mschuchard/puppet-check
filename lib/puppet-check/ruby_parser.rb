@@ -14,19 +14,19 @@ class RubyParser
     else
       # check ruby style
       if style
-        # check RuboCop and parse warnings JSON output
+        # check RuboCop and parse warnings' JSON output
         require 'json'
         require 'rubocop'
 
         rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
         rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
-        # check Reek
+        # check Reek and parse warnings' JSON output
         require 'reek'
         require 'reek/cli/application'
 
         reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new(['-f', 'json', file]).execute }
-        reek_offenses = JSON.parse(reek_warnings).map { |warning| "#{warning['lines']}: #{warning['context']} #{warning['message']}" }
+        reek_offenses = JSON.parse(reek_warnings).map { |warning| "#{warning['lines'].join(',')}: #{warning['context']} #{warning['message']}" }
 
         # assign warnings from combined offenses
         warnings = rubocop_offenses + reek_offenses
