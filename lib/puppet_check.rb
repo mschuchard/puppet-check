@@ -27,10 +27,10 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    execute_parsers(files, settings)
+    parsed_files = execute_parsers(files, settings)
 
     # output the diagnostic results
-    OutputResults.run(PuppetCheck.files.clone, settings[:output_format])
+    OutputResults.run(parsed_files, settings[:output_format])
 
     # progress to regression checks if no errors in file checks
     if self.class.files[:errors].empty? && (!settings[:fail_on_warning] || self.class.files[:warnings].empty?)
@@ -149,5 +149,7 @@ class PuppetCheck
     RubyParser.librarian(librarians, settings[:style], settings[:rubocop_args]) unless librarians.empty?
     # ignore everything else
     files.each { |file| self.class.files[:ignored].push(file.to_s) }
+    # return PuppetCheck.files to mitigate singleton write accessor side effects
+    PuppetCheck.files
   end
 end
