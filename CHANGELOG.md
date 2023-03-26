@@ -1,4 +1,4 @@
-### 2.2.1 (Next)
+### 2.2.1
 - Improved output formatting for all formats.
 - Update and improve Rake task interfacing.
 

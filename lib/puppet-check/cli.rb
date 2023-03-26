@@ -29,7 +29,7 @@ class PuppetCheck::CLI
 
       # base options
       opts.on('--version', 'Display the current version.') do
-        puts 'puppet-check 2.2.0'
+        puts 'puppet-check 2.2.1'
         exit 0
       end
 

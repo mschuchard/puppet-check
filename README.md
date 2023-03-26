@@ -173,18 +173,24 @@ rake puppetcheck:kitchen:* # Execute Test Kitchen acceptance tests
 You can add style, smoke, and regression checks to the `rake puppetcheck:file`, or change the output format, by adding the following after the require:
 
 ```ruby
-# example of modifying Puppet Check behavior
-PuppetCheck.settings[:style] = true
-PuppetCheck.settings[:fail_on_warnings] = true
-PuppetCheck.settings[:smoke] = true
-PuppetCheck.settings[:regression] = true # in progress, do not use
-PuppetCheck.settings[:public] = 'public.pem'
-PuppetCheck.settings[:private] = 'private.pem'
-PuppetCheck.settings[:output_format] = 'yaml'
-PuppetCheck.settings[:octoconfig] = '.octocatalog-diff.cfg.rb'
-PuppetCheck.settings[:octonodes] = %w(localhost.localdomain)
-PuppetCheck.settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two']
-PuppetCheck.settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-two']
+# example of modifying Puppet Check behavior and creating a custom task
+settings = {}
+settings[:fail_on_warnings] = true # default false
+settings[:style] = true # default false
+settings[:smoke] = true # default false
+settings[:regression] = true # in progress, do not use; default false
+settings[:public] = 'public.pem' # default nil
+settings[:private] = 'private.pem' # default nil
+settings[:output_format] = 'yaml' # also 'json'; default 'text'
+settings[:octoconfig] = '$HOME/octocatalog-diff.cfg.rb' # default '.octocatalog-diff.cfg.rb'
+settings[:octonodes] = %w(server.example.com) # default: %w(localhost.localdomain)
+settings[:puppetlint_args] = ['--puppetlint-arg-one', '--puppetlint-arg-two'] # default []
+settings[:rubocop_args] = ['--except', 'rubocop-arg-one,rubocop-arg-two'] # default []
+
+desc 'Execute custom Puppet-Check file checks'
+task :file_custom do
+  Rake::Task[:'puppetcheck:file'].invoke(settings)
+end
 ```
 
 Please note that `rspec` does not support yaml output and therefore would still use the default 'progress' formatter even if `yaml` is specified as the format option to Puppet Check.
@@ -276,7 +282,7 @@ PuppetCheck.new.run(settings, [dirs, files])
 require 'puppet-check/rspec_puppet_support'
 
 RSpecPuppetSupport.run
-task.pattern = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').reject { |dir| dir =~ /fixtures/ }
+task.pattern = Dir.glob('**/{classes,defines,facter,functions,hosts,puppet,unit,types}/**/*_spec.rb').grep_v(/fixtures/)
 ```
 
 ### Docker
