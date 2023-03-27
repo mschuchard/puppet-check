@@ -1,4 +1,4 @@
-### 2.2.2 (Next)
+### 2.2.2
 - Workaround Ruby passbyref issue mutating an immutable.
 
 ### 2.2.1
