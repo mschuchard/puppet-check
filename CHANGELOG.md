@@ -1,3 +1,6 @@
+### 2.2.2 (Next)
+- Workaround Ruby passbyref issue mutating an immutable.
+
 ### 2.2.1
 - Improved output formatting for all formats.
 - Update and improve Rake task interfacing.

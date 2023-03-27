@@ -30,10 +30,10 @@ class PuppetCheck
     parsed_files = execute_parsers(files, settings)
 
     # output the diagnostic results
-    OutputResults.run(parsed_files, settings[:output_format])
+    OutputResults.run(parsed_files.clone, settings[:output_format])
 
     # progress to regression checks if no errors in file checks
-    if self.class.files[:errors].empty? && (!settings[:fail_on_warning] || self.class.files[:warnings].empty?)
+    if parsed_files[:errors].empty? && (!settings[:fail_on_warning] || parsed_files[:warnings].empty?)
       begin
         require_relative 'puppet-check/regression_check'
       # if octocatalog-diff is not installed then return immediately
