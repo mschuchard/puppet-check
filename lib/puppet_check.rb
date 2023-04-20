@@ -105,14 +105,14 @@ class PuppetCheck
     # traverse the unique paths and return all files
     paths.uniq.each do |path|
       if File.directory?(path)
-        files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file?(subpath) })
-      elsif File.file?(path)
+        # glob all files in directory and concat them
+        files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file?(subpath) && !subpath.include?('fixtures') })
+      elsif File.file?(path) && !path.include?('fixtures')
         files.push(path)
       end
     end
 
-    # do not process fixtures, check that at least one file was found, and remove double slashes
-    files.reject! { |file| file.include?('fixtures') }
+    # check that at least one file was found and remove double slashes
     raise "puppet-check: no files found in supplied paths '#{paths.join(', ')}'." if files.empty?
     files.map! { |file| file.gsub('//', '/') }
 

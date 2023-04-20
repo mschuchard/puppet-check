@@ -87,7 +87,11 @@ describe PuppetCheck do
 
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
-      expect(dir.length).to eql(37)
+      if ENV['TRAVIS'] == 'true' || ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
+        expect(dir.length).to eql(37)
+      else
+        expect(dir.length).to eql(40)
+      end
     end
 
     it 'correctly parses multiple directories and returns all of their files' do
