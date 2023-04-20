@@ -102,21 +102,21 @@ class PuppetCheck
     private_class_method :method
     files = []
 
-    # traverse the unique paths and return all files
+    # traverse the unique paths and return all files not explicitly in fixtures
     paths.uniq.each do |path|
       if File.directory?(path)
         # glob all files in directory and concat them
         files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file?(subpath) && !subpath.include?('fixtures') })
       elsif File.file?(path) && !path.include?('fixtures')
         files.push(path)
+      else
+        warn "puppet-check: #{path} is not a directory, file, or symlink, and will not be considered during parsing"
       end
     end
 
-    # check that at least one file was found and remove double slashes
+    # check that at least one file was found, and remove double slashes from returned array
     raise "puppet-check: no files found in supplied paths '#{paths.join(', ')}'." if files.empty?
-    files.map! { |file| file.gsub('//', '/') }
-
-    files.uniq
+    files.map { |file| file.gsub('//', '/') }.uniq
   end
 
   private
