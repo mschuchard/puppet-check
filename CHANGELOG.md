@@ -1,3 +1,6 @@
+### 2.3.0
+- Support Puppet 8.
+
 ### 2.2.2
 - Workaround Ruby passbyref issue mutating an immutable.
 

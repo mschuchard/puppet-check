@@ -13,7 +13,7 @@ class PuppetCheck
     ignored: []
   }
 
-  # allow the parser methods write to the files
+  # allow the parser methods to write to the files
   class << self
     attr_accessor :files
   end
@@ -27,7 +27,7 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    parsed_files = execute_parsers(files, settings)
+    parsed_files = execute_parsers(files, settings[:style], settings[:puppetlint_args], settings[:rubocop_args])
 
     # output the diagnostic results
     OutputResults.run(parsed_files.clone, settings[:output_format])
@@ -122,16 +122,16 @@ class PuppetCheck
   private
 
   # categorize and pass the files out to the parsers to determine their status
-  def execute_parsers(files, settings)
+  def execute_parsers(files, style, puppetlint_args, rubocop_args)
     # check manifests
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
-    PuppetParser.manifest(manifests, settings[:style], settings[:puppetlint_args]) unless manifests.empty?
+    PuppetParser.manifest(manifests, style, puppetlint_args) unless manifests.empty?
     # check puppet templates
     templates, files = files.partition { |file| File.extname(file) == '.epp' }
     PuppetParser.template(templates) unless templates.empty?
     # check ruby files
     rubies, files = files.partition { |file| File.extname(file) == '.rb' }
-    RubyParser.ruby(rubies, settings[:style], settings[:rubocop_args]) unless rubies.empty?
+    RubyParser.ruby(rubies, style, rubocop_args) unless rubies.empty?
     # check ruby templates
     templates, files = files.partition { |file| File.extname(file) == '.erb' }
     RubyParser.template(templates) unless templates.empty?
@@ -146,7 +146,7 @@ class PuppetCheck
     # DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
     # check misc ruby
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
-    RubyParser.librarian(librarians, settings[:style], settings[:rubocop_args]) unless librarians.empty?
+    RubyParser.librarian(librarians, style, rubocop_args) unless librarians.empty?
     # ignore everything else
     files.each { |file| self.class.files[:ignored].push(file.to_s) }
     # return PuppetCheck.files to mitigate singleton write accessor side effects
