@@ -29,7 +29,9 @@ class PuppetCheck::CLI
 
       # base options
       opts.on('--version', 'Display the current version.') do
-        puts 'puppet-check 2.2.2'
+        require 'rubygems'
+
+        puts Gem::Specification.load("#{File.dirname(__FILE__)}/../../puppet-check.gemspec").version
         exit 0
       end
 
