@@ -39,31 +39,30 @@ class DataParser
     end
 
     # setup decryption
-    rsa = OpenSSL::PKey::RSA.new(File.read(private))
-    x509 = OpenSSL::X509::Certificate.new(File.read(public))
+    # rsa = OpenSSL::PKey::RSA.new(File.read(private))
+    # x509 = OpenSSL::X509::Certificate.new(File.read(public))
 
     files.each do |file|
       # grab all encoded portions of the eyaml
 
       # decrypt the encoded portions
-      decrypted = OpenSSL::PKCS7.new(File.read(file)).decrypt(rsa, x509)
+      # decrypted = OpenSSL::PKCS7.new(File.read(file)).decrypt(rsa, x509)
 
       # insert decrypted portions back into eyaml (pass into loader below)
 
       # check yaml syntax
-      begin
-        parsed = YAML.load_file(decrypted)
-      rescue StandardError => err
-        PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
-      else
-        warnings = []
+      # parsed = YAML.load_file(decrypted)
+      parsed = YAML.load_file(file)
+    rescue StandardError => err
+      PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
+    else
+      warnings = []
 
-        # perform some rudimentary hiera checks if data exists and is hieradata
-        warnings = hiera(parsed, file) if parsed
+      # perform some rudimentary hiera checks if data exists and is hieradata
+      warnings = hiera(parsed, file) if parsed
 
-        next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
-        PuppetCheck.files[:clean].push(file.to_s)
-      end
+      next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
+      PuppetCheck.files[:clean].push(file.to_s)
     end
   end
 
