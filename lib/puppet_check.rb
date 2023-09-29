@@ -27,7 +27,7 @@ class PuppetCheck
     files = self.class.parse_paths(paths)
 
     # parse the files
-    parsed_files = execute_parsers(files, settings[:style], settings[:puppetlint_args], settings[:rubocop_args])
+    parsed_files = execute_parsers(files, settings[:style], settings[:puppetlint_args], settings[:rubocop_args], settings[:public], settings[:private])
 
     # output the diagnostic results
     OutputResults.run(parsed_files.clone, settings[:output_format])
@@ -122,7 +122,7 @@ class PuppetCheck
   private
 
   # categorize and pass the files out to the parsers to determine their status
-  def execute_parsers(files, style, puppetlint_args, rubocop_args)
+  def execute_parsers(files, style, puppetlint_args, rubocop_args, public, private)
     # check manifests
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
     PuppetParser.manifest(manifests, style, puppetlint_args) unless manifests.empty?
@@ -142,8 +142,8 @@ class PuppetCheck
     jsons, files = files.partition { |file| File.extname(file) == '.json' }
     DataParser.json(jsons) unless jsons.empty?
     # check eyaml data; block this for now
-    # eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
-    # DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
+    eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
+    DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
     # check misc ruby
     librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem)file$/ }
     RubyParser.librarian(librarians, style, rubocop_args) unless librarians.empty?
