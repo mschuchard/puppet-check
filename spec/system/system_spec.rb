@@ -7,9 +7,9 @@ describe PuppetCheck do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
     # see regression_check_spec
     if ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
-      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding .]) }
+      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding --public keys/public_key.pkcs7.pem --private keys/private_key.pkcs7.pem .]) }
     else
-      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .]) }
+      let(:cli) { PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding --public keys/public_key.pkcs7.pem --private keys/private_key.pkcs7.pem --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .]) }
     end
 
     it 'outputs diagnostic results correctly after processing all of the files' do
@@ -17,10 +17,10 @@ describe PuppetCheck do
 
       expect { cli }.not_to raise_exception
 
-      expect(PuppetCheck.files[:errors].length).to eql(10)
-      expect(PuppetCheck.files[:warnings].length).to eql(11)
-      expect(PuppetCheck.files[:clean].length).to eql(13)
-      expect(PuppetCheck.files[:ignored].length).to eql(6)
+      expect(PuppetCheck.files[:errors].length).to eql(11)
+      expect(PuppetCheck.files[:warnings].length).to eql(12)
+      expect(PuppetCheck.files[:clean].length).to eql(14)
+      expect(PuppetCheck.files[:ignored].length).to eql(3)
 
       expect(cli).to eql(2)
     end
@@ -50,10 +50,10 @@ describe PuppetCheck do
       expect { Rake::Task[:'puppetcheck:file'].invoke(settings) }.to raise_error(ArgumentError, /Attempt to redefine entity/)
 
       # current puppet pops limitations no longer allow testing this
-      # expect(PuppetCheck.files[:errors].length).to eql(10)
-      # expect(PuppetCheck.files[:warnings].length).to eql(11)
-      # expect(PuppetCheck.files[:clean].length).to eql(13)
-      # expect(PuppetCheck.files[:ignored].length).to eql(6)
+      # expect(PuppetCheck.files[:errors].length).to eql(11)
+      # expect(PuppetCheck.files[:warnings].length).to eql(12)
+      # expect(PuppetCheck.files[:clean].length).to eql(14)
+      # expect(PuppetCheck.files[:ignored].length).to eql(3)
     end
   end
 end
