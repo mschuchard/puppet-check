@@ -39,20 +39,24 @@ class DataParser
     end
 
     # setup decryption
-    # rsa = OpenSSL::PKey::RSA.new(File.read(private))
-    # x509 = OpenSSL::X509::Certificate.new(File.read(public))
+    rsa = OpenSSL::PKey::RSA.new(File.read(private))
+    x509 = OpenSSL::X509::Certificate.new(File.read(public))
 
     files.each do |file|
-      # grab all encoded portions of the eyaml
+      # check encoded yaml syntax
+      parsed = YAML.load_file(file)
 
-      # decrypt the encoded portions
+      # extract encoded values
+      # ENC[PKCS7]
+
+      # decrypt the encoded yaml
       # decrypted = OpenSSL::PKCS7.new(File.read(file)).decrypt(rsa, x509)
 
-      # insert decrypted portions back into eyaml (pass into loader below)
+      # check decoded eyaml syntax
+      # decoded = YAML.safe_load(decrypted)
 
-      # check yaml syntax
-      # parsed = YAML.load_file(decrypted)
-      parsed = YAML.load_file(file)
+      # merge data hashes
+      # parsed = merge(parsed, decoded)
     rescue StandardError => err
       PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
     else
