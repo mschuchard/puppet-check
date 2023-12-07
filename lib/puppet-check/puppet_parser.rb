@@ -10,6 +10,13 @@ class PuppetParser
     # prepare the Puppet settings for the error checking
     Puppet.initialize_settings unless Puppet.settings.app_defaults_initialized?
 
+    # prepare the PuppetLint object for style checks
+    if style
+      require 'puppet-lint'
+      require 'puppet-lint/optparser'
+      puppet_lint = PuppetLint.new
+    end
+
     files.each do |file|
       # setup error logging and collection; warnings logged for all versions, but errors for only puppet < 6.5
       errors = []
@@ -48,9 +55,6 @@ class PuppetParser
 
       # check puppet style
       if style
-        require 'puppet-lint'
-        require 'puppet-lint/optparser'
-
         # check for invalid arguments to PuppetLint
         begin
           PuppetLint::OptParser.build.parse!(pl_args.clone)
@@ -58,8 +62,7 @@ class PuppetParser
           raise "puppet-lint: invalid option supplied among #{pl_args.join(' ')}"
         end
 
-        # prepare the PuppetLint object for style checks
-        puppet_lint = PuppetLint.new
+        # execute puppet-lint style checks
         puppet_lint.file = file
         puppet_lint.run
 

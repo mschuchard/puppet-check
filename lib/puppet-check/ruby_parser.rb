@@ -5,6 +5,14 @@ require_relative 'utils'
 class RubyParser
   # checks ruby (.rb)
   def self.ruby(files, style, rc_args)
+    # prepare rubocop object for style checks
+    if style
+      require 'json'
+      require 'rubocop'
+
+      rubocop_cli = RuboCop::CLI.new
+    end
+
     files.each do |file|
       # check ruby syntax
       # prevents ruby code from actually executing
@@ -15,10 +23,7 @@ class RubyParser
       # check ruby style
       if style
         # check RuboCop and parse warnings' JSON output
-        require 'json'
-        require 'rubocop'
-
-        rubocop_warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
+        rubocop_warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
         rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # check Reek and parse warnings' JSON output
@@ -65,6 +70,11 @@ class RubyParser
   def self.librarian(files, style, rc_args)
     # efficient var assignment prior to iterator
     if style
+      require 'json'
+      require 'rubocop'
+
+      rubocop_cli = RuboCop::CLI.new
+
       # RuboCop is grumpy about non-snake_case filenames so disable the FileName check
       rc_args.include?('--except') ? rc_args[rc_args.index('--except') + 1] = "#{rc_args[rc_args.index('--except') + 1]},Naming/FileName" : rc_args.push('--except', 'Naming/FileName')
     end
@@ -82,7 +92,7 @@ class RubyParser
         require 'json'
         require 'rubocop'
 
-        warnings = Utils.capture_stdout { RuboCop::CLI.new.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
+        warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
         offenses = JSON.parse(warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # collect style warnings
