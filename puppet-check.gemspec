@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'puppet-check'
-  spec.version       = '2.2.2'
+  spec.version       = '2.3.0'
   spec.authors       = ['Matt Schuchard']
   spec.description   = 'Puppet Check is a gem that provides a comprehensive, streamlined, and efficient analysis of the syntax, style, and validity of your entire Puppet code and data.'
   spec.summary       = 'A streamlined comprehensive set of checks for your entire Puppet code and data'
@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.6.0'
   spec.add_dependency 'puppet', '>= 5.5', '< 9'
-  spec.add_dependency 'puppet-lint', '>= 2.0', '< 4'
+  spec.add_dependency 'puppet-lint', '~> 4.0'
   spec.add_dependency 'reek', '~> 6.0'
   spec.add_dependency 'rubocop', '~> 1.0'
   spec.add_dependency 'rubocop-performance', '~> 1.0'

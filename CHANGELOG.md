@@ -1,6 +1,7 @@
 ### 2.3.0 (Next)
 - Support Puppet 8.
 - Upgrade EYAML validation functionality from experimental to beta.
+- Code execution optimization.
 
 ### 2.2.2
 - Workaround Ruby passbyref issue mutating an immutable.
