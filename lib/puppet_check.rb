@@ -38,6 +38,7 @@ class PuppetCheck
         require_relative 'puppet-check/regression_check'
       # if octocatalog-diff is not installed then return immediately
       rescue LoadError
+        warn 'octocatalog-diff is not installed, and therefore the regressions check will be skipped'
         return 0
       end
 

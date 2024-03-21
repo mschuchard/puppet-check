@@ -9,6 +9,8 @@ class RubyParser
     if style
       require 'json'
       require 'rubocop'
+      require 'reek'
+      require 'reek/cli/application'
 
       rubocop_cli = RuboCop::CLI.new
     end
@@ -27,9 +29,6 @@ class RubyParser
         rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # check Reek and parse warnings' JSON output
-        require 'reek'
-        require 'reek/cli/application'
-
         reek_warnings = Utils.capture_stdout { Reek::CLI::Application.new(['-f', 'json', file]).execute }
         reek_offenses = JSON.parse(reek_warnings).map { |warning| "#{warning['lines'].join(',')}: #{warning['context']} #{warning['message']}" }
 
@@ -88,10 +87,6 @@ class RubyParser
     # check librarian puppet style
     else
       if style
-        # check Rubocop
-        require 'json'
-        require 'rubocop'
-
         warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
         offenses = JSON.parse(warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
