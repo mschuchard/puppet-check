@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         ruby_version:
-        - '2.6'
+        - '2.7'
         - '3.3'
     runs-on: ubuntu-22.04
     container: ruby:${{ matrix.ruby_version }}-slim

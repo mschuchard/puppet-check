@@ -1,4 +1,5 @@
 ### 2.3.0 (Next)
+- Minimum Ruby version increased to 2.7.
 - Support Puppet 8.
 - Upgrade EYAML validation functionality from experimental to beta.
 - Code execution optimization.
