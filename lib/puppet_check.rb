@@ -73,29 +73,26 @@ class PuppetCheck
   # establish default settings
   def self.defaults(settings = {})
     private_class_method :method
-    # initialize fail on warning,  style check, and regression check bools
-    settings[:fail_on_warning] ||= false
-    settings[:style] ||= false
-    settings[:smoke] ||= false
-    settings[:regression] ||= false
 
-    # initialize ssl keys for eyaml checks
-    settings[:public] ||= nil
-    settings[:private] ||= nil
-
-    # initialize output format option
-    settings[:output_format] ||= 'text'
-
-    # initialize octocatalog-diff options
-    settings[:octoconfig] ||= '.octocatalog-diff.cfg.rb'
-    settings[:octonodes] ||= %w[localhost.localdomain]
-
-    # initialize style arg arrays
-    settings[:puppetlint_args] ||= []
-    settings[:rubocop_args] ||= []
-
-    # return update settings
-    settings
+    # return settings with defaults where unspecified
+    {
+      # initialize fail on warning,  style check, and regression check bools
+      fail_on_warning: false,
+      style: false,
+      smoke: false,
+      regression: false,
+      # initialize ssl keys for eyaml checks
+      public: nil,
+      private: nil,
+      # initialize output format option
+      output_format: 'text',
+      # initialize octocatalog-diff options
+      octoconfig: '.octocatalog-diff.cfg.rb',
+      octonodes: %w[localhost.localdomain],
+      # initialize style arg arrays
+      puppetlint_args: [],
+      rubocop_args: []
+    }.merge(settings)
   end
 
   # parse the paths and return the array of files
