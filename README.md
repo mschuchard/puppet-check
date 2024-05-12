@@ -1,6 +1,4 @@
 # Puppet Check
-[![CircleCI](https://circleci.com/gh/mschuchard/puppet-check.svg?style=svg)](https://circleci.com/gh/mschuchard/puppet-check)
-
 - [Description](#description)
 - [Usage](#usage)
   - [CLI](#cli)
@@ -15,7 +13,7 @@
 ## Description
 Puppet Check is a gem that provides a comprehensive, streamlined, and efficient analysis of the syntax, style, and validity of your entire Puppet code and data.
 
-**IMPORTANT**: The current support for encrypted yaml validation is experimental. The code is blocked in the current release (the files will continue to be treated as unrecognized) and will be unblocked when the feature is finished in a future version.
+**IMPORTANT**: The current support for encrypted yaml validation is experimental and should be considered a beta feature as of 2.3.0.
 
 ### Former Method for Code and Data Checks
 ![Old](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_old.png)
