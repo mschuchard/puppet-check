@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://www.github.com/mschuchard/puppet-check'
   spec.license       = 'MIT'
 
-  spec.files         = Dir['bin/**/*', 'lib/**/*', 'spec/**/*', 'CHANGELOG.md', 'LICENSE.md', 'README.md']
+  spec.files         = Dir['bin/**/*', 'lib/**/*', 'spec/**/*', 'CHANGELOG.md', 'LICENSE.md', 'README.md', 'puppet-check.gemspec']
   spec.executables   = spec.files.grep(%r{^bin/}) { |file| File.basename(file) }
   spec.require_paths = Dir['lib']
 
