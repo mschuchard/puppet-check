@@ -3,14 +3,16 @@ require_relative '../../lib/puppet-check/cli'
 
 describe PuppetCheck::CLI do
   context '.run' do
-    it 'raises an error if no paths were specified' do
-      expect { PuppetCheck::CLI.run(%w[-s -f]) }.to raise_error(RuntimeError, 'puppet-check: no file paths specified; try using --help')
+    it 'targets the current working directory if no paths were specified' do
+      expect { PuppetCheck::CLI.run(%w[--fail-on-warnings]) }.not_to raise_exception
+      expect(PuppetCheck.files[:clean].length).to eql(28)
+      expect(PuppetCheck.files[:ignored].length).to eql(10)
     end
   end
 
   context '.parse' do
     it 'raises an error if an invalid option was specified' do
-      expect { PuppetCheck::CLI.parse(%w[-s -f -asdf foo]) }.to raise_error(OptionParser::InvalidOption)
+      expect { PuppetCheck::CLI.parse(%w[-s -asdf foo]) }.to raise_error(OptionParser::InvalidOption)
     end
 
     it 'allows fail on warnings, style, smoke, and regression checks to be enabled' do

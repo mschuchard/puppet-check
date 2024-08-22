@@ -6,7 +6,9 @@ class PuppetCheck::CLI
   def self.run(args)
     # gather the user arguments
     settings = parse(args)
-    raise 'puppet-check: no file paths specified; try using --help' if args.empty?
+
+    # target cwd if no paths input as variadic
+    args = [Dir.pwd] if args.empty?
 
     # run PuppetCheck with specified paths
     PuppetCheck.new.run(settings, args)
