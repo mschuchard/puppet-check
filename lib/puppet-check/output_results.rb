@@ -40,17 +40,17 @@ class OutputResults
       # immediately return if category is empty
       next unless files.key?(category)
 
+      # display heading, files, and file messages per category for text formatting
+      category_files = files[category]
+
       # display category heading
       print HEADER[category]
 
-      # display heading, files, and file messages per category for text formatting
-      files = files[category]
-
       # display files and optionally messages
-      case files
-      when Hash then files.each { |file, messages| puts "-- #{file}:\n#{messages.join("\n")}" }
-      when Array then puts files.join("\n-- ")
-      else raise "puppet-check: The files category was of unexpected type #{files.class}. Please file an issue with this log message, category heading, and information about the parsed files."
+      case category_files
+      when Hash then category_files.each { |file, messages| puts "-- #{file}:\n#{messages.join("\n")}" }
+      when Array then puts category_files.join("\n-- ")
+      else raise "puppet-check: The files category was of unexpected type #{category_files.class}. Please file an issue with this log message, category heading, and information about the parsed files."
       end
 
       # newline between categories for easier visual parsing
