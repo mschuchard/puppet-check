@@ -20,7 +20,7 @@ jobs:
         command: apt-get update && apt-get install -y cmake pkg-config
     - run:
         name: bundler install
-        command: bundle install --retry=3 && bundle binstubs puppet
+        command: bundle install --retry=3
     - save_cache:
         paths:
         - ~/.bundle

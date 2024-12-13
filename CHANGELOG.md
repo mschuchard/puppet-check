@@ -1,5 +1,6 @@
 ### 2.3.1 (Next)
 - No input target paths now defaults to current working directory instead of error.
+- Additionally check `Vagrantfile` and `gemspec` files.
 
 ### 2.3.0
 - Minimum Ruby version increased to 2.7.

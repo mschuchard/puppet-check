@@ -5,8 +5,8 @@ describe PuppetCheck::CLI do
   context '.run' do
     it 'targets the current working directory if no paths were specified' do
       expect { PuppetCheck::CLI.run(%w[--fail-on-warnings]) }.not_to raise_exception
-      expect(PuppetCheck.files[:clean].length).to eql(28)
-      expect(PuppetCheck.files[:ignored].length).to eql(10)
+      expect(PuppetCheck.files[:clean].length).to eql(30)
+      expect(PuppetCheck.files[:ignored].length).to eql(7)
     end
   end
 
