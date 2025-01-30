@@ -2,7 +2,6 @@
 require: rubocop-performance
 
 AllCops:
-  TargetRubyVersion: 2.7
   NewCops: enable
   Include:
     - 'lib/**/*.rb'
