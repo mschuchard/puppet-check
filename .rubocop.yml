@@ -16,28 +16,37 @@ AllCops:
     - 'spec/fixtures/**/*'
     - 'bin/puppet'
 
+# twenty-first century
 Metrics:
   Enabled: false
 
 Layout/LineLength:
   Enabled: false
 
+# why
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
+# poor coding practices
 Naming/RescuedExceptionsVariableName:
   Enabled: false
 
-# false triggers for this cop
+# false triggers
 Style/EvalWithLocation:
   Enabled: false
 
-# probably can remove after rails cops removed from core
+# false positives
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+# why
 Style/ClassAndModuleChildren:
   Enabled: false
 
+# poor practices
 Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+# encourages unreadable code
+Style/IfUnlessModifier:
   Enabled: false
