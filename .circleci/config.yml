@@ -17,7 +17,7 @@ jobs:
         - puppet-check-ruby-<< parameters.ruby-version >>
     - run:
         name: package prereqs install
-        command: apt-get update && apt-get install -y cmake pkg-config
+        command: apt-get update && apt-get install -y cmake pkg-config openssl
     - run:
         name: bundler install
         command: bundle install --retry=3
