@@ -36,15 +36,12 @@ class PuppetCheck
     if parsed_files[:errors].empty? && (!settings[:fail_on_warning] || parsed_files[:warnings].empty?)
       begin
         require_relative 'puppet-check/regression_check'
-      # if octocatalog-diff is not installed then return immediately
-      rescue LoadError
-        warn 'octocatalog-diff is not installed, and therefore the regressions check will be skipped'
-        return 0
-      end
 
-      # perform smoke checks if there were no errors and the user desires
-      begin
+        # perform smoke checks if there were no errors and the user desires
         catalog = RegressionCheck.smoke(settings[:octonodes], settings[:octoconfig]) if settings[:smoke]
+      # if octocatalog-diff is not installed then continue immediately
+      rescue NameError
+        puts 'puppet-check: immediately continuing to results'
       # smoke check failure? output message and return 2
       rescue OctocatalogDiff::Errors::CatalogError => err
         puts 'There was a smoke check error:'
@@ -61,6 +58,7 @@ class PuppetCheck
       #   puts catalog.error_message unless catalog.valid?
       #   2
       # end
+
       # code to output differences in catalog?
       # everything passed? return 0
       0

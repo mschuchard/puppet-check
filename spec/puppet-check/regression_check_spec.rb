@@ -37,5 +37,5 @@ begin
     end
   end
 rescue NameError
-  puts 'octocatalog-diff is not installed, and its unit tests will be skipped'
+  puts 'puppet-check+rspec: octocatalog-diff is not installed, and its unit tests will be skipped'
 end

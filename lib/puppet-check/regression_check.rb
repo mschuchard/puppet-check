@@ -29,5 +29,5 @@ begin
     end
   end
 rescue LoadError
-  # octocatalog-diff not installed
+  warn 'puppet-check: octocatalog-diff is not installed, and therefore the regression checks will be skipped'
 end
