@@ -30,4 +30,5 @@ begin
   end
 rescue LoadError
   warn 'puppet-check: octocatalog-diff is not installed, and therefore the regression checks will be skipped'
+  $VERBOSE = false
 end
