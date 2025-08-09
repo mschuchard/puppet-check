@@ -1,4 +1,4 @@
-### 2.3.1 (Next)
+### 2.3.1
 - No input target paths now defaults to current working directory instead of error.
 - Additionally check `Vagrantfile` and `gemspec` files.
 - Fix and improve behavior for when optional dependency `octocatalog-diff` is absent.
