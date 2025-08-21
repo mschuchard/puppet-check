@@ -30,7 +30,7 @@ class RSpecPuppetSupport
 
   # setup the files, directories, and symlinks for rspec-puppet testing
   def self.file_setup(module_name)
-    private_class_method :method
+    private_class_method :file_setup
     # create all the necessary fixture dirs that are missing
     ['spec/fixtures', 'spec/fixtures/manifests', 'spec/fixtures/modules'].each do |dir|
       Dir.mkdir(dir) unless File.directory?(dir)
@@ -59,7 +59,7 @@ class RSpecPuppetSupport
 
   # setup the module dependencies for rspec-puppet testing
   def self.dependency_setup
-    private_class_method :method
+    private_class_method :dependency_setup
     require 'json'
 
     # parse the metadata.json (assumes DataParser.json has already given it a pass)
@@ -86,7 +86,7 @@ class RSpecPuppetSupport
 
   # download external module dependency with git
   def self.git(git_url, args = '')
-    private_class_method :method
+    private_class_method :git
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(git_url, '.git')}"
     # is the module present and already cloned with git? do a pull; otherwise, do a clone
@@ -99,7 +99,7 @@ class RSpecPuppetSupport
 
   # download external module dependency with forge
   def self.forge(forge_name, args = '')
-    private_class_method :method
+    private_class_method :forge
     # is the module present? do an upgrade; otherwise, do an install
     subcommand = File.directory?("spec/fixtures/modules/#{forge_name}") ? 'upgrade' : 'install'
     spawn("puppet module #{subcommand} --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
@@ -107,7 +107,7 @@ class RSpecPuppetSupport
 
   # download external module dependency with svn
   def self.svn(svn_url, args = '')
-    private_class_method :method
+    private_class_method :svn
     # establish path to checkout module to
     path = "spec/fixtures/modules/#{File.basename(svn_url)}"
     # is the module present and already checked out with svn? do an update; otherwise, do a checkout
@@ -120,7 +120,7 @@ class RSpecPuppetSupport
 
   # download external module dependency with hg
   def self.hg(hg_url, args = '')
-    private_class_method :method
+    private_class_method :hg
     # establish path to clone module to
     path = "spec/fixtures/modules/#{File.basename(hg_url)}"
     # is the module present and already cloned with hg? do a pull and update; otherwise do a clone

@@ -70,7 +70,7 @@ class PuppetCheck
 
   # establish default settings
   def self.defaults(settings = {})
-    private_class_method :method
+    private_class_method :defaults
 
     # return settings with defaults where unspecified
     {
@@ -95,7 +95,7 @@ class PuppetCheck
 
   # parse the paths and return the array of files
   def self.parse_paths(paths = [])
-    private_class_method :method
+    private_class_method :parse_paths
     files = []
 
     # traverse the unique paths and return all files not explicitly in fixtures

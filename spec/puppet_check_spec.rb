@@ -33,7 +33,7 @@ describe PuppetCheck do
 
   context 'defaults' do
     it 'returns defaults correctly' do
-      expect(PuppetCheck.defaults).to eql(
+      expect(PuppetCheck.send(:defaults)).to eql(
         {
           fail_on_warning: false,
           style: false,
@@ -64,18 +64,18 @@ describe PuppetCheck do
         puppetlint_args: %w[--puppetlint-arg-one --puppetlint-arg-two],
         rubocop_args: %w[--rubocop-arg-one --rubocop-arg-two]
       }
-      expect(PuppetCheck.defaults(settings)).to eql(settings)
+      expect(PuppetCheck.send(:defaults, settings)).to eql(settings)
     end
   end
 
   context '.parse_paths' do
     before(:each) { Dir.chdir(fixtures_dir) }
 
-    let(:no_files) { PuppetCheck.parse_paths(%w[foo bar baz]) }
-    let(:file) { PuppetCheck.parse_paths(['lib/good.rb']) }
-    let(:dir) { PuppetCheck.parse_paths(['.']) }
-    let(:multi_dir) { PuppetCheck.parse_paths(%w[hieradata lib manifests]) }
-    let(:repeats) { PuppetCheck.parse_paths(['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
+    let(:no_files) { PuppetCheck.send(:parse_paths, %w[foo bar baz]) }
+    let(:file) { PuppetCheck.send(:parse_paths, ['lib/good.rb']) }
+    let(:dir) { PuppetCheck.send(:parse_paths, ['.']) }
+    let(:multi_dir) { PuppetCheck.send(:parse_paths, %w[hieradata lib manifests]) }
+    let(:repeats) { PuppetCheck.send(:parse_paths, ['hieradata', 'hieradata', 'lib', 'hieradata/good.json', 'manifests/good.pp', 'manifests/good.pp']) }
 
     it 'raises an error if no files were found' do
       expect { no_files }.to raise_error(RuntimeError, 'puppet-check: no files found in supplied paths \'foo, bar, baz\'.')

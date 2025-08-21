@@ -33,7 +33,7 @@ class OutputResults
 
   # output the results as text
   def self.text(files)
-    private_class_method :method
+    private_class_method :text
 
     # output text for each of four file categories
     %i[errors warnings clean ignored].each do |category|

@@ -5,19 +5,19 @@ describe OutputResults do
   context '.text' do
     it 'outputs files with errors' do
       files = { errors: { 'foo' => ['i had an error'] } }
-      expect { OutputResults.text(files) }.to output("\033[31mThe following files have errors:\033[0m\n-- foo:\ni had an error\n\n").to_stdout
+      expect { OutputResults.send(:text, files) }.to output("\033[31mThe following files have errors:\033[0m\n-- foo:\ni had an error\n\n").to_stdout
     end
     it 'outputs files with warnings' do
       files = { warnings: { 'foo' => ['i had a warning'] } }
-      expect { OutputResults.text(files) }.to output("\033[33mThe following files have warnings:\033[0m\n-- foo:\ni had a warning\n\n").to_stdout
+      expect { OutputResults.send(:text, files) }.to output("\033[33mThe following files have warnings:\033[0m\n-- foo:\ni had a warning\n\n").to_stdout
     end
     it 'outputs files with no errors or warnings' do
       files = { clean: ['foo'] }
-      expect { OutputResults.text(files) }.to output("\033[32mThe following files have no errors or warnings:\033[0m\n-- foo\n\n").to_stdout
+      expect { OutputResults.send(:text, files) }.to output("\033[32mThe following files have no errors or warnings:\033[0m\n-- foo\n\n").to_stdout
     end
     it 'outputs files that were not processed' do
       files = { ignored: ['foo'] }
-      expect { OutputResults.text(files) }.to output("\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo\n\n").to_stdout
+      expect { OutputResults.send(:text, files) }.to output("\033[36mThe following files have unrecognized formats and therefore were not processed:\033[0m\n-- foo\n\n").to_stdout
     end
   end
 
