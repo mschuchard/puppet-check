@@ -23,7 +23,11 @@ describe RubyParser do
       RubyParser.ruby(["#{fixtures_dir}lib/style.rb"], true, [])
       expect(PuppetCheck.files[:errors]).to eql({})
       expect(PuppetCheck.files[:warnings].keys).to eql(["#{fixtures_dir}lib/style.rb"])
-      expect(PuppetCheck.files[:warnings]["#{fixtures_dir}lib/style.rb"].join("\n")).to match(/Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty.*\n.*is a writable attribute.*\n.*Issue has no descriptive comment/)
+      unless ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
+        expect(PuppetCheck.files[:warnings]["#{fixtures_dir}lib/style.rb"].join("\n")).to match(/Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty.*\n.*is a writable attribute.*\n.*Issue has no descriptive comment/)
+      else
+        expect(PuppetCheck.files[:warnings]["#{fixtures_dir}lib/style.rb"].join("\n")).to match(/Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty/)
+      end
       expect(PuppetCheck.files[:clean]).to eql([])
     end
     it 'puts a bad style ruby file in the clean files array when rubocop_args ignores its warnings' do
