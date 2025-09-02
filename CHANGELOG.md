@@ -1,3 +1,6 @@
+### 2.3.2 (Next)
+- Fix `rubocop-performance` inclusion warning.
+
 ### 2.3.1
 - No input target paths now defaults to current working directory instead of error.
 - Additionally check `Vagrantfile` and `gemspec` files.

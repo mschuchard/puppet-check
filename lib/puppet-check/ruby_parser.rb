@@ -25,7 +25,7 @@ class RubyParser
       # check ruby style
       if style
         # check RuboCop and parse warnings' JSON output
-        rubocop_warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
+        rubocop_warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--plugin', 'rubocop-performance', '--format', 'json', file]) }
         rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # check Reek and parse warnings' JSON output
@@ -87,7 +87,7 @@ class RubyParser
     # check librarian puppet style
     else
       if style
-        warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--require', 'rubocop-performance', '--format', 'json', file]) }
+        warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--plugin', 'rubocop-performance', '--format', 'json', file]) }
         offenses = JSON.parse(warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # collect style warnings
