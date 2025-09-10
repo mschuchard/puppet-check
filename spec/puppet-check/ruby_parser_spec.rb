@@ -79,30 +79,30 @@ describe RubyParser do
 
   context '.librarian' do
     it 'puts a bad syntax librarian Puppet file in the error files hash' do
-      RubyParser.librarian(["#{fixtures_dir}librarian_syntax/Puppetfile"], false, [])
-      expect(PuppetCheck.files[:errors].keys).to eql(["#{fixtures_dir}librarian_syntax/Puppetfile"])
-      expect(PuppetCheck.files[:errors]["#{fixtures_dir}librarian_syntax/Puppetfile"].join("\n")).to match(/^.*syntax error/)
+      RubyParser.librarian(["#{fixtures_dir}librarian/Puppetfile_syntax"], false, [])
+      expect(PuppetCheck.files[:errors].keys).to eql(["#{fixtures_dir}librarian/Puppetfile_syntax"])
+      expect(PuppetCheck.files[:errors]["#{fixtures_dir}librarian/Puppetfile_syntax"].join("\n")).to match(/^.*syntax error/)
       expect(PuppetCheck.files[:warnings]).to eql({})
       expect(PuppetCheck.files[:clean]).to eql([])
     end
     it 'puts a bad style librarian Puppet file in the warning files array' do
-      RubyParser.librarian(["#{fixtures_dir}librarian_style/Puppetfile"], true, [])
+      RubyParser.librarian(["#{fixtures_dir}librarian/Puppetfile_style"], true, [])
       expect(PuppetCheck.files[:errors]).to eql({})
-      expect(PuppetCheck.files[:warnings].keys).to eql(["#{fixtures_dir}librarian_style/Puppetfile"])
-      expect(PuppetCheck.files[:warnings]["#{fixtures_dir}librarian_style/Puppetfile"].join("\n")).to match(/Align the arguments.*\n.*Use the new/)
+      expect(PuppetCheck.files[:warnings].keys).to eql(["#{fixtures_dir}librarian/Puppetfile_style"])
+      expect(PuppetCheck.files[:warnings]["#{fixtures_dir}librarian/Puppetfile_style"].join("\n")).to match(/Align the arguments.*\n.*Use the new/)
       expect(PuppetCheck.files[:clean]).to eql([])
     end
     it 'puts a bad style librarian Puppet file in the clean files array when rubocop_args ignores its warnings' do
-      RubyParser.librarian(["#{fixtures_dir}librarian_style/Puppetfile"], true, ['--except', 'Layout/ArgumentAlignment,Style/HashSyntax'])
+      RubyParser.librarian(["#{fixtures_dir}librarian/Puppetfile_style"], true, ['--except', 'Layout/ArgumentAlignment,Style/HashSyntax'])
       expect(PuppetCheck.files[:errors]).to eql({})
       expect(PuppetCheck.files[:warnings]).to eql({})
-      expect(PuppetCheck.files[:clean]).to eql(["#{fixtures_dir}librarian_style/Puppetfile"])
+      expect(PuppetCheck.files[:clean]).to eql(["#{fixtures_dir}librarian/Puppetfile_style"])
     end
     it 'puts a good librarian Puppet file in the clean files array' do
-      RubyParser.librarian(["#{fixtures_dir}librarian_good/Puppetfile"], true, [])
+      RubyParser.librarian(["#{fixtures_dir}librarian/Puppetfile_good"], true, [])
       expect(PuppetCheck.files[:errors]).to eql({})
       expect(PuppetCheck.files[:warnings]).to eql({})
-      expect(PuppetCheck.files[:clean]).to eql(["#{fixtures_dir}librarian_good/Puppetfile"])
+      expect(PuppetCheck.files[:clean]).to eql(["#{fixtures_dir}librarian/Puppetfile_good"])
     end
   end
 end
