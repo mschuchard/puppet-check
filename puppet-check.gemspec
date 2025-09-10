@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'puppet', '>= 5.5', '< 9'
   spec.add_dependency 'puppet-lint', '~> 4.0'
   spec.add_dependency 'reek', '~> 6.0'
-  spec.add_dependency 'rubocop', '~> 1.0'
+  spec.add_dependency 'rubocop', '~> 1.72'
   spec.add_dependency 'rubocop-performance', '~> 1.0'
   # spec.add_development_dependency 'octocatalog-diff', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 13.0'

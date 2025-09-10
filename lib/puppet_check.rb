@@ -141,7 +141,7 @@ class PuppetCheck
     eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
     DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
     # check misc ruby
-    librarians, files = files.partition { |file| File.basename(file) =~ /(?:Puppet|Module|Rake|Gem|Vagrant)file|.gemspec$/ }
+    librarians, files = files.partition { |file| File.basename(file) =~ /^(?:Puppet|Module|Rake|Gem|Vagrant)file|\.gemspec$/ && File.extname(file) != '.lock' }
     RubyParser.librarian(librarians, style, rubocop_args) unless librarians.empty?
     # ignore everything else
     files.each { |file| self.class.files[:ignored].push(file.to_s) }

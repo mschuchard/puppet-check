@@ -1,5 +1,6 @@
 ### 2.3.2 (Next)
 - Fix `rubocop-performance` inclusion warning.
+- Improve recognition of Ruby support files.
 
 ### 2.3.1
 - No input target paths now defaults to current working directory instead of error.
