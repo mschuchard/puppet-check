@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |file| File.basename(file) }
   spec.require_paths = Dir['lib']
 
-  spec.required_ruby_version = '>= 2.7.0'
+  spec.required_ruby_version = '>= 3.0.0'
   spec.add_dependency 'puppet', '>= 5.5', '< 9'
   spec.add_dependency 'puppet-lint', '~> 4.0'
   spec.add_dependency 'reek', '~> 6.0'
