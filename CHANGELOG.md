@@ -1,6 +1,7 @@
 ### 2.4.0 (Next)
 - Fix `rubocop-performance` inclusion warning.
 - Improve recognition of Ruby support files.
+- Fix `file` task for no settings override usage.
 - Minimum Ruby version increased to 3.0.
 
 ### 2.3.1
