@@ -205,8 +205,7 @@ class DataParser
   end
 
   # checks hieradata
-  def self.hiera(data, file)
-    private_class_method :hiera
+  private_class_method def self.hiera(data, file)
     warnings = []
 
     # disregard nil/undef value data check if default values (common)

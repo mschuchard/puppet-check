@@ -23,8 +23,7 @@ begin
     # end
 
     # config file loading
-    def self.config(octoconfig)
-      private_class_method :config
+    private_class_method def self.config(octoconfig)
       OctocatalogDiff::API::V1.config(filename: octoconfig)
     end
   end

@@ -32,9 +32,7 @@ class OutputResults
   end
 
   # output the results as text
-  def self.text(files)
-    private_class_method :text
-
+  private_class_method def self.text(files)
     # output text for each of four file categories
     %i[errors warnings clean ignored].each do |category|
       # immediately return if category is empty

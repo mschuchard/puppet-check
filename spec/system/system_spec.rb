@@ -40,7 +40,7 @@ describe PuppetCheck do
       }
 
       # cannot re-use plan fixture between system tests
-      expect { Rake::Task[:'puppetcheck:file'].invoke() }.to raise_error(ArgumentError, /Attempt to redefine entity/)
+      expect { Rake::Task[:'puppetcheck:file'].execute }.to raise_error(ArgumentError, /Attempt to redefine entity/)
 
       # current puppet pops limitations no longer allow testing this
       # expect(PuppetCheck.files[:errors].length).to eql(11)
