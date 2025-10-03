@@ -1,8 +1,9 @@
 ### 2.4.0 (Next)
 - Fix `rubocop-performance` inclusion warning.
-- Improve recognition of Ruby support files.
+- Improve recognition of Ruby support files during filesystem parsing.
 - Fix `file` task for no settings override usage.
 - Minimum Ruby version increased to 3.0.
+- Add `rubocop-rspec` plugin to Ruby checks.
 
 ### 2.3.1
 - No input target paths now defaults to current working directory instead of error.
