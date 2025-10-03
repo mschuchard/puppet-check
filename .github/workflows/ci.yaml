@@ -19,7 +19,7 @@ jobs:
       matrix:
         ruby_version:
         - '3.0'
-        - '3.4'
+        - '3.3' # latest supported by Puppet 8
     runs-on: ubuntu-latest
     container: ruby:${{ matrix.ruby_version }}-slim
     steps:

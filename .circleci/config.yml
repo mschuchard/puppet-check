@@ -37,4 +37,4 @@ workflows:
           parameters:
             ruby-version:
             - '3.0'
-            - '3.4'
+            - '3.3' # latest supported by Puppet 8
