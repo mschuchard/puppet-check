@@ -15,7 +15,7 @@ describe RSpecPuppetSupport do
 
     it 'creates missing directories, missing site.pp, missing symlinks, and a missing spec_helper' do
       # circle ci and gh actions
-      if ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
+      if ci_env
         expect { rspec_puppet_setup }.to output("git is not installed and cannot be used to retrieve dependency modules\nsubversion is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
       else
         expect { rspec_puppet_setup }.to output("subversion is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
@@ -29,7 +29,7 @@ describe RSpecPuppetSupport do
       expect(File.file?('spec/spec_helper.rb')).to be true
 
       # .dependency_setup
-      expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true unless ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
+      expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true unless ci_env
       expect(File.directory?('spec/fixtures/modules/stdlib')).to be true
     end
   end

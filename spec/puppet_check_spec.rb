@@ -87,7 +87,7 @@ describe PuppetCheck do
 
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
-      if ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
+      if ci_env
         expect(dir.length).to eql(37)
       else
         expect(dir.length).to eql(40)

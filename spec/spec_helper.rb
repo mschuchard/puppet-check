@@ -11,6 +11,10 @@ module Variables
   def octocatalog_diff_dir
     @octocatalog_diff_dir = "#{File.dirname(__FILE__)}/octocatalog-diff/"
   end
+
+  def ci_env
+    @ci_env = ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
+  end
 end
 
 RSpec.configure do |config|
