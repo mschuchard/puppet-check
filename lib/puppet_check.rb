@@ -68,8 +68,10 @@ class PuppetCheck
     end
   end
 
+  private
+
   # establish default settings
-  private_class_method def self.defaults(settings = {})
+  def self.defaults(settings = {})
     # return settings with defaults where unspecified
     {
       # initialize fail on warning,  style check, and regression check bools
@@ -92,7 +94,7 @@ class PuppetCheck
   end
 
   # parse the paths and return the array of files
-  private_class_method def self.parse_paths(paths = [])
+  def self.parse_paths(paths = [])
     files = []
 
     # traverse the unique paths and return all files not explicitly in fixtures
@@ -111,8 +113,6 @@ class PuppetCheck
     raise "puppet-check: no files found in supplied paths '#{paths.join(', ')}'." if files.empty?
     files.map { |file| file.gsub('//', '/') }.uniq
   end
-
-  private
 
   # categorize and pass the files out to the parsers to determine their status
   def execute_parsers(files, style, puppetlint_args, rubocop_args, public, private)
