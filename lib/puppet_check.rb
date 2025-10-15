@@ -33,7 +33,7 @@ class PuppetCheck
     OutputResults.run(parsed_files.clone, settings[:output_format])
 
     # progress to regression checks if no errors in file checks
-    if parsed_files[:errors].empty? && (!settings[:fail_on_warning] || parsed_files[:warnings].empty?)
+    if parsed_files[:errors].empty? && (!settings[:fail_on_warnings] || parsed_files[:warnings].empty?)
       begin
         require_relative 'puppet-check/regression_check'
 
