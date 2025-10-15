@@ -8,7 +8,7 @@ class DataParser
   def self.yaml(files)
     files.each do |file|
       # check yaml syntax
-      parsed = YAML.load_file(file)
+      parsed = YAML.safe_load_file(file, permitted_classes: [Symbol], permitted_symbols: [], aliases: true)
     rescue StandardError => err
       PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
     else
@@ -44,7 +44,7 @@ class DataParser
 
     files.each do |file|
       # check encoded yaml syntax
-      parsed = YAML.load_file(file)
+      parsed = YAML.safe_load_file(file, permitted_classes: [Symbol], permitted_symbols: [], aliases: true)
 
       # extract encoded values
       # ENC[PKCS7]

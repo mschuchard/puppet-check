@@ -6,6 +6,7 @@
 - Add `rubocop-rspec` plugin to Ruby checks.
 - Fix `--fail-on-warnings` functionality.
 - Improve safety of Ruby syntax checks.
+- Safely load Puppet data files.
 
 ### 2.3.1
 - No input target paths now defaults to current working directory instead of error.
