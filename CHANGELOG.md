@@ -1,4 +1,4 @@
-### 2.4.0 (Next)
+### 2.4.0
 - Minimum Ruby version increased to 3.0.
 - Fix `rubocop-performance` inclusion warning.
 - Improve recognition of Ruby support files during filesystem parsing.
