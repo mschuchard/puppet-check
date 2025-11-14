@@ -79,8 +79,7 @@ class RubyParser
 
     files.each do |file|
       # check librarian puppet syntax
-      # prevents ruby code from actually executing the input ruby file
-      catch(:good) { instance_eval("BEGIN {throw :good}; #{File.read(file)} # BEGIN {throw :good}; ruby_file_content", file) }
+      RubyVM::InstructionSequence.compile_file(file)
     rescue SyntaxError, LoadError, ArgumentError => err
       PuppetCheck.files[:errors][file] = err.to_s.gsub("#{file}:", '').split("\n")
     # check librarian puppet style
