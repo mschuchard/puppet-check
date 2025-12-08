@@ -1,3 +1,6 @@
+### 2.4.1 (Next)
+- Minimum Puppet-Lint increased to 5.0.
+
 ### 2.4.0
 - Minimum Ruby version increased to 3.0.
 - Fix `rubocop-performance` inclusion warning.
