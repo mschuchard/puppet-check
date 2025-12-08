@@ -1,5 +1,6 @@
 ### 2.4.1 (Next)
 - Minimum Puppet-Lint increased to 5.0.
+- Restore ERB validation mock Ruby binding.
 
 ### 2.4.0
 - Minimum Ruby version increased to 3.0.

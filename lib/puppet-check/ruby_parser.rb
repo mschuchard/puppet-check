@@ -48,10 +48,7 @@ class RubyParser
     files.each do |file|
       # check ruby template syntax
       begin
-        # need to eventually have this associated with a different binding during each iteration
-        # older usage throws extra warning and mixes with valid warnings confusingly
-        warnings = Utils.capture_stderr { ERB.new(File.read(file), trim_mode: '-').result }
-        # warnings = ERB.new(File.read(file), trim_mode: '-').result(RubyParser.new.bind)
+        warnings = Utils.capture_stderr { ERB.new(File.read(file), trim_mode: '-').result(Object.new.instance_eval { binding }) }
       rescue NameError, TypeError
         # empty out warnings since it would contain an error if this pass triggers
         warnings = ''
