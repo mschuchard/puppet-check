@@ -331,6 +331,4 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 ## Contributing
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
 
-A [Dockerfile](Dockerfile) is provided for easy rake testing. A [Vagrantfile](Vagrantfile) is provided for easy gem building, installation, and post-installation testing.
-
 Please consult the GitHub Project for the current development roadmap.
