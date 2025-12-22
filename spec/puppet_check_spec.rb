@@ -72,6 +72,7 @@ describe PuppetCheck do
     before(:each) { Dir.chdir(fixtures_dir) }
 
     let(:no_files) { PuppetCheck.send(:parse_paths, %w[foo bar baz]) }
+    let(:mixed_files) { PuppetCheck.send(:parse_paths, %w[foo lib/good.rb]) }
     let(:file) { PuppetCheck.send(:parse_paths, ['lib/good.rb']) }
     let(:dir) { PuppetCheck.send(:parse_paths, ['.']) }
     let(:multi_dir) { PuppetCheck.send(:parse_paths, %w[hieradata lib manifests]) }
@@ -79,6 +80,11 @@ describe PuppetCheck do
 
     it 'raises an error if no files were found' do
       expect { no_files }.to raise_error(RuntimeError, 'puppet-check: no files found in supplied paths \'foo, bar, baz\'.')
+    end
+
+    it 'warns on invalid path and correctly parses a valid file path' do
+      expect { mixed_files }.to output("puppet-check: ignoring invalid path \'foo\'.\n").to_stderr
+      expect(mixed_files[0]).to eql('lib/good.rb')
     end
 
     it 'correctly parses one file and returns it' do
