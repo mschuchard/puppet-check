@@ -83,7 +83,7 @@ describe PuppetCheck do
     end
 
     it 'warns on invalid path and correctly parses a valid file path' do
-      expect { mixed_files }.to output("puppet-check: ignoring invalid path \'foo\'.\n").to_stderr
+      expect { mixed_files }.to output("puppet-check: foo is not a directory, file, or symlink, and will not be considered during parsing\n").to_stderr
       expect(mixed_files[0]).to eql('lib/good.rb')
     end
 
