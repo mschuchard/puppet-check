@@ -27,8 +27,8 @@ class RubyParser
         rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # check Reek using examiner api
-        warnings = Reek::Examiner.new([file]).examine
-        reek_offenses = warnings.map { |warning| "#{warning.lines.join(',')}: #{warning.context} #{warning.message}" }
+        examiner = Reek::Examiner.new(Pathname.new(file))
+        reek_offenses = examiner.smells.map { |warning| "#{warning.lines.join(',')}: #{warning.context} #{warning.message}" }
 
         # assign warnings from combined offenses
         warnings = rubocop_offenses + reek_offenses
