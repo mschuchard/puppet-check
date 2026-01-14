@@ -3,6 +3,7 @@
 - Minimum Puppet-Lint increased to 5.0.
 - Restore ERB validation mock Ruby binding.
 - Update Reek API usage.
+- Ensure `rubocop-rspec` plugin only loaded for spec files.
 
 ### 2.4.0
 - Minimum Ruby version increased to 3.0.

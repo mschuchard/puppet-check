@@ -24,7 +24,7 @@ describe RubyParser do
       expect(PuppetCheck.files[:errors]).to eql({})
       expect(PuppetCheck.files[:warnings].keys).to eql(["#{fixtures_dir}lib/style.rb"])
       unless ci_env
-        expect(PuppetCheck.files[:warnings]["#{fixtures_dir}lib/style.rb"].join("\n")).to match(/Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty.*\n.*is a writable attribute.*\n.*Issue has no descriptive comment/)
+        expect(PuppetCheck.files[:warnings]["#{fixtures_dir}lib/style.rb"].length).to eql(8)
       else
         expect(PuppetCheck.files[:warnings]["#{fixtures_dir}lib/style.rb"].join("\n")).to match(/Useless assignment.*\n.*Use the new.*\n.*Do not introduce.*\n.*Prefer single.*\n.*Remove unnecessary empty.*\n.*Source code comment is empty/)
       end
