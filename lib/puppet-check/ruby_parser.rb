@@ -90,9 +90,4 @@ class RubyParser
       PuppetCheck.files[:clean].push(file.to_s)
     end
   end
-
-  # potentially for unique erb bindings
-  def bind
-    binding
-  end
 end
