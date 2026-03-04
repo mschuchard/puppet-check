@@ -1,23 +1,10 @@
 require 'rspec'
 
 # for path to fixtures
-module Variables
-  extend RSpec::SharedContext
-
-  def fixtures_dir
-    @fixtures_dir = "#{File.dirname(__FILE__)}/fixtures/"
-  end
-
-  def octocatalog_diff_dir
-    @octocatalog_diff_dir = "#{File.dirname(__FILE__)}/octocatalog-diff/"
-  end
-
-  def ci_env
-    @ci_env = ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
-  end
-end
+FIXTURES_DIR = "#{File.dirname(__FILE__)}/fixtures/".freeze
+OCTOCATALOG_DIFF_DIR = "#{File.dirname(__FILE__)}/octocatalog-diff/".freeze
+CI_ENV = ENV['CIRCLECI'] == 'true' || ENV['GITHUB_ACTIONS'] == 'true'
 
 RSpec.configure do |config|
-  config.include Variables
   config.color = true
 end

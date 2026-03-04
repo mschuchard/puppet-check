@@ -5,15 +5,15 @@ require_relative '../../lib/puppet-check/tasks'
 describe PuppetCheck::Tasks do
   after(:all) do
     # cleanup rspec_puppet_setup
-    File.delete("#{fixtures_dir}/spec/spec_helper.rb")
-    %w[manifests modules].each { |dir| FileUtils.rm_r("#{fixtures_dir}/spec/fixtures/#{dir}") }
+    File.delete("#{FIXTURES_DIR}/spec/spec_helper.rb")
+    %w[manifests modules].each { |dir| FileUtils.rm_r("#{FIXTURES_DIR}/spec/fixtures/#{dir}") }
   end
 
   context 'puppetcheck:spec' do
     let(:spec_tasks) { Rake::Task[:'puppetcheck:spec'].invoke }
 
     it 'executes RSpec and RSpec-Puppet checks in the expected manner' do
-      Dir.chdir(fixtures_dir)
+      Dir.chdir(FIXTURES_DIR)
 
       # rspec task executed
       expect { spec_tasks }.to output(%r{spec/facter/facter_spec.rb}).to_stdout

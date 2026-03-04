@@ -5,17 +5,17 @@ require 'fileutils'
 describe RSpecPuppetSupport do
   after(:all) do
     # cleanup rspec_puppet_setup
-    File.delete("#{fixtures_dir}/spec/spec_helper.rb")
-    %w[manifests modules].each { |dir| FileUtils.rm_r("#{fixtures_dir}/spec/fixtures/#{dir}") }
+    File.delete("#{FIXTURES_DIR}/spec/spec_helper.rb")
+    %w[manifests modules].each { |dir| FileUtils.rm_r("#{FIXTURES_DIR}/spec/fixtures/#{dir}") }
   end
 
   context '.run' do
     let(:rspec_puppet_setup) { RSpecPuppetSupport.run }
-    before(:each) { Dir.chdir(fixtures_dir) }
+    before(:each) { Dir.chdir(FIXTURES_DIR) }
 
     it 'creates missing directories, missing site.pp, missing symlinks, and a missing spec_helper' do
       # circle ci and gh actions
-      if ci_env
+      if CI_ENV
         expect { rspec_puppet_setup }.to output("git is not installed and cannot be used to retrieve dependency modules\nsubversion is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
       else
         expect { rspec_puppet_setup }.to output("subversion is not installed and cannot be used to retrieve dependency modules\npuppetlabs/gruntmaster has an unspecified, or specified but unsupported, download method.\n").to_stderr
@@ -29,7 +29,7 @@ describe RSpecPuppetSupport do
       expect(File.file?('spec/spec_helper.rb')).to be true
 
       # .dependency_setup
-      expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true unless ci_env
+      expect(File.directory?('spec/fixtures/modules/puppetlabs-lvm')).to be true unless CI_ENV
       expect(File.directory?('spec/fixtures/modules/stdlib')).to be true
     end
   end

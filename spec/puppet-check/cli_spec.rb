@@ -6,7 +6,7 @@ describe PuppetCheck::CLI do
     it 'targets the current working directory if no paths were specified' do
       expect { PuppetCheck::CLI.run(%w[--fail-on-warnings]) }.not_to raise_exception
       expect(PuppetCheck.files[:clean].length).to eql(29)
-      if ci_env
+      if CI_ENV
         expect(PuppetCheck.files[:ignored].length).to eql(8)
       else
         expect(PuppetCheck.files[:ignored].length).to eql(7)
@@ -40,7 +40,7 @@ describe PuppetCheck::CLI do
     end
 
     it 'correctly loads a .puppet-lint.rc' do
-      expect(PuppetCheck::CLI.send(:parse, %W[-c #{fixtures_dir}/manifests/.puppet-lint.rc])).to include(puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'])
+      expect(PuppetCheck::CLI.send(:parse, %W[-c #{FIXTURES_DIR}/manifests/.puppet-lint.rc])).to include(puppetlint_args: ['--puppetlint-arg-one', '--puppetlint-arg-two'])
     end
 
     it 'correctly parses Rubocop arguments' do

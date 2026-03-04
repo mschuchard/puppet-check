@@ -7,10 +7,10 @@ begin
     context '.config' do
       # json gem is messed up for the EOL Ruby versions
       it 'raise an appropriate error if the file is malformed' do
-        expect { RegressionCheck.send(:config, "#{fixtures_dir}metadata.json") }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
+        expect { RegressionCheck.send(:config, "#{FIXTURES_DIR}metadata.json") }.to raise_error(OctocatalogDiff::Errors::ConfigurationFileContentError, 'Configuration must define OctocatalogDiff::Config!')
       end
       it 'loads in a good octocatalog-diff config file' do
-        expect { RegressionCheck.send(:config, "#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.not_to raise_exception
+        expect { RegressionCheck.send(:config, "#{OCTOCATALOG_DIFF_DIR}octocatalog_diff.cfg.rb") }.not_to raise_exception
       end
       it 'loads in the settings from the file correctly' do
         # TODO
@@ -19,16 +19,16 @@ begin
 
     context '.smoke' do
       # octocatalog-diff is returning a blank error for these tests
-      unless ci_env
+      unless CI_ENV
         it 'returns a pass for a successful catalog compilation' do
-          expect { RegressionCheck.smoke(['good.example.com'], "#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.not_to raise_exception
+          expect { RegressionCheck.smoke(['good.example.com'], "#{OCTOCATALOG_DIFF_DIR}octocatalog_diff.cfg.rb") }.not_to raise_exception
         end
         it 'returns a failure for a catalog with an error' do
-          expect { RegressionCheck.smoke(['does_not_exist.example.com'], "#{octocatalog_diff_dir}octocatalog_diff.cfg.rb") }.to raise_error(OctocatalogDiff::Errors::CatalogError)
+          expect { RegressionCheck.smoke(['does_not_exist.example.com'], "#{OCTOCATALOG_DIFF_DIR}octocatalog_diff.cfg.rb") }.to raise_error(OctocatalogDiff::Errors::CatalogError)
         end
       end
       it 'returns a failure for a good and bad catalog' do
-        # RegressionCheck.smoke(['good.example.com', 'syntax_error.example.com'], "#{fixtures_dir}octocatalog_diff.cfg.rb")
+        # RegressionCheck.smoke(['good.example.com', 'syntax_error.example.com'], "#{FIXTURES_DIR}octocatalog_diff.cfg.rb")
       end
     end
 
