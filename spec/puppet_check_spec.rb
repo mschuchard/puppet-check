@@ -35,7 +35,7 @@ describe PuppetCheck do
     it 'returns defaults correctly' do
       expect(PuppetCheck.send(:defaults)).to eql(
         {
-          fail_on_warning: false,
+          fail_on_warnings: false,
           style: false,
           smoke: false,
           regression: false,
@@ -52,7 +52,7 @@ describe PuppetCheck do
 
     it 'modifies settings correctly' do
       settings = {
-        fail_on_warning: true,
+        fail_on_warnings: true,
         style: true,
         smoke: true,
         regression: true,
@@ -69,7 +69,7 @@ describe PuppetCheck do
   end
 
   context '.parse_paths' do
-    before(:each) { Dir.chdir(fixtures_dir) }
+    before(:each) { Dir.chdir(FIXTURES_DIR) }
 
     let(:no_files) { PuppetCheck.send(:parse_paths, %w[foo bar baz]) }
     let(:mixed_files) { PuppetCheck.send(:parse_paths, %w[foo lib/good.rb]) }
@@ -93,7 +93,7 @@ describe PuppetCheck do
 
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
-      if ci_env
+      if CI_ENV
         expect(dir.length).to eql(37)
       else
         expect(dir.length).to eql(40)

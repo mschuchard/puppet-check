@@ -75,7 +75,7 @@ class PuppetCheck
     # return settings with defaults where unspecified
     {
       # initialize fail on warning,  style check, and regression check bools
-      fail_on_warning: false,
+      fail_on_warnings: false,
       style: false,
       smoke: false,
       regression: false,
