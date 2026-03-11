@@ -32,12 +32,12 @@ class PuppetParser
         new_error = Puppet::Face[:parser, :current].validate(file)
         # puppet 6.5 output format is now a hash from the face api
         if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0') && new_error != {}
-          messages.concat(new_error.values.map(&:to_s).map { |error| error.gsub(/ \(file: #{File.absolute_path(file)}(, |\))/, '') }.map { |error| error.gsub('Could not parse for environment *root*: ', '') })
+          messages.concat(new_error.values.map(&:to_s).map { |error| error.gsub(Regexp.escape(" (file: #{File.absolute_path(file)}(, |))"), '') }.map { |error| error.gsub('Could not parse for environment *root*: ', '') })
         end
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
-        messages.concat(errors.map(&:to_s).join("\n").map { |error| error.gsub(/file: #{File.absolute_path(file)}(, |\))/, '') }.map { |error| error.gsub(/Could not parse.*: /, '') })
+        messages.concat(errors.map(&:to_s).join("\n").map { |error| error.gsub(Regexp.escape("file: #{File.absolute_path(file)}(, |))"), '') }.map { |error| error.gsub(/Could not parse.*: /, '') })
       end
 
       Puppet::Util::Log.close_all
@@ -50,7 +50,7 @@ class PuppetParser
       # weirdly puppet >= 6.5 still does not return warnings and logs them instead unlike errors
       unless errors.empty?
         # puppet >= 5.4 has a new validator output format
-        warnings.concat(errors.map(&:to_s).join("\n").gsub("file: #{File.absolute_path(file)}, ", '').split("\n"))
+        warnings.concat(errors.map(&:to_s).join("\n").gsub(Regexp.escape("file: #{File.absolute_path(file)}(, |))"), '').split("\n"))
       end
 
       # check puppet style

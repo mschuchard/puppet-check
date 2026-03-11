@@ -1,5 +1,6 @@
 ### 2.5.1 (Next)
 - Fix explicit `fail_on_warnings` default value assignment.
+- Improve message transformation for Puppet::Face errors and warnings.
 
 ### 2.5.0
 - Minimum Ruby version increased to 3.1.
