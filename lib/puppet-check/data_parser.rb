@@ -33,9 +33,9 @@ class DataParser
     end
 
     # keys exist?
-    unless File.file?(public) && File.file?(private)
+    unless File.readable?(public) && File.readable?(private)
       PuppetCheck.files[:ignored].concat(files)
-      return warn 'Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.'
+      return warn 'Specified Public X509 and/or Private RSA PKCS7 certs do not exist or are not readable. EYAML checks will not be executed.'
     end
 
     # setup decryption
