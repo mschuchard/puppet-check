@@ -332,3 +332,7 @@ To overcome the lack of convenient portability, you could try spinning up the Va
 Code should pass all spec tests. New features should involve new spec tests. Adherence to Rubocop and Reek is expected where not overly onerous or where the check is of dubious cost/benefit.
 
 Please consult the GitHub Project for the current development roadmap.
+
+## Links
+
+[![Hypercommit](https://img.shields.io/badge/Hypercommit-DB2475)](https://hypercommit.com/puppet-check)
