@@ -42,7 +42,7 @@ describe DataParser do
       expect { DataParser.eyaml(['foo.eyaml'], 'public.pem', nil) }.to output("Public X509 and/or Private RSA PKCS7 certs were not specified. EYAML checks will not be executed.\n").to_stderr
     end
     it 'returns a warning if the public key or private key are not existing files' do
-      expect { DataParser.eyaml(['foo.eyaml'], 'public.pem', 'private.pem') }.to output("Specified Public X509 and/or Private RSA PKCS7 certs do not exist. EYAML checks will not be executed.\n").to_stderr
+      expect { DataParser.eyaml(['foo.eyaml'], 'public.pem', 'private.pem') }.to output("Specified Public X509 and/or Private RSA PKCS7 certs do not exist or are not readable. EYAML checks will not be executed.\n").to_stderr
     end
     it 'puts a bad syntax eyaml file in the error files hash' do
       DataParser.eyaml(["#{FIXTURES_DIR}hieradata/syntax.eyaml"], "#{FIXTURES_DIR}keys/public_key.pkcs7.pem", "#{FIXTURES_DIR}keys/private_key.pkcs7.pem")

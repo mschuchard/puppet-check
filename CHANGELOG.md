@@ -2,6 +2,7 @@
 - Fix explicit `fail_on_warnings` default value assignment.
 - Improve message transformation for Puppet::Face errors and warnings.
 - Improve EYAML certification validation check.
+- Verify that files to be validated are readable by current user.
 
 ### 2.5.0
 - Minimum Ruby version increased to 3.1.
