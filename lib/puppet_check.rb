@@ -101,8 +101,8 @@ class PuppetCheck
     paths.uniq.each do |path|
       if File.directory?(path)
         # glob all files in directory and concat them
-        files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.readable?(subpath) && !subpath.include?('fixtures') })
-      elsif File.readable?(path) && !path.include?('fixtures')
+        files.concat(Dir.glob("#{path}/**/*").select { |subpath| File.file?(subpath) && File.readable?(subpath) && !subpath.include?('fixtures') })
+      elsif File.file?(path) && File.readable?(path) && !path.include?('fixtures')
         files.push(path)
       else
         warn "puppet-check: #{path} is not a readable directory, file, or symlink, and will not be considered during parsing"
