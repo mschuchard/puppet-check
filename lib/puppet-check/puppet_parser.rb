@@ -37,7 +37,7 @@ class PuppetParser
       # this is the actual error that we need to rescue Puppet::Face from
       rescue SystemExit
         # puppet 5.4-6.4 has a new validator output format and eof errors have fake dir env info
-        messages.concat(errors.map(&:to_s).join("\n").map { |error| error.gsub(Regexp.escape("file: #{File.absolute_path(file)}(, |))"), '') }.map { |error| error.gsub(/Could not parse.*: /, '') })
+        messages.concat(errors.map(&:to_s).map { |error| error.gsub(Regexp.escape("file: #{File.absolute_path(file)}(, |))"), '') }.map { |error| error.gsub(/Could not parse.*: /, '') })
       end
 
       Puppet::Util::Log.close_all

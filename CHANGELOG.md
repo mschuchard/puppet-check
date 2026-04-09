@@ -3,6 +3,7 @@
 - Improve message transformation for Puppet::Face errors and warnings.
 - Improve EYAML certification validation check.
 - Verify that files to be validated are readable by current user.
+- Fix Puppet 5.4-6.4 syntax error output format.
 
 ### 2.5.0
 - Minimum Ruby version increased to 3.1.

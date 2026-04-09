@@ -18,7 +18,7 @@ describe PuppetParser do
       if Gem::Version.new(Puppet::PUPPETVERSION) >= Gem::Version.new('6.5.0')
         expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}manifests/syntax.pp"].join("\n")).to match(/^Language validation logged 2 errors/)
       else
-        expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}manifests/syntax.yaml"].join("\n")).to match(/^This Variable has no effect.*\nIllegal variable name/)
+        expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}manifests/syntax.pp"].join("\n")).to match(/^This Variable has no effect.*\nIllegal variable name/)
       end
       expect(PuppetCheck.files[:warnings]).to eql({})
       expect(PuppetCheck.files[:clean]).to eql([])
