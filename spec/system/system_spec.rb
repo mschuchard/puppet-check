@@ -6,10 +6,10 @@ require_relative '../../lib/puppet-check/tasks'
 describe PuppetCheck do
   context 'executed as a system from the CLI with arguments and various files to be processed' do
     it 'outputs diagnostic results correctly after processing all of the files' do
-      Dir.chdir(fixtures_dir)
+      Dir.chdir(FIXTURES_DIR)
 
       # see regression_check_spec
-      if ci_env
+      if CI_ENV
         expect(PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding --public keys/public_key.pkcs7.pem --private keys/private_key.pkcs7.pem .])).to eql(2)
       else
         expect(PuppetCheck::CLI.run(%w[-s --puppet-lint no-hard_tabs-check,no-140chars-check --rubocop Layout/LineLength,Style/Encoding --public keys/public_key.pkcs7.pem --private keys/private_key.pkcs7.pem --smoke -n good.example.com --octoconfig spec/octocatalog-diff/octocatalog-diff.cfg.rb .])).to eql(2)
@@ -25,7 +25,7 @@ describe PuppetCheck do
   context 'executed as a system from the Rakefile with arguments and various files to be processed' do
     it 'outputs diagnostic results correctly after processing all of the files' do
       # ensure rake only checks the files inside fixtures
-      Dir.chdir(fixtures_dir)
+      Dir.chdir(FIXTURES_DIR)
 
       # clear out files member from previous system test
       PuppetCheck.files = {
@@ -47,7 +47,7 @@ describe PuppetCheck do
 
     it 'uses override settings and outputs diagnostic results correctly after processing all of the files' do
         # ensure rake only checks the files inside fixtures
-        Dir.chdir(fixtures_dir)
+        Dir.chdir(FIXTURES_DIR)
 
         # clear out files member from previous system test
         PuppetCheck.files = {
@@ -60,7 +60,7 @@ describe PuppetCheck do
         # assign settings
         settings = { style: true }
         # see regression_check_spec
-        unless ci_env
+        unless CI_ENV
           settings[:smoke] = true
           settings[:octonodes] = %w[good.example.com]
           settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
