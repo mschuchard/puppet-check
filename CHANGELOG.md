@@ -1,4 +1,4 @@
-### 2.5.1 (Next)
+### 2.5.1
 - Fix explicit `fail_on_warnings` default value assignment.
 - Improve message transformation for Puppet::Face errors and warnings.
 - Improve EYAML certification validation check.
