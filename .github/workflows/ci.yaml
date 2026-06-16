@@ -7,11 +7,13 @@ on:
     paths:
     - 'lib/**'
     - 'spec/**/*_spec.rb'
+    - puppet-check.gemspec
   pull_request:
     branches: [master]
     paths:
     - 'lib/**'
     - 'spec/**/*_spec.rb'
+    - puppet-check.gemspec
 
 jobs:
   test:

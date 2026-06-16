@@ -122,14 +122,14 @@ class PuppetCheck
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
     PuppetParser.manifest(manifests, style, puppetlint_args) unless manifests.empty?
     # check puppet templates
-    templates, files = files.partition { |file| File.extname(file) == '.epp' }
-    PuppetParser.template(templates) unless templates.empty?
+    epp, files = files.partition { |file| File.extname(file) == '.epp' }
+    PuppetParser.template(epp) unless epp.empty?
     # check ruby files
     rubies, files = files.partition { |file| File.extname(file) == '.rb' }
     RubyParser.ruby(rubies, style, rubocop_args) unless rubies.empty?
     # check ruby templates
-    templates, files = files.partition { |file| File.extname(file) == '.erb' }
-    RubyParser.template(templates) unless templates.empty?
+    erb, files = files.partition { |file| File.extname(file) == '.erb' }
+    RubyParser.template(erb) unless erb.empty?
     # check yaml data
     yamls, files = files.partition { |file| File.extname(file) =~ /\.ya?ml$/ }
     DataParser.yaml(yamls) unless yamls.empty?
