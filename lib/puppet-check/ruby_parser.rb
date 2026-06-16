@@ -23,10 +23,15 @@ class RubyParser
       # check ruby style
       if style
         # add rubocop rspec plugin if the file is a spec
-        rc_args.push('--plugin', 'rubocop-rspec') if file =~ /_spec\.rb$/
+        if file =~ /_spec\.rb$/
+          # invoke RuboCop with rspec plugin
+          rubocop_warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--plugin', 'rubocop-rspec','--enable-pending-cops', '--plugin', 'rubocop-performance', '--format', 'json', file]) }
+        else
+          # invoke rubocop
+          rubocop_warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--plugin', 'rubocop-performance', '--format', 'json', file]) }
+        end
 
-        # check RuboCop and parse warnings' JSON output
-        rubocop_warnings = Utils.capture_stdout { rubocop_cli.run(rc_args + ['--enable-pending-cops', '--plugin', 'rubocop-performance', '--format', 'json', file]) }
+        # parse rubocop offenses' structured JSON output
         rubocop_offenses = JSON.parse(rubocop_warnings)['files'][0]['offenses'].map { |warning| "#{warning['location']['line']}:#{warning['location']['column']} #{warning['message']}" }
 
         # check Reek using examiner api

@@ -1,5 +1,6 @@
 ### 2.5.2 (Next)
 - Fix incorrect exit code `0` when `octocatalog` detects catalog compilation failure.
+- Avoid mutation of and optimize Rubocop argument interfacing.
 
 ### 2.5.1
 - Fix explicit `fail_on_warnings` default value assignment.
