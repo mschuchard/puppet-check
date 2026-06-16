@@ -42,12 +42,15 @@ class PuppetCheck
       # if octocatalog-diff is not installed then continue immediately
       rescue NameError
         puts 'puppet-check: immediately continuing to results'
+        0
       # smoke check failure? output message and return 2
       rescue OctocatalogDiff::Errors::CatalogError => err
         puts 'There was a smoke check error:'
         puts err
         puts catalog.error_message unless catalog.valid?
         2
+      else
+        0
       end
       # perform regression checks if there were no errors and the user desires
       # begin
@@ -61,7 +64,6 @@ class PuppetCheck
 
       # code to output differences in catalog?
       # everything passed? return 0
-      0
     else
       # error files? return 2
       2
