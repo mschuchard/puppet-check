@@ -97,7 +97,7 @@ class RSpecPuppetSupport
   # download external module dependency with forge
   private_class_method def self.forge(forge_name, args = '')
     # is the module present? do an upgrade; otherwise, do an install
-    subcommand = File.directory?("spec/fixtures/modules/#{forge_name}") ? 'upgrade' : 'install'
+    subcommand = File.directory?("spec/fixtures/modules/#{forge_name.split('-').last}") ? 'upgrade' : 'install'
     spawn("puppet module #{subcommand} --modulepath spec/fixtures/modules/ #{args} #{forge_name}")
   end
 
