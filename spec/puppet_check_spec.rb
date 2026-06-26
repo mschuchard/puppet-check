@@ -112,16 +112,51 @@ describe PuppetCheck do
   end
 
   context '.execute_parsers' do
-    it 'correctly organizes a set of files and invokes the correct parsers' do
-      # parser_output = instance_double('execute_parsers', files: %w[puppet.pp puppet_template.epp ruby.rb ruby_template.erb yaml.yaml yaml.yml json.json Puppetfile Modulefile foobarbaz], style: false, pl_args: [], rc_args: [])
-      # expect(parser_output).to receive(:manifest).with(%w[puppet.pp])
-      # expect(parser_output).to receive(:template).with(%w[puppet_template.epp])
-      # expect(parser_output).to receive(:ruby).with(%w[ruby.rb])
-      # expect(parser_output).to receive(:template).with(%w[ruby_template.erb])
-      # expect(parser_output).to receive(:yaml).with(%w[yaml.yaml yaml.yml])
-      # expect(parser_output).to receive(:json).with(%w[json.json])
-      # expect(parser_output).to receive(:librarian).with(%w[Puppetfile Modulefile])
-      # expect(PuppetCheck.files[:ignored]).to eql(%w[foobarbaz])
+    before(:each) do
+      PuppetCheck.files = { errors: {}, warnings: {}, clean: [], ignored: [] }
+    end
+    let(:puppet_check) { PuppetCheck.new }
+
+    it 'correctly routes each file type to the appropriate parser and ignores unrecognized files' do
+      expect(PuppetParser).to receive(:manifest).with(['manifests/good.pp'], false, [])
+      expect(PuppetParser).to receive(:template).with(['templates/good.epp'])
+      expect(RubyParser).to receive(:ruby).with(['lib/good.rb'], false, [])
+      expect(RubyParser).to receive(:template).with(['templates/good.erb'])
+      expect(DataParser).to receive(:yaml).with(['hieradata/good.yaml', 'hieradata/good.yml'])
+      expect(DataParser).to receive(:json).with(['hieradata/good.json'])
+      expect(DataParser).to receive(:eyaml).with(['hieradata/good.eyaml'], nil, nil)
+      expect(RubyParser).to receive(:librarian).with(['librarian/Puppetfile_good'], false, [])
+
+      puppet_check.send(:execute_parsers, %w[manifests/good.pp templates/good.epp lib/good.rb templates/good.erb hieradata/good.yaml hieradata/good.yml hieradata/good.json hieradata/good.eyaml librarian/Puppetfile_good foobarbaz], false, [], [], nil, nil)
+
+      expect(PuppetCheck.files[:ignored]).to eql(['foobarbaz'])
+    end
+
+    it 'passes style and arg options through to the correct parsers and skips parser calls when a given file category is empty' do
+      expect(PuppetParser).to receive(:manifest).with(['manifests/good.pp'], true, ['--no-140chars-check'])
+      expect(PuppetParser).not_to receive(:template)
+      expect(RubyParser).to receive(:ruby).with(['lib/good.rb'], true, ['--except', 'Style/FrozenStringLiteralComment'])
+      expect(RubyParser).to receive(:librarian).with(['librarian/Puppetfile_good'], true, ['--except', 'Style/FrozenStringLiteralComment'])
+      expect(RubyParser).not_to receive(:template)
+      expect(DataParser).to receive(:yaml).with(['hieradata/good.yaml'])
+      expect(DataParser).not_to receive(:json)
+      expect(DataParser).not_to receive(:eyaml)
+
+      puppet_check.send(
+        :execute_parsers,
+        %w[manifests/good.pp lib/good.rb hieradata/good.yaml librarian/Puppetfile_good],
+        true,
+        ['--no-140chars-check'],
+        ['--except', 'Style/FrozenStringLiteralComment'],
+        nil,
+        nil
+      )
+    end
+
+    it 'returns PuppetCheck.files' do
+      allow(PuppetParser).to receive(:manifest)
+      result = puppet_check.send(:execute_parsers, ['manifests/good.pp'], false, [], [], nil, nil)
+      expect(result).to eql(PuppetCheck.files)
     end
   end
 end
