@@ -48,24 +48,8 @@ class DataParser
       # load the file
       parsed = YAML.safe_load_file(file, permitted_classes: [Symbol], permitted_symbols: [], aliases: true)
 
-      # recursively decrypts ENC[PKCS7,...] leaf values in a parsed eyaml structure
-      decoded = case parsed
-      when Hash
-        # recurse into hash values and keys are never encrypted
-        parsed.transform_values { |v| decrypt_eyaml(v, rsa, x509) }
-      when Array
-        # recurse into array elements
-        parsed.map { |v| decrypt_eyaml(v, rsa, x509) }
-      when String
-        # leave plain (non-ENC) strings untouched
-        match = parsed.match(/\AENC\[PKCS7,(.+)\]\z/m)
-        return parsed unless match
-
-        # decode the base64 payload to DER and decrypt
-        OpenSSL::PKCS7.new(Base64.decode64(match[1])).decrypt(rsa, x509)
-      else
-        parsed
-      end
+      # decrypt any ENC[PKCS7,...] leaf values found in the parsed structure
+      decoded = decrypt_eyaml(parsed, rsa, x509)
     rescue StandardError => err
       PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
     else
@@ -76,6 +60,27 @@ class DataParser
 
       next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
       PuppetCheck.files[:clean].push(file.to_s)
+    end
+  end
+
+  # recursively decrypts ENC[PKCS7,...] leaf values in a parsed eyaml structure
+  private_class_method def self.decrypt_eyaml(data, rsa, x509)
+    case data
+    when Hash
+      # recurse into hash values, keys are never encrypted
+      data.transform_values { |v| decrypt_eyaml(v, rsa, x509) }
+    when Array
+      # recurse into array elements
+      data.map { |v| decrypt_eyaml(v, rsa, x509) }
+    when String
+      # leave plain (non-ENC) strings untouched
+      match = data.match(/\AENC\[PKCS7,(.+)\]\z/m)
+      return data unless match
+
+      # decode the base64 payload to DER and decrypt
+      OpenSSL::PKCS7.new(Base64.decode64(match[1])).decrypt(rsa, x509)
+    else
+      data
     end
   end
 

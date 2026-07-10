@@ -2,6 +2,7 @@
 - Fix incorrect exit code `0` when `octocatalog` detects catalog compilation failure.
 - Avoid mutation of and optimize Rubocop argument interfacing.
 - Fix existing module install check when using Puppet Forge source for RSpec.
+- Upgrade EYAML validation functionality from beta to release candidate.
 
 ### 2.5.1
 - Fix explicit `fail_on_warnings` default value assignment.
