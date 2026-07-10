@@ -25,6 +25,7 @@ class DataParser
   # checks eyaml (.eyaml/.eyml)
   def self.eyaml(files, public, private)
     require 'openssl'
+    require 'base64'
 
     # keys specified?
     if public.nil? || private.nil?
@@ -42,28 +43,36 @@ class DataParser
     rsa = OpenSSL::PKey::RSA.new(File.read(private))
     x509 = OpenSSL::X509::Certificate.new(File.read(public))
 
+    # iterate through files and decrypt eyaml values
     files.each do |file|
-      # check encoded yaml syntax
+      # load the file
       parsed = YAML.safe_load_file(file, permitted_classes: [Symbol], permitted_symbols: [], aliases: true)
 
-      # extract encoded values
-      # ENC[PKCS7]
+      # recursively decrypts ENC[PKCS7,...] leaf values in a parsed eyaml structure
+      decoded = case parsed
+      when Hash
+        # recurse into hash values and keys are never encrypted
+        parsed.transform_values { |v| decrypt_eyaml(v, rsa, x509) }
+      when Array
+        # recurse into array elements
+        parsed.map { |v| decrypt_eyaml(v, rsa, x509) }
+      when String
+        # leave plain (non-ENC) strings untouched
+        match = parsed.match(/\AENC\[PKCS7,(.+)\]\z/m)
+        return parsed unless match
 
-      # decrypt the encoded yaml
-      # decrypted = OpenSSL::PKCS7.new(File.read(file)).decrypt(rsa, x509)
-
-      # check decoded eyaml syntax
-      # decoded = YAML.safe_load(decrypted)
-
-      # merge data hashes
-      # parsed = merge(parsed, decoded)
+        # decode the base64 payload to DER and decrypt
+        OpenSSL::PKCS7.new(Base64.decode64(match[1])).decrypt(rsa, x509)
+      else
+        parsed
+      end
     rescue StandardError => err
       PuppetCheck.files[:errors][file] = err.to_s.gsub("(#{file}): ", '').split("\n")
     else
       warnings = []
 
       # perform some rudimentary hiera checks if data exists and is hieradata
-      warnings = hiera(parsed, file) if parsed
+      warnings = hiera(decoded, file) if decoded
 
       next PuppetCheck.files[:warnings][file] = warnings unless warnings.empty?
       PuppetCheck.files[:clean].push(file.to_s)
