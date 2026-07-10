@@ -70,7 +70,7 @@ describe DataParser do
     it 'puts a bad syntax json file in the error files hash' do
       DataParser.json(["#{FIXTURES_DIR}hieradata/syntax.json"])
       expect(PuppetCheck.files[:errors].keys).to eql(["#{FIXTURES_DIR}hieradata/syntax.json"])
-      expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}hieradata/syntax.json"].join("\n")).to match(/after object value, got.*at line 2 column 3/)
+      expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}hieradata/syntax.json"].join("\n")).to match(/after object value, got.*at line 3 column 3/)
       expect(PuppetCheck.files[:warnings]).to eql({})
       expect(PuppetCheck.files[:clean]).to eql([])
     end
