@@ -64,6 +64,64 @@ describe DataParser do
       expect(PuppetCheck.files[:warnings]).to eql({})
       expect(PuppetCheck.files[:clean]).to eql(["#{FIXTURES_DIR}hieradata/good.eyaml"])
     end
+    it 'puts an eyaml file with an undecryptable PKCS7 payload in the error files hash; distinctly from a YAML syntax error' do
+      DataParser.eyaml(["#{FIXTURES_DIR}hieradata/decrypt_error.eyaml"], "#{FIXTURES_DIR}keys/public_key.pkcs7.pem", "#{FIXTURES_DIR}keys/private_key.pkcs7.pem")
+      expect(PuppetCheck.files[:errors].keys).to eql(["#{FIXTURES_DIR}hieradata/decrypt_error.eyaml"])
+      expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}hieradata/decrypt_error.eyaml"].join("\n")).to match(/PKCS7/i)
+      expect(PuppetCheck.files[:errors]["#{FIXTURES_DIR}hieradata/decrypt_error.eyaml"].join("\n")).not_to match(/^block sequence entries are not allowed/)
+      expect(PuppetCheck.files[:warnings]).to eql({})
+      expect(PuppetCheck.files[:clean]).to eql([])
+    end
+    it 'decrypts an ENC[PKCS7,...] value nested inside an array of hashes and puts the file in the clean files array' do
+      DataParser.eyaml(["#{FIXTURES_DIR}hieradata/nested_array.eyaml"], "#{FIXTURES_DIR}keys/public_key.pkcs7.pem", "#{FIXTURES_DIR}keys/private_key.pkcs7.pem")
+      expect(PuppetCheck.files[:errors]).to eql({})
+      expect(PuppetCheck.files[:warnings]).to eql({})
+      expect(PuppetCheck.files[:clean]).to eql(["#{FIXTURES_DIR}hieradata/nested_array.eyaml"])
+    end
+  end
+
+  context '.decrypt_eyaml' do
+    before(:all) do
+      require 'openssl'
+      require 'base64'
+    end
+
+    let(:rsa) { OpenSSL::PKey::RSA.new(File.read("#{FIXTURES_DIR}keys/private_key.pkcs7.pem")) }
+    let(:x509) { OpenSSL::X509::Certificate.new(File.read("#{FIXTURES_DIR}keys/public_key.pkcs7.pem")) }
+
+    # encrypts a plaintext value against the fixture cert and wraps it as eyaml expects
+    def encrypt(plaintext)
+      pkcs7 = OpenSSL::PKCS7.encrypt([x509], plaintext, OpenSSL::Cipher.new('AES-256-CBC'), OpenSSL::PKCS7::BINARY)
+      "ENC[PKCS7,#{Base64.strict_encode64(pkcs7.to_der)}]"
+    end
+
+    it 'decrypts a single ENC[PKCS7,...] string to its original plaintext' do
+      expect(DataParser.send(:decrypt_eyaml, encrypt('puppetcheck'), rsa, x509)).to eql('puppetcheck')
+    end
+    it 'leaves a plain non-ENC string untouched' do
+      expect(DataParser.send(:decrypt_eyaml, 'plaintext value', rsa, x509)).to eql('plaintext value')
+    end
+    it 'leaves a string that merely resembles but does not fully match the ENC[PKCS7,...] pattern untouched' do
+      expect(DataParser.send(:decrypt_eyaml, 'prefix ENC[PKCS7,abc] suffix', rsa, x509)).to eql('prefix ENC[PKCS7,abc] suffix')
+    end
+    it 'recurses into hash values and decrypts them, while never decrypting hash keys' do
+      encrypted = encrypt('secret-value')
+      result = DataParser.send(:decrypt_eyaml, { encrypted => 'plain-key-value', 'plain-key' => encrypted }, rsa, x509)
+      expect(result.keys).to eql([encrypted, 'plain-key'])
+      expect(result[encrypted]).to eql('plain-key-value')
+      expect(result['plain-key']).to eql('secret-value')
+    end
+    it 'recurses into array elements and decrypts them' do
+      expect(DataParser.send(:decrypt_eyaml, ['plain', encrypt('array-secret')], rsa, x509)).to eql(['plain', 'array-secret'])
+    end
+    it 'recurses through nested hash/array/hash structures' do
+      expect(DataParser.send(:decrypt_eyaml, { 'list' => [{ 'inner' => encrypt('nested-secret') }] }, rsa, x509)).to eql({ 'list' => [{ 'inner' => 'nested-secret' }] })
+    end
+    it 'returns non-string/hash/array scalars unchanged' do
+      expect(DataParser.send(:decrypt_eyaml, 42, rsa, x509)).to eql(42)
+      expect(DataParser.send(:decrypt_eyaml, nil, rsa, x509)).to be_nil
+      expect(DataParser.send(:decrypt_eyaml, true, rsa, x509)).to be true
+    end
   end
 
   context '.json' do
