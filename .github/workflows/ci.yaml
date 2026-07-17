@@ -31,5 +31,7 @@ jobs:
       run: apt-get update && apt-get install -y cmake pkg-config libffi-dev
     - name: bundler install
       run: bundle install --retry=3
-    - name: run tests
-      run: bundle exec rake unit system
+    - name: execute unit tests
+      run: bundle exec rake unit
+    - name: execute integration tests
+      run: bundle exec rake system

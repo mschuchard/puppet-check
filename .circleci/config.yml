@@ -26,8 +26,11 @@ jobs:
         - ~/.bundle
         key: puppet-check-ruby-<< parameters.ruby-version >>
     - run:
-        name: execute tests
-        command: bundle exec rake unit system
+        name: execute unit tests
+        command: bundle exec rake unit
+    - run:
+        name: execute integration tests
+        command: bundle exec rake system
 
 workflows:
   execute_tests:
