@@ -1,4 +1,4 @@
-### 2.5.2 (Next)
+### 2.5.2
 - Fix incorrect exit code `0` when `octocatalog` detects catalog compilation failure.
 - Avoid mutation of and optimize Rubocop argument interfacing.
 - Fix existing module install check when using Puppet Forge source for RSpec.

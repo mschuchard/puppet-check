@@ -13,7 +13,7 @@
 ## Description
 Puppet Check is a gem that provides a comprehensive, streamlined, and efficient analysis of the syntax, style, and validity of your entire Puppet code and data.
 
-**IMPORTANT**: The current support for encrypted yaml validation is experimental and should be considered a beta feature as of 2.3.0.
+**IMPORTANT**: The current support for encrypted yaml validation is semi-experimental and should be considered a release candidate feature as of 2.5.2.
 
 ### Former Method for Code and Data Checks
 ![Old](https://raw.githubusercontent.com/mschuchard/puppet-check/master/images/puppetcheck_old.png)
