@@ -137,11 +137,11 @@ class PuppetCheck
     # ignore everything else
     files.each { |file| self.class.files[:ignored].push(file.to_s) }
 
-    #if Process.respond_to?(:fork)
-    #  execute_parsers_parallel(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
-    #else
+    if Process.respond_to?(:fork)
+      execute_parsers_parallel(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
+    else
       execute_parsers_sequential(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
-    #end
+    end
   end
 
   private
@@ -158,6 +158,58 @@ class PuppetCheck
     DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
     RubyParser.librarian(librarians, style, rubocop_args) unless librarians.empty?
     # return PuppetCheck.files to mitigate singleton write accessor side effects
+    PuppetCheck.files
+  end
+
+  # parallel parser execution for systems that support Process.fork
+  def execute_parsers_parallel(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
+    # define jobs for parallel execution between different file types
+    jobs = [
+      manifests.empty? ? nil : -> { PuppetParser.manifest(manifests, style, puppetlint_args) },
+      epp.empty? ? nil : -> { PuppetParser.template(epp) },
+      rubies.empty? ? nil : -> { RubyParser.ruby(rubies, style, rubocop_args) },
+      erb.empty? ? nil : -> { RubyParser.template(erb) },
+      yamls.empty? ? nil : -> { DataParser.yaml(yamls) },
+      jsons.empty? ? nil : -> { DataParser.json(jsons) },
+      eyamls.empty? ? nil : -> { DataParser.eyaml(eyamls, public, private) },
+      librarians.empty? ? nil : -> { RubyParser.librarian(librarians, style, rubocop_args) }
+    ].compact
+
+    # short circuit if no jobs to execute
+    return PuppetCheck.files if jobs.empty?
+
+    # initialize merged results hash to collect results from each forked process
+    merged = { errors: {}, warnings: {}, clean: [], ignored: self.class.files[:ignored] }
+
+    # TODO
+    pipes = jobs.map do |job|
+      reader, writer = IO.pipe
+      pid = Process.fork do
+        reader.close
+        job.call
+        writer.write(Marshal.dump(PuppetCheck.files))
+        writer.close
+      end
+      writer.close
+      [pid, reader]
+    end
+
+    # TODO
+    pipes.each do |pid, reader|
+      begin
+        data = reader.read
+        result = Marshal.load(data)
+        merged[:errors].merge!(result[:errors])
+        merged[:warnings].merge!(result[:warnings])
+        merged[:clean].concat(result[:clean])
+      ensure
+        reader.close unless reader.closed?
+        Process.wait(pid)
+      end
+    end
+
+    # TODO
+    self.class.files = merged
     PuppetCheck.files
   end
 end
