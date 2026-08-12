@@ -120,30 +120,43 @@ class PuppetCheck
   def execute_parsers(files, style, puppetlint_args, rubocop_args, public, private)
     # check manifests
     manifests, files = files.partition { |file| File.extname(file) == '.pp' }
-    PuppetParser.manifest(manifests, style, puppetlint_args) unless manifests.empty?
     # check puppet templates
     epp, files = files.partition { |file| File.extname(file) == '.epp' }
-    PuppetParser.template(epp) unless epp.empty?
     # check ruby files
     rubies, files = files.partition { |file| File.extname(file) == '.rb' }
-    RubyParser.ruby(rubies, style, rubocop_args) unless rubies.empty?
     # check ruby templates
     erb, files = files.partition { |file| File.extname(file) == '.erb' }
-    RubyParser.template(erb) unless erb.empty?
     # check yaml data
     yamls, files = files.partition { |file| File.extname(file) =~ /\.ya?ml$/ }
-    DataParser.yaml(yamls) unless yamls.empty?
     # check json data
     jsons, files = files.partition { |file| File.extname(file) == '.json' }
-    DataParser.json(jsons) unless jsons.empty?
-    # check eyaml data; block this for now
+    # check eyaml data
     eyamls, files = files.partition { |file| File.extname(file) =~ /\.eya?ml$/ }
-    DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
     # check misc ruby
     librarians, files = files.partition { |file| File.basename(file) =~ /^(?:Puppet|Module|Rake|Gem|Vagrant)file|\.gemspec$/ && File.extname(file) != '.lock' }
-    RubyParser.librarian(librarians, style, rubocop_args) unless librarians.empty?
     # ignore everything else
     files.each { |file| self.class.files[:ignored].push(file.to_s) }
+
+    #if Process.respond_to?(:fork)
+    #  execute_parsers_parallel(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
+    #else
+      execute_parsers_sequential(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
+    #end
+  end
+
+  private
+
+  # sequential parser execution for systems that do not support Process.fork
+  def execute_parsers_sequential(manifests, epp, rubies, erb, yamls, jsons, eyamls, librarians, style, puppetlint_args, rubocop_args, public, private)
+    # perform file checks for each type
+    PuppetParser.manifest(manifests, style, puppetlint_args) unless manifests.empty?
+    PuppetParser.template(epp) unless epp.empty?
+    RubyParser.ruby(rubies, style, rubocop_args) unless rubies.empty?
+    RubyParser.template(erb) unless erb.empty?
+    DataParser.yaml(yamls) unless yamls.empty?
+    DataParser.json(jsons) unless jsons.empty?
+    DataParser.eyaml(eyamls, public, private) unless eyamls.empty?
+    RubyParser.librarian(librarians, style, rubocop_args) unless librarians.empty?
     # return PuppetCheck.files to mitigate singleton write accessor side effects
     PuppetCheck.files
   end
