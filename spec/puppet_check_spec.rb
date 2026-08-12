@@ -111,9 +111,12 @@ describe PuppetCheck do
     end
   end
 
+  # also tests the .execute_parsers_sequential method since it is called by .execute_parsers when Process.fork is not available
+  # note that the .execute_parsers_parallel method is tested as part of the system test
   context '.execute_parsers' do
     before(:each) do
       PuppetCheck.files = { errors: {}, warnings: {}, clean: [], ignored: [] }
+      allow(Process).to receive(:respond_to?).with(:fork).and_return(false)
     end
     let(:puppet_check) { PuppetCheck.new }
 

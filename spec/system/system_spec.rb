@@ -35,14 +35,16 @@ describe PuppetCheck do
         ignored: []
       }
 
-      # cannot re-use plan fixture between system tests
-      expect { Rake::Task[:'puppetcheck:file'].execute }.to raise_error(ArgumentError, /Attempt to redefine entity/)
-
-      # current puppet pops limitations no longer allow testing this
-      # expect(PuppetCheck.files[:errors].length).to eql(11)
-      # expect(PuppetCheck.files[:warnings].length).to eql(12)
-      # expect(PuppetCheck.files[:clean].length).to eql(14)
-      # expect(PuppetCheck.files[:ignored].length).to eql(3)
+      if Process.respond_to?(:fork)
+        # puppet gloabal loader reset in each forked process
+        expect(PuppetCheck.files[:errors].length).to eql(12)
+        expect(PuppetCheck.files[:warnings].length).to eql(13)
+        expect(PuppetCheck.files[:clean].length).to eql(14)
+        expect(PuppetCheck.files[:ignored].length).to eql(3)
+      else
+        # cannot re-use plan fixture between system tests
+        expect { Rake::Task[:'puppetcheck:file'].execute }.to raise_error(ArgumentError, /Attempt to redefine entity/)
+      end
     end
 
     it 'uses override settings and outputs diagnostic results correctly after processing all of the files' do
@@ -66,14 +68,16 @@ describe PuppetCheck do
           settings[:octoconfig] = 'spec/octocatalog-diff/octocatalog-diff.cfg.rb'
         end
 
-        # cannot re-use plan fixture between system tests
-        expect { Rake::Task[:'puppetcheck:file'].invoke(settings) }.to raise_error(ArgumentError, /Attempt to redefine entity/)
-
-        # current puppet pops limitations no longer allow testing this
-        # expect(PuppetCheck.files[:errors].length).to eql(11)
-        # expect(PuppetCheck.files[:warnings].length).to eql(12)
-        # expect(PuppetCheck.files[:clean].length).to eql(14)
-        # expect(PuppetCheck.files[:ignored].length).to eql(3)
+        if Process.respond_to?(:fork)
+          # puppet gloabal loader reset in each forked process
+          expect(PuppetCheck.files[:errors].length).to eql(11)
+          expect(PuppetCheck.files[:warnings].length).to eql(12)
+          expect(PuppetCheck.files[:clean].length).to eql(14)
+          expect(PuppetCheck.files[:ignored].length).to eql(3)
+        else
+          # cannot re-use plan fixture between system tests
+          expect { Rake::Task[:'puppetcheck:file'].invoke(settings) }.to raise_error(ArgumentError, /Attempt to redefine entity/)
+        end
     end
   end
 end
