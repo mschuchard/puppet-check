@@ -94,20 +94,20 @@ describe PuppetCheck do
     it 'correctly parses one directory and returns all of its files' do
       dir.each { |file| expect(File.file?(file)).to be true }
       if CI_ENV
-        expect(dir.length).to eql(37)
+        expect(dir.length).to eql(39)
       else
-        expect(dir.length).to eql(40)
+        expect(dir.length).to eql(42)
       end
     end
 
     it 'correctly parses multiple directories and returns all of their files' do
       multi_dir.each { |file| expect(File.file?(file)).to be true }
-      expect(multi_dir.length).to eql(17)
+      expect(multi_dir.length).to eql(19)
     end
 
     it 'correctly parses three directories (one repeated) and three files (one repeated from directories and another repeated from files) and returns the unique files' do
       repeats.each { |file| expect(File.file?(file)).to be true }
-      expect(repeats.length).to eql(13)
+      expect(repeats.length).to eql(15)
     end
   end
 
