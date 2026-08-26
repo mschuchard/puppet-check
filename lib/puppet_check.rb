@@ -181,34 +181,44 @@ class PuppetCheck
     # initialize merged results hash to collect results from each forked process
     merged = { errors: {}, warnings: {}, clean: [], ignored: self.class.files[:ignored] }
 
-    # TODO
+    # setup concurrent i/o pipes mapped to per-file type jobs to collect results from each forked process
     pipes = jobs.map do |job|
+      # initialize i/o
       reader, writer = IO.pipe
+
+      # fork a process to execute the job and write the results to the pipe
       pid = Process.fork do
         reader.close
         job.call
         writer.write(Marshal.dump(PuppetCheck.files))
         writer.close
       end
+
+      # close the writer in the parent process to avoid deadlocks
       writer.close
+
+      # return the pid and reader for later collection
       [pid, reader]
     end
 
-    # TODO
+    # iterate through job pipes to collect results from each forked process and merge them into the merged results hash
     pipes.each do |pid, reader|
       begin
+        # read and marshal results from the pipe
         data = reader.read
         result = Marshal.load(data)
+        # merge results
         merged[:errors].merge!(result[:errors])
         merged[:warnings].merge!(result[:warnings])
         merged[:clean].concat(result[:clean])
       ensure
+        # ensure the reader is closed and process is awaited in case of marshalling errors
         reader.close unless reader.closed?
         Process.wait(pid)
       end
     end
 
-    # TODO
+    # aggregate merged results into class variable
     self.class.files = merged
     PuppetCheck.files
   end

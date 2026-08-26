@@ -1,3 +1,6 @@
+### 2.6.0 (Next)
+- Execute file checks in parallel between types.
+
 ### 2.5.2
 - Fix incorrect exit code `0` when `octocatalog` detects catalog compilation failure.
 - Avoid mutation of and optimize Rubocop argument interfacing.
