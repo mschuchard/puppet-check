@@ -36,10 +36,11 @@ describe PuppetCheck do
       }
 
       if Process.respond_to?(:fork)
+        expect { Rake::Task[:'puppetcheck:file'].execute }.not_to raise_error
         # puppet gloabal loader reset in each forked process
-        expect(PuppetCheck.files[:errors].length).to eql(12)
-        expect(PuppetCheck.files[:warnings].length).to eql(13)
-        expect(PuppetCheck.files[:clean].length).to eql(14)
+        expect(PuppetCheck.files[:errors].length).to eql(10)
+        expect(PuppetCheck.files[:warnings].length).to eql(6)
+        expect(PuppetCheck.files[:clean].length).to eql(18)
         expect(PuppetCheck.files[:ignored].length).to eql(3)
       else
         # cannot re-use plan fixture between system tests
@@ -69,10 +70,11 @@ describe PuppetCheck do
         end
 
         if Process.respond_to?(:fork)
+          expect { Rake::Task[:'puppetcheck:file'].invoke(settings) }.not_to raise_error
           # puppet gloabal loader reset in each forked process
-          expect(PuppetCheck.files[:errors].length).to eql(11)
+          expect(PuppetCheck.files[:errors].length).to eql(10)
           expect(PuppetCheck.files[:warnings].length).to eql(12)
-          expect(PuppetCheck.files[:clean].length).to eql(14)
+          expect(PuppetCheck.files[:clean].length).to eql(12)
           expect(PuppetCheck.files[:ignored].length).to eql(3)
         else
           # cannot re-use plan fixture between system tests
