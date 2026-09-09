@@ -211,6 +211,7 @@ class PuppetCheck
         merged[:errors].merge!(result[:errors])
         merged[:warnings].merge!(result[:warnings])
         merged[:clean].concat(result[:clean])
+        merged[:ignored] |= result[:ignored]
       ensure
         # ensure the reader is closed and process is awaited in case of marshalling errors
         reader.close unless reader.closed?

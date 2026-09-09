@@ -41,7 +41,7 @@ describe PuppetCheck do
         expect(PuppetCheck.files[:errors].length).to eql(10)
         expect(PuppetCheck.files[:warnings].length).to eql(6)
         expect(PuppetCheck.files[:clean].length).to eql(18)
-        expect(PuppetCheck.files[:ignored].length).to eql(3)
+        expect(PuppetCheck.files[:ignored].length).to eql(8)
       else
         # cannot re-use plan fixture between system tests
         expect { Rake::Task[:'puppetcheck:file'].execute }.to raise_error(ArgumentError, /Attempt to redefine entity/)
@@ -75,7 +75,7 @@ describe PuppetCheck do
           expect(PuppetCheck.files[:errors].length).to eql(10)
           expect(PuppetCheck.files[:warnings].length).to eql(12)
           expect(PuppetCheck.files[:clean].length).to eql(12)
-          expect(PuppetCheck.files[:ignored].length).to eql(3)
+          expect(PuppetCheck.files[:ignored].length).to eql(8)
         else
           # cannot re-use plan fixture between system tests
           expect { Rake::Task[:'puppetcheck:file'].invoke(settings) }.to raise_error(ArgumentError, /Attempt to redefine entity/)
