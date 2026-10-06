@@ -26,6 +26,8 @@ class OutputResults
     when 'json'
       require 'json'
       puts JSON.pretty_generate(files)
+    when 'junit'
+      junit(files)
     else
       raise "puppet-check: Unsupported output format '#{format}' was specified."
     end
@@ -54,5 +56,36 @@ class OutputResults
       # newline between categories for easier visual parsing
       puts ''
     end
+  end
+
+  # output the results as junit xml
+  private_class_method def self.junit(files)
+    require 'rexml/document'
+
+    # initialize four categories from input files
+    errors = files.fetch(:errors, {})
+    warnings = files.fetch(:warnings, {})
+    clean = files.fetch(:clean, [])
+    ignored = files.fetch(:ignored, [])
+
+    # initialize junit document
+    document = REXML::Document.new
+    document << REXML::XMLDecl.new('1.0', 'UTF-8')
+    suite = document.add_element('testsuite', 'name' => 'puppet-check', 'tests' => (errors.length + warnings.length + clean.length + ignored.length).to_s, 'failures' => errors.length.to_s, 'skipped' => ignored.length.to_s)
+
+    # junit has no warning status, so errors are failures, warnings are passing tests with output, and ignored files are skipped
+    errors.each { |file, messages| junit_testcase(suite, file).add_element('failure', 'message' => messages.first).text = messages.join("\n") }
+    warnings.each { |file, messages| junit_testcase(suite, file).add_element('system-out').text = messages.join("\n") }
+    clean.each { |file| junit_testcase(suite, file) }
+    ignored.each { |file| junit_testcase(suite, file).add_element('skipped') }
+
+    # write without added whitespace so that multi-line message text is preserved exactly
+    REXML::Formatters::Default.new.write(document, $stdout)
+    puts ''
+  end
+
+  # add a testcase element for a file to the test suite
+  private_class_method def self.junit_testcase(suite, file)
+    suite.add_element('testcase', 'classname' => 'puppet-check', 'name' => file)
   end
 end
