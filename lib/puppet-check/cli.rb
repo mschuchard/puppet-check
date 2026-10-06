@@ -47,7 +47,7 @@ class PuppetCheck::CLI
       opts.on('--private cert.pem', String, 'Private key for EYAML checks') { |arg| settings[:private] = arg }
 
       # formatting options
-      opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, or yaml') { |arg| settings[:output_format] = arg }
+      opts.on('-o', '--output format', String, 'Format for results output (default is text): text, json, junit, or yaml') { |arg| settings[:output_format] = arg }
 
       # octocatalog-diff options
       opts.on('--octoconfig config_file', String, 'Octocatalog-diff configuration file to use') { |arg| settings[:octoconfig] = arg }

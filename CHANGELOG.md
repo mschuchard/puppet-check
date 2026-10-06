@@ -1,5 +1,6 @@
 ### 2.6.0 (Next)
 - Execute file checks in parallel between types.
+- Add support for JUnit output format.
 
 ### 2.5.2
 - Fix incorrect exit code `0` when `octocatalog` detects catalog compilation failure.
